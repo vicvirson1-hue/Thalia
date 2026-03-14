@@ -353,20 +353,14 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 300px;
-  min-width: 300px;
-  flex-shrink: 0;
 }
-/* The ad unit wrapper */
 .ad-unit {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--rl);
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
-  align-self: start;
-  width: 100%;
 }
 .ad-unit-label {
   font-size: 10px;
@@ -378,25 +372,8 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
   border-bottom: 1px solid var(--border);
   text-align: center;
 }
-.ad-unit-placeholder {
-  background: var(--surface2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: var(--text3);
-  font-size: 12px;
-  text-align: center;
-  padding: 16px;
-}
-.ad-unit-placeholder .ad-ph-icon { font-size: 28px; opacity: .4; }
-/* 300x250 — Medium Rectangle — reserve height while ad loads */
-.ad-300x250 { width: 300px; min-height: 272px; }
-.ad-300x250 .ad-unit-placeholder { height: 250px; width: 268px; }
-/* 160x600 — Wide Skyscraper — reserve height while ad loads */
-.ad-160x600 { width: 160px; min-height: 622px; }
-.ad-160x600 .ad-unit-placeholder { height: 600px; width: 128px; }
+.ad-300x250 { min-height: 272px; }
+.ad-160x600 { min-height: 622px; }
 
 /* FOOTER */
 .site-footer{background:var(--plum);color:rgba(237,229,247,.7);margin-top:80px}
@@ -554,60 +531,21 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
   </div>
 
   <div class="with-sidebar" id="booksSection" style="padding-top:48px;padding-bottom:48px">
-    <!-- Main content column -->
     <div>
       <div class="sec-hdr"><h2 class="sec-title">Stories from the community</h2></div>
       <div class="book-grid" id="bookGrid"></div>
     </div>
-
-    <!-- Right sidebar — Adsterra ad units -->
     <div class="sidebar-col">
-
-      <!-- ═══════════════════════════════════════════
-           AD SLOT 1 — Homepage sidebar — 300×250
-           PASTE your Adsterra 300x250 code below,
-           replacing the placeholder div entirely.
-      ════════════════════════════════════════════ -->
       <div class="ad-unit ad-300x250">
         <div class="ad-unit-label">Advertisement</div>
-        <script>(function(){
-          var atOptions = {
-            'key' : '40248aa8a3372469020608e1be0c352f',
-            'format' : 'iframe',
-            'height' : 250,
-            'width' : 300,
-            'params' : {}
-          };
-          var d=document,s=d.createElement('script');
-          s.src='https://www.highperformanceformat.com/40248aa8a3372469020608e1be0c352f/invoke.js';
-          s.async=true;
-          (d.head||d.body).appendChild(s);
-        })();</script>
-        <!-- END AD SLOT 1 -->
+        <script>(function(){var atOptions={'key':'40248aa8a3372469020608e1be0c352f','format':'iframe','height':250,'width':300,'params':{}};var d=document,s=d.createElement('script');s.src='https://www.highperformanceformat.com/40248aa8a3372469020608e1be0c352f/invoke.js';s.async=true;(d.head||d.body).appendChild(s);})();</script>
       </div>
-           PASTE your Adsterra 160x600 code below,
-           replacing the placeholder div entirely.
-      ════════════════════════════════════════════ -->
       <div class="ad-unit ad-160x600">
         <div class="ad-unit-label">Advertisement</div>
-        <script>(function(){
-          var atOptions = {
-            'key' : '2a76266bdcf748eb88ee696b8c356418',
-            'format' : 'iframe',
-            'height' : 600,
-            'width' : 160,
-            'params' : {}
-          };
-          var d=document,s=d.createElement('script');
-          s.src='https://www.highperformanceformat.com/2a76266bdcf748eb88ee696b8c356418/invoke.js';
-          s.async=true;
-          (d.head||d.body).appendChild(s);
-        })();</script>
-        <!-- END AD SLOT 2 -->
+        <script>(function(){var atOptions={'key':'2a76266bdcf748eb88ee696b8c356418','format':'iframe','height':600,'width':160,'params':{}};var d=document,s=d.createElement('script');s.src='https://www.highperformanceformat.com/2a76266bdcf748eb88ee696b8c356418/invoke.js';s.async=true;(d.head||d.body).appendChild(s);})();</script>
       </div>
-
-    </div><!-- /sidebar-col -->
-  </div><!-- /with-sidebar -->
+    </div>
+  </div>
 </div>
 
 <!-- READER -->
@@ -629,66 +567,23 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
   </div>
   <!-- Reader body with sidebar -->
   <div class="with-sidebar" style="padding-top:0">
-
-    <!-- Reading content column -->
     <div>
       <div class="rdr-body" style="max-width:100%;padding-left:0;padding-right:0">
         <div id="rdrContent" class="rdr-content"></div>
       </div>
       <div id="commentsSection"></div>
     </div>
-
-    <!-- Right sidebar — Adsterra ad units (sticky, follows scroll) -->
     <div class="sidebar-col">
-
-      <!-- ═══════════════════════════════════════════
-           AD SLOT 3 — Reader sidebar — 300×250
-           PASTE your Adsterra 300x250 code below,
-           replacing the placeholder div entirely.
-      ════════════════════════════════════════════ -->
       <div class="ad-unit ad-300x250">
         <div class="ad-unit-label">Advertisement</div>
-        <script>(function(){
-          var atOptions = {
-            'key' : '40248aa8a3372469020608e1be0c352f',
-            'format' : 'iframe',
-            'height' : 250,
-            'width' : 300,
-            'params' : {}
-          };
-          var d=document,s=d.createElement('script');
-          s.src='https://www.highperformanceformat.com/40248aa8a3372469020608e1be0c352f/invoke.js';
-          s.async=true;
-          (d.head||d.body).appendChild(s);
-        })();</script>
-        <!-- END AD SLOT 3 -->
+        <script>(function(){var atOptions={'key':'40248aa8a3372469020608e1be0c352f','format':'iframe','height':250,'width':300,'params':{}};var d=document,s=d.createElement('script');s.src='https://www.highperformanceformat.com/40248aa8a3372469020608e1be0c352f/invoke.js';s.async=true;(d.head||d.body).appendChild(s);})();</script>
       </div>
-
-      <!-- ═══════════════════════════════════════════
-           AD SLOT 4 — Reader sidebar — 160×600
-           PASTE your Adsterra 160x600 code below,
-           replacing the placeholder div entirely.
-      ════════════════════════════════════════════ -->
       <div class="ad-unit ad-160x600">
         <div class="ad-unit-label">Advertisement</div>
-        <script>(function(){
-          var atOptions = {
-            'key' : '2a76266bdcf748eb88ee696b8c356418',
-            'format' : 'iframe',
-            'height' : 600,
-            'width' : 160,
-            'params' : {}
-          };
-          var d=document,s=d.createElement('script');
-          s.src='https://www.highperformanceformat.com/2a76266bdcf748eb88ee696b8c356418/invoke.js';
-          s.async=true;
-          (d.head||d.body).appendChild(s);
-        })();</script>
-        <!-- END AD SLOT 4 -->
+        <script>(function(){var atOptions={'key':'2a76266bdcf748eb88ee696b8c356418','format':'iframe','height':600,'width':160,'params':{}};var d=document,s=d.createElement('script');s.src='https://www.highperformanceformat.com/2a76266bdcf748eb88ee696b8c356418/invoke.js';s.async=true;(d.head||d.body).appendChild(s);})();</script>
       </div>
-
-    </div><!-- /sidebar-col -->
-  </div><!-- /with-sidebar -->
+    </div>
+  </div>
 </div>
 
 <!-- AUTHOR PROFILE -->
