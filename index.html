@@ -1741,4 +1741,26 @@ function toast(msg,type='info'){
 }
 
 
-// Expose all functions to window for inline
+// Expose all functions to window for inline onclick handlers
+Object.assign(window, {
+  toggleTheme, goPg, toggleDD, cDD, updateNav,
+  doLogin, doRegister, logout, openEditProfile, saveProfile,
+  openBook, goAuthorFromReader, openAuthor, goMyProfile,
+  setStar, submitComment,
+  toggleDM, closeDM, openDMThread, closeDMThread, sendMsg, openNewDM, dmAuthor, sendNewDM,
+  doSearch, filterTag, scrollToBooks,
+  buildTagOpts, togglePubTag, removePubTag, prevCover, fmtText, insertChapter, insertAd, checkOrig, publishBook,
+  renderDashboard, reqPayout, submitClaim,
+  renderAdmin, approveAndTakedown, dismissClaim, adminTakedown, adminRestore, openBanModal, confirmBan, unbanUser,
+  openM, closeM, swModal, toast
+});
+
+// INIT
+loadState();
+checkBan();
+renderGrid(S.books,'bookGrid');
+updateNav();
+buildTagOpts();
+</script>
+</body>
+</html>
