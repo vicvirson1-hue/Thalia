@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thalia — Everyone Has a Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --plum:       #3d1f5e;
+  --plum-mid:   #5a2d82;
+  --plum-light: #7b4fa6;
+  --plum-pale:  #ede5f7;
+  --plum-ghost: #f7f3fc;
+  --violet:     #9b59d0;
+  --lavender:   #c4a3e8;
+  --gold:       #c9933a;
+  --gold-lt:    #e8b84b;
+  --crimson:    #b03060;
+  --sage:       #3a7a50;
+
+  --bg:         #faf8fd;
+  --bg2:        #f2edf9;
+  --surface:    #ffffff;
+  --surface2:   #f7f3fc;
+  --border:     #ddd4ed;
+  --border2:    #cfc2e8;
+  --text:       #1a0f2e;
+  --text2:      #4a3668;
+  --text3:      #7a6898;
+
+  --sh-sm: 0 1px 8px rgba(61,31,94,.07);
+  --sh-md: 0 4px 24px rgba(61,31,94,.11);
+  --sh-lg: 0 12px 48px rgba(61,31,94,.16);
+  --r:  6px;
+  --rl: 12px;
+  --nav: 62px;
+  --ease: .22s cubic-bezier(.4,0,.2,1);
+
+  --f-serif: 'Cormorant Garamond', Georgia, serif;
+  --f-sans:  'Outfit', sans-serif;
+  --f-mono:  'JetBrains Mono', monospace;
+}
+[data-theme="dark"] {
+  --bg:        #0e0817; --bg2:       #160d24;
+  --surface:   #1c1130; --surface2:  #231642;
+  --border:    #2e1f4a; --border2:   #3d2860;
+  --text:      #ede5f7; --text2:     #c4a3e8; --text3:     #7b5fa8;
+  --plum-pale: #1c1130; --plum-ghost:#160d24;
+  --sh-sm: 0 1px 8px rgba(0,0,0,.3); --sh-md: 0 4px 24px rgba(0,0,0,.4); --sh-lg: 0 12px 48px rgba(0,0,0,.5);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--f-sans);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;transition:background var(--ease),color var(--ease)}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--f-sans)}
+img{display:block}
+
+/* UTILITY */
+.hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-sans);font-size:13.5px;font-weight:500;padding:9px 20px;border-radius:var(--r);border:none;cursor:pointer;transition:all var(--ease);white-space:nowrap}
+.btn-primary{background:var(--plum);color:#fff}
+.btn-primary:hover{background:var(--plum-mid);transform:translateY(-1px);box-shadow:0 4px 16px rgba(61,31,94,.35)}
+.btn-violet{background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff}
+.btn-violet:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 4px 20px rgba(155,89,208,.4)}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-gold:hover{background:var(--gold-lt);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--border2)}
+.btn-outline:hover{border-color:var(--plum-light);color:var(--plum-light);background:var(--plum-ghost)}
+.btn-ghost{background:transparent;color:var(--text3);border:none;padding:8px 14px}
+.btn-ghost:hover{color:var(--text);background:var(--surface2)}
+.btn-danger{background:var(--crimson);color:#fff}
+.btn-danger:hover{filter:brightness(1.1)}
+.btn-sage{background:var(--sage);color:#fff}
+.btn-sage:hover{filter:brightness(1.1)}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-xs{padding:4px 10px;font-size:11px}
+
+.badge{display:inline-flex;align-items:center;font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:3px}
+.bv{background:var(--plum-pale);color:var(--plum-mid);border:1px solid var(--lavender)}
+.bg2{background:#fdf3df;color:#9a6a10;border:1px solid #f0d89a}
+.bgrn{background:#eaf5ea;color:#2e7d32;border:1px solid #a5d6a7}
+.bred{background:#fdecea;color:var(--crimson);border:1px solid #f0b0b8}
+.bgray{background:var(--surface2);color:var(--text3);border:1px solid var(--border)}
+
+.tag{display:inline-flex;align-items:center;font-size:12px;font-weight:500;padding:4px 13px;background:var(--surface2);color:var(--text3);border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:all var(--ease)}
+.tag:hover,.tag.active{background:var(--plum);color:#fff;border-color:var(--plum)}
+
+.avatar{border-radius:50%;background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--f-serif);flex-shrink:0}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:background var(--ease)}
+.nav-in{max-width:1320px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;gap:18px}
+.logo{font-family:var(--f-serif);font-weight:700;font-size:26px;color:var(--text);display:flex;align-items:center;gap:9px;cursor:pointer}
+.logo-dot{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--plum-mid),var(--violet));display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 10px rgba(90,45,130,.4)}
+.nav-search{flex:1;max-width:420px;display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color var(--ease),box-shadow var(--ease)}
+.nav-search:focus-within{border-color:var(--plum-light);box-shadow:0 0 0 3px rgba(123,79,166,.15)}
+.nav-search input{flex:1;padding:9px 14px;border:none;background:transparent;font-family:var(--f-sans);font-size:14px;color:var(--text);outline:none}
+.nav-search input::placeholder{color:var(--text3)}
+.nav-sbtn{padding:9px 14px;background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:16px;transition:color var(--ease)}
+.nav-sbtn:hover{color:var(--plum-light)}
+.nav-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+.night-wrap{display:flex;align-items:center;gap:6px}
+.night-icon{font-size:15px}
+.ntoggle{width:40px;height:22px;border-radius:11px;background:var(--border2);border:none;cursor:pointer;position:relative;transition:background var(--ease)}
+.ntoggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:transform var(--ease)}
+[data-theme="dark"] .ntoggle{background:var(--plum-mid)}
+[data-theme="dark"] .ntoggle::after{transform:translateX(18px)}
+.dm-btn{position:relative;background:none;border:none;cursor:pointer;padding:6px;border-radius:var(--r);transition:background var(--ease);color:var(--text2)}
+.dm-btn:hover{background:var(--surface2)}
+.dm-badge{position:absolute;top:2px;right:2px;width:9px;height:9px;background:var(--crimson);border-radius:50%;border:2px solid var(--bg)}
+.nav-av-wrap{position:relative}
+.nav-av{width:36px;height:36px;font-size:15px;cursor:pointer;border:2px solid var(--border2);transition:border-color var(--ease)}
+.nav-av:hover{border-color:var(--plum-light)}
+.dropdown{position:absolute;right:0;top:calc(100% + 10px);background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--sh-lg);min-width:195px;overflow:hidden;z-index:300;animation:dropIn .18s ease}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.dropdown a,.dropdown button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 16px;font-size:14px;color:var(--text);background:none;border:none;font-family:var(--f-sans);cursor:pointer;transition:background var(--ease)}
+.dropdown a:hover,.dropdown button:hover{background:var(--surface2);color:var(--plum-light)}
+.dropdown hr{border:none;border-top:1px solid var(--border);margin:4px 0}
+.drop-lbl{padding:6px 16px 2px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3)}
+
+/* PAGES */
+.page{display:none;animation:fadeUp .28s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* HERO */
+.hero{min-height:560px;background:var(--plum);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 60px;position:relative;overflow:hidden}
+.h-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 60% at 20% 50%,rgba(155,89,208,.25) 0%,transparent 70%),radial-gradient(ellipse 50% 70% at 80% 30%,rgba(201,147,58,.12) 0%,transparent 60%)}
+.h-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:48px 48px}
+.h-eye{font-family:var(--f-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--lavender);margin-bottom:22px;display:flex;align-items:center;gap:10px;justify-content:center}
+.h-eye::before,.h-eye::after{content:'';width:32px;height:1px;background:var(--lavender);opacity:.5}
+.hero h1{font-family:var(--f-serif);font-size:clamp(46px,7vw,90px);font-weight:700;color:#fff;line-height:1.05;margin-bottom:18px}
+.hero h1 em{color:var(--lavender);font-style:italic}
+.hero p{font-size:17px;color:rgba(237,229,247,.65);max-width:520px;margin:0 auto 38px;line-height:1.7}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+.hero-proof{display:flex;gap:36px;margin-top:52px;padding-top:32px;border-top:1px solid rgba(255,255,255,.1);position:relative;justify-content:center;flex-wrap:wrap}
+.proof-val{font-family:var(--f-serif);font-size:28px;font-weight:700;color:var(--lavender)}
+.proof-lbl{font-size:11px;color:rgba(237,229,247,.4);text-transform:uppercase;letter-spacing:.06em}
+
+/* HOW IT WORKS strip */
+.hiw{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:40px 24px}
+.hiw-in{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px}
+.hiw-step{text-align:center}
+.hiw-icon{font-size:36px;margin-bottom:12px}
+.hiw-title{font-family:var(--f-serif);font-size:18px;font-weight:700;margin-bottom:6px}
+.hiw-desc{font-size:14px;color:var(--text3);line-height:1.6}
+
+/* TAGS STRIP */
+.tags-strip{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;overflow-x:auto;scrollbar-width:none}
+.tags-strip::-webkit-scrollbar{display:none}
+.tags-in{max-width:1320px;margin:0 auto;display:flex;gap:8px;align-items:center;flex-wrap:nowrap;min-width:max-content}
+.tags-lbl{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-right:4px;flex-shrink:0}
+
+/* SECTION & GRID */
+.section{padding:48px 24px;max-width:1320px;margin:0 auto}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.sec-title{font-family:var(--f-serif);font-size:28px;font-weight:700}
+.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:24px}
+.book-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;cursor:pointer;transition:all var(--ease);display:flex;flex-direction:column}
+.book-card:hover{transform:translateY(-5px);box-shadow:var(--sh-lg);border-color:var(--border2)}
+.book-cover{width:100%;aspect-ratio:2/3;background:var(--surface2);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.book-cover img{width:100%;height:100%;object-fit:cover}
+.bcover-grad{position:absolute;inset:0;background:linear-gradient(135deg,var(--plum),var(--violet));opacity:.75}
+.bcover-emoji{font-size:44px;position:absolute;filter:drop-shadow(0 4px 8px rgba(0,0,0,.25))}
+.book-info{padding:14px;flex:1;display:flex;flex-direction:column;gap:5px}
+.book-title{font-family:var(--f-serif);font-size:15px;font-weight:700;line-height:1.3}
+.book-author{font-size:12.5px;color:var(--text3)}
+.book-author span:hover{color:var(--plum-light);cursor:pointer}
+.book-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.btag{font-size:10px;padding:2px 8px;background:var(--plum-pale);color:var(--plum-mid);border-radius:10px}
+.book-meta{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px}
+.book-reads{font-size:11.5px;color:var(--text3);font-family:var(--f-mono)}
+.book-rating{font-size:12px;color:var(--gold)}
+
+/* READER */
+#page-reader{background:var(--bg)}
+.rdr-hero{background:var(--plum);padding:40px 24px 0}
+.rdr-hero-in{max-width:860px;margin:0 auto;display:flex;gap:28px;align-items:flex-end;padding-bottom:32px}
+.rdr-cover{width:110px;height:165px;border-radius:var(--r);overflow:hidden;flex-shrink:0;box-shadow:6px 6px 30px rgba(0,0,0,.35);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:36px}
+.rdr-cover img{width:100%;height:100%;object-fit:cover}
+.rdr-meta h1{font-family:var(--f-serif);font-size:32px;font-weight:700;color:#fff;line-height:1.1}
+.rdr-author-lnk{font-size:14px;color:var(--lavender);cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:8px 0 12px}
+.rdr-author-lnk:hover{color:#fff}
+.rdr-acts{max-width:860px;margin:0 auto;padding:14px 0;display:flex;gap:8px;border-top:1px solid rgba(255,255,255,.1)}
+.rdr-body{max-width:680px;margin:0 auto;padding:52px 24px 80px}
+.rdr-content{font-size:18.5px;line-height:1.9;font-family:var(--f-serif);color:var(--text)}
+.rdr-content p{margin-bottom:1.5em}
+.chap-hdr{font-family:var(--f-serif);font-size:26px;font-weight:700;margin:56px 0 28px;color:var(--plum);display:flex;align-items:center;gap:14px}
+[data-theme="dark"] .chap-hdr{color:var(--lavender)}
+.chap-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
+.ad-block{background:var(--surface);border:1px dashed var(--border2);border-radius:var(--r);padding:18px 22px;text-align:center;margin:44px 0;font-size:12px;color:var(--text3);font-family:var(--f-mono)}
+.ad-block strong{display:block;font-size:13px;margin-bottom:3px;color:var(--text2);font-family:var(--f-sans)}
+
+/* COMMENTS */
+.comments-section{max-width:680px;margin:0 auto;padding:0 24px 80px}
+.star-row{display:flex;gap:4px;margin-bottom:12px}
+.star{font-size:24px;cursor:pointer;color:var(--border2);transition:color var(--ease)}
+.star.active,.star:hover{color:var(--gold)}
+.cmt-card{display:flex;gap:14px;padding:20px 0;border-bottom:1px solid var(--border)}
+.cmt-card:last-child{border-bottom:none}
+.cmt-body{flex:1}
+.cmt-author{font-weight:600;font-size:14px}
+.cmt-rating{color:var(--gold);font-size:13px;margin:2px 0}
+.cmt-text{font-size:14px;color:var(--text2);line-height:1.6;margin-top:4px}
+.cmt-date{font-size:11.5px;color:var(--text3);font-family:var(--f-mono);margin-top:6px}
+
+/* AUTHOR PAGE */
+#page-author .auth-hero{background:var(--plum);padding:60px 24px 0;text-align:center;position:relative;overflow:hidden}
+.auth-hero-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 50% 80% at 30% 50%,rgba(155,89,208,.2) 0%,transparent 70%)}
+.auth-av{width:108px;height:108px;font-size:40px;font-weight:700;border:4px solid rgba(255,255,255,.25);margin:0 auto 14px;font-family:var(--f-serif)}
+.auth-name{font-family:var(--f-serif);font-size:36px;font-weight:700;color:#fff}
+.auth-bio{font-size:15px;color:rgba(237,229,247,.65);max-width:480px;margin:10px auto 0;line-height:1.7}
+.auth-socials{display:flex;gap:10px;justify-content:center;margin:18px 0;flex-wrap:wrap}
+.social-lnk{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:20px;background:rgba(255,255,255,.1);color:rgba(237,229,247,.8);font-size:13px;border:1px solid rgba(255,255,255,.15);transition:all var(--ease);cursor:pointer}
+.social-lnk:hover{background:rgba(255,255,255,.2);color:#fff}
+.auth-stats{display:flex;gap:36px;justify-content:center;padding:24px 0;border-top:1px solid rgba(255,255,255,.1);margin-top:28px;flex-wrap:wrap}
+.auth-sv{font-family:var(--f-serif);font-size:26px;font-weight:700;color:var(--lavender)}
+.auth-sl{font-size:11px;color:rgba(237,229,247,.45);text-transform:uppercase;letter-spacing:.07em}
+
+/* DASHBOARD */
+.dash-grid{display:grid;grid-template-columns:290px 1fr;gap:32px;max-width:1320px;margin:0 auto;padding:44px 24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:22px 24px;margin-bottom:16px}
+.stat-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3)}
+.stat-val{font-family:var(--f-serif);font-size:38px;font-weight:700;margin:4px 0 2px}
+.stat-sub{font-size:13px;color:var(--text3)}
+.earn-bar{background:var(--surface2);border-radius:4px;height:7px;margin:14px 0 7px;overflow:hidden}
+.earn-fill{height:100%;background:linear-gradient(90deg,var(--plum-mid),var(--violet));border-radius:4px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.pay-note{font-size:11.5px;color:var(--text3);font-family:var(--f-mono)}
+.dash-table{width:100%;border-collapse:collapse}
+.dash-table th{text-align:left;padding:10px 16px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);border-bottom:1px solid var(--border)}
+.dash-table td{padding:14px 16px;border-bottom:1px solid var(--border);font-size:14px}
+.dash-table tr:last-child td{border-bottom:none}
+.dash-table tr:hover td{background:var(--surface2)}
+
+/* PUBLISH */
+.pub-grid{display:grid;grid-template-columns:1fr 300px;gap:32px;max-width:980px;margin:0 auto;padding:44px 24px}
+.toolbar{display:flex;gap:4px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface2);flex-wrap:wrap}
+.tbtn{padding:5px 12px;font-size:12px;background:none;border:1px solid transparent;border-radius:var(--r);color:var(--text2);cursor:pointer;font-family:var(--f-sans);transition:all var(--ease)}
+.tbtn:hover{border-color:var(--border2);background:var(--surface)}
+.cover-up{border:2px dashed var(--border2);border-radius:var(--rl);aspect-ratio:2/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all var(--ease);overflow:hidden;position:relative;background:var(--surface)}
+.cover-up:hover{border-color:var(--plum-light);background:var(--plum-ghost)}
+.cover-up img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cover-up-icon{font-size:32px;position:relative;z-index:1}
+.cover-up-lbl{font-size:13px;color:var(--text3);text-align:center;position:relative;z-index:1}
+.cover-up-over{position:absolute;inset:0;background:rgba(61,31,94,.7);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;opacity:0;transition:opacity var(--ease);z-index:2}
+.cover-up:hover .cover-up-over{opacity:1}
+.orig-box{border-radius:var(--r);padding:14px 16px;margin-top:14px;border:1px solid}
+.orig-pass{background:#eaf5ea;border-color:#a5d6a7}
+.orig-fail{background:#fdecea;border-color:#f0b0b8}
+.orig-chk{background:var(--plum-pale);border-color:var(--border2)}
+
+/* DM PANEL */
+.dm-panel{position:fixed;right:0;top:var(--nav);bottom:0;width:380px;background:var(--surface);border-left:1px solid var(--border);z-index:150;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:var(--sh-lg)}
+.dm-panel.open{transform:none}
+.dm-hdr{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface)}
+.dm-hdr-title{font-family:var(--f-serif);font-size:20px;font-weight:700}
+.dm-list{flex:1;overflow-y:auto}
+.dm-conv-item{display:flex;align-items:center;gap:12px;padding:13px 18px;cursor:pointer;transition:background var(--ease);border-bottom:1px solid var(--border)}
+.dm-conv-item:hover{background:var(--surface2)}
+.dm-conv-item.active{background:var(--plum-pale)}
+.dm-conv-name{font-weight:600;font-size:14px}
+.dm-conv-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.dm-conv-time{font-size:10.5px;color:var(--text3);font-family:var(--f-mono);margin-left:auto;flex-shrink:0}
+.dm-unread{width:8px;height:8px;border-radius:50%;background:var(--crimson);flex-shrink:0}
+.dm-thread{flex:1;display:flex;flex-direction:column;display:none}
+.dm-thread.open{display:flex}
+.dm-thread-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.dm-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.dm-msg{max-width:75%;padding:10px 14px;border-radius:var(--rl);font-size:14px;line-height:1.5}
+.dm-msg.me{background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.dm-msg.them{background:var(--surface2);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border)}
+.dm-msg-time{font-size:10px;opacity:.6;margin-top:4px;font-family:var(--f-mono)}
+.dm-input-row{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px}
+.dm-input{flex:1;padding:9px 13px;border:1.5px solid var(--border);border-radius:20px;background:var(--bg);font-family:var(--f-sans);font-size:14px;color:var(--text);outline:none;transition:border-color var(--ease)}
+.dm-input:focus{border-color:var(--plum-light)}
+.dm-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:filter var(--ease);flex-shrink:0}
+.dm-send:hover{filter:brightness(1.15)}
+.dm-empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--text3);text-align:center;padding:24px}
+.dm-empty-icon{font-size:40px}
+
+/* MODALS */
+.overlay{position:fixed;inset:0;background:rgba(14,8,23,.65);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--sh-lg);width:100%;max-width:500px;max-height:92vh;overflow-y:auto;animation:mIn .22s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+.m-hdr{padding:26px 28px 0;display:flex;align-items:center;justify-content:space-between}
+.m-title{font-family:var(--f-serif);font-size:26px;font-weight:700}
+.m-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3);line-height:1;padding:4px;border-radius:var(--r);transition:all var(--ease)}
+.m-close:hover{color:var(--text);background:var(--surface2)}
+.m-body{padding:20px 28px 28px}
+
+/* FORMS */
+.fg{margin-bottom:18px}
+.fl{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--text2)}
+.fi,.fta,.fsel{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:var(--f-sans);font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:border-color var(--ease),box-shadow var(--ease)}
+.fi:focus,.fta:focus,.fsel:focus{border-color:var(--plum-light);box-shadow:0 0 0 3px rgba(123,79,166,.12)}
+.fta{resize:vertical;min-height:110px}
+.fhint{font-size:11.5px;color:var(--text3);margin-top:4px}
+.ferr{font-size:12px;color:var(--crimson);margin-top:4px}
+.fdiv{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text3);font-size:13px}
+.fdiv::before,.fdiv::after{content:'';flex:1;height:1px;background:var(--border)}
+.soc-inputs{display:flex;flex-direction:column;gap:10px}
+.soc-row{display:flex;align-items:center;gap:10px}
+.soc-icon{font-size:20px;width:28px;flex-shrink:0}
+
+/* ADMIN */
+.admin-wrap{max-width:1060px;margin:0 auto;padding:44px 24px}
+.admin-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:24px;overflow:hidden}
+.admin-chdr{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-weight:600}
+.admin-row{padding:14px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.admin-row:last-child{border-bottom:none}
+
+/* SUBHDR */
+.subhdr{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px}
+.subhdr-in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:14px;width:100%}
+
+/* BANNED BANNER */
+.banned-wall{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column;gap:16px;padding:40px}
+.banned-icon{font-size:64px}
+.banned-title{font-family:var(--f-serif);font-size:36px;font-weight:700;color:var(--crimson)}
+.banned-msg{font-size:16px;color:var(--text3);max-width:420px;line-height:1.7}
+
+/* TOAST */
+#toasts{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--text);color:var(--bg);padding:13px 18px;border-radius:var(--rl);font-size:13.5px;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:10px;max-width:320px;animation:toastIn .28s ease}
+[data-theme="dark"] .toast{background:var(--surface);color:var(--text);border:1px solid var(--border2)}
+.toast.success{border-left:3px solid #4caf50}
+.toast.error{border-left:3px solid var(--crimson)}
+.toast.info{border-left:3px solid var(--plum-light)}
+@keyframes toastIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+
+/* MISC */
+.claim-banner{background:#fdecea;border:1px solid #f0b0b8;border-radius:var(--r);padding:16px 20px;margin:24px 0;display:flex;align-items:flex-start;gap:12px}
+[data-theme="dark"] .claim-banner{background:rgba(176,48,96,.1)}
+.claim-step{display:flex;gap:14px;margin-bottom:16px}
+.claim-num{width:28px;height:28px;border-radius:50%;background:var(--crimson);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+
+/* FOOTER */
+.site-footer{background:var(--plum);color:rgba(237,229,247,.7);margin-top:80px}
+.footer-top{max-width:1320px;margin:0 auto;padding:60px 24px 40px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px}
+.footer-brand .logo{color:#fff;margin-bottom:14px;display:inline-flex}
+.footer-brand p{font-size:14px;line-height:1.7;max-width:280px;color:rgba(237,229,247,.6)}
+.footer-brand-tagline{font-family:var(--f-serif);font-style:italic;font-size:16px;color:var(--lavender);margin-top:10px;display:block}
+.footer-col h4{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--lavender);margin-bottom:16px}
+.footer-col a,.footer-col button{display:block;font-size:14px;color:rgba(237,229,247,.6);background:none;border:none;cursor:pointer;font-family:var(--f-sans);text-align:left;padding:0;margin-bottom:10px;transition:color var(--ease)}
+.footer-col a:hover,.footer-col button:hover{color:#fff}
+.footer-contact{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--rl);padding:20px 22px;margin-top:4px}
+.footer-contact-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.footer-contact-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px}
+.footer-contact-row:last-child{margin-bottom:0}
+.footer-contact-icon{font-size:16px;flex-shrink:0;width:22px}
+.footer-contact-row a{color:var(--lavender);text-decoration:none;transition:color var(--ease)}
+.footer-contact-row a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:20px 24px}
+.footer-bottom-in{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:rgba(237,229,247,.4)}
+.footer-bottom a{color:rgba(237,229,247,.5);transition:color var(--ease)}
+.footer-bottom a:hover{color:#fff}
+.footer-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 12px;border-radius:20px;font-size:11px;color:rgba(237,229,247,.6)}
+
+@media(max-width:860px){
+  .footer-top{grid-template-columns:1fr 1fr;gap:32px}
+  .footer-brand{grid-column:1/-1}
+}
+  .dash-grid,.pub-grid{grid-template-columns:1fr}
+  .book-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+  .rdr-hero-in{flex-wrap:wrap}
+  .dm-panel{width:100%;right:0;left:0}
+  .hero-proof{gap:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ BAN WALL (shown if user is banned) ══ -->
+<div id="banWall" class="hidden">
+  <div class="banned-wall">
+    <div class="banned-icon">🚫</div>
+    <div class="banned-title">Your account has been suspended</div>
+    <div class="banned-msg">Your account has been suspended by a Thalia administrator. This may be due to a violation of our content policy or a sustained copyright infringement. If you believe this is an error, contact <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1a2a4a1a1bea3a591a5b9b0bdb8b0ffb2bebc">[email&#160;protected]</a></strong>.</div>
+    <button class="btn btn-outline" onclick="logout()">Sign out</button>
+  </div>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div id="app">
+
+<!-- NAV -->
+<nav>
+  <div class="nav-in">
+    <div class="logo" onclick="goPg('home')">
+      <div class="logo-dot">✦</div>Thalia
+    </div>
+    <div class="nav-search">
+      <input id="searchInput" type="text" placeholder="Search books, authors, genres…" onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="nav-sbtn" onclick="doSearch()">⌕</button>
+    </div>
+    <div class="nav-r">
+      <div class="night-wrap" title="Toggle dark mode">
+        <span class="night-icon">☀️</span>
+        <button class="ntoggle" onclick="toggleTheme()"></button>
+        <span class="night-icon">🌙</span>
+      </div>
+      <div id="navGuest" style="display:flex;gap:8px">
+        <button class="btn btn-outline btn-sm" onclick="openM('loginModal')">Sign in</button>
+        <button class="btn btn-violet btn-sm" onclick="openM('registerModal')">Start writing</button>
+      </div>
+      <div id="navUser" class="hidden" style="display:flex;align-items:center;gap:10px">
+        <button class="btn btn-violet btn-sm" onclick="goPg('publish')">✦ Publish</button>
+        <button class="dm-btn" onclick="toggleDM()" title="Messages" id="dmBtn">
+          💬
+          <div class="dm-badge hidden" id="dmDot"></div>
+        </button>
+        <div class="nav-av-wrap">
+          <div class="avatar nav-av" id="navAv" onclick="toggleDD()"></div>
+          <div class="dropdown hidden" id="avDD">
+            <div class="drop-lbl">My Thalia</div>
+            <a href="#" onclick="goPg('dashboard');cDD()">📊 Dashboard</a>
+            <a href="#" onclick="goMyProfile();cDD()">👤 My Profile</a>
+            <a href="#" onclick="openEditProfile();cDD()">✏️ Edit Profile</a>
+            <a href="#" onclick="toggleDM();cDD()">💬 Messages</a>
+            <hr>
+            <div class="drop-lbl">Admin</div>
+            <a href="#" onclick="goPg('admin');cDD()">🛡 Admin Panel</a>
+            <hr>
+            <button onclick="logout()">↩ Sign out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ PAGES ══ -->
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="h-bg"></div><div class="h-grid"></div>
+    <div class="h-eye">The Stage for Every Story</div>
+    <h1>You are<br>already <em>an author.</em></h1>
+    <p>Thalia believes every person has a story worth telling. Write it, publish it, and earn real revenue from readers around the world — no gatekeepers, no agents, no permission needed.</p>
+    <div class="hero-cta">
+      <button class="btn btn-violet" style="font-size:16px;padding:14px 30px" onclick="openM('registerModal')">Publish your first story free</button>
+      <button class="btn btn-outline" style="font-size:16px;padding:14px 30px;color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25)" onclick="scrollToBooks()">Read what others wrote ↓</button>
+    </div>
+    <div class="hero-proof">
+      <div><div class="proof-val" id="hBooks">6</div><div class="proof-lbl">Books published</div></div>
+      <div><div class="proof-val" id="hReads">9.6k</div><div class="proof-lbl">Stories read</div></div>
+      <div><div class="proof-val" id="hAuthors">4</div><div class="proof-lbl">Authors earning</div></div>
+      <div><div class="proof-val">$0.003</div><div class="proof-lbl">Per ad impression</div></div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="hiw">
+    <div class="hiw-in">
+      <div class="hiw-step"><div class="hiw-icon">✍️</div><div class="hiw-title">Write anything</div><div class="hiw-desc">Fiction, memoirs, poetry, essays — there are no wrong genres. Your story is valid.</div></div>
+      <div class="hiw-step"><div class="hiw-icon">🚀</div><div class="hiw-title">Publish instantly</div><div class="hiw-desc">No agents, no rejection letters. Paste your work, add a cover, and go live in minutes.</div></div>
+      <div class="hiw-step"><div class="hiw-icon">💜</div><div class="hiw-title">Build your audience</div><div class="hiw-desc">Readers follow your author page, leave reviews, and message you directly.</div></div>
+      <div class="hiw-step"><div class="hiw-icon">💰</div><div class="hiw-title">Earn as you write</div><div class="hiw-desc">55% of ad revenue from your pages goes straight to you. No minimum followers required.</div></div>
+    </div>
+  </div>
+
+  <div class="tags-strip">
+    <div class="tags-in">
+      <span class="tags-lbl">Genres</span>
+      <span class="tag active" onclick="filterTag(this,'all')">All</span>
+      <span class="tag" onclick="filterTag(this,'Fiction')">Fiction</span>
+      <span class="tag" onclick="filterTag(this,'Mystery')">Mystery</span>
+      <span class="tag" onclick="filterTag(this,'Romance')">Romance</span>
+      <span class="tag" onclick="filterTag(this,'Sci-Fi')">Sci-Fi</span>
+      <span class="tag" onclick="filterTag(this,'Fantasy')">Fantasy</span>
+      <span class="tag" onclick="filterTag(this,'Thriller')">Thriller</span>
+      <span class="tag" onclick="filterTag(this,'Horror')">Horror</span>
+      <span class="tag" onclick="filterTag(this,'Non-Fiction')">Non-Fiction</span>
+      <span class="tag" onclick="filterTag(this,'Poetry')">Poetry</span>
+      <span class="tag" onclick="filterTag(this,'Drama')">Drama</span>
+      <span class="tag" onclick="filterTag(this,'Self-Help')">Self-Help</span>
+    </div>
+  </div>
+
+  <div class="section" id="booksSection">
+    <div class="sec-hdr"><h2 class="sec-title">Stories from the community</h2></div>
+    <div class="book-grid" id="bookGrid"></div>
+  </div>
+</div>
+
+<!-- READER -->
+<div id="page-reader" class="page">
+  <div class="rdr-hero">
+    <div class="rdr-hero-in">
+      <div class="rdr-cover" id="rdrCover"></div>
+      <div class="rdr-meta" style="flex:1">
+        <h1 id="rdrTitle"></h1>
+        <div class="rdr-author-lnk" id="rdrAuthorLnk" onclick="goAuthorFromReader()"></div>
+        <div id="rdrTags"></div>
+      </div>
+    </div>
+    <div class="rdr-acts">
+      <button class="btn btn-ghost" style="color:rgba(237,229,247,.7)" onclick="goPg('home')">← Back</button>
+      <button class="btn btn-outline" style="color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25);font-size:13px" onclick="openM('copyrightModal')">⚠ Report Copyright</button>
+      <button class="btn btn-outline" style="color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25);font-size:13px" id="dmAuthorBtn" onclick="dmAuthor()">💬 Message Author</button>
+    </div>
+  </div>
+  <div class="rdr-body"><div id="rdrContent" class="rdr-content"></div></div>
+  <div id="commentsSection"></div>
+</div>
+
+<!-- AUTHOR PROFILE -->
+<div id="page-author" class="page">
+  <div class="auth-hero">
+    <div class="auth-hero-bg"></div>
+    <div class="avatar auth-av" id="authAv"></div>
+    <div class="auth-name" id="authName"></div>
+    <div class="auth-bio" id="authBio"></div>
+    <div class="auth-socials" id="authSocials"></div>
+    <div id="authDMBtnWrap" style="margin-top:10px"></div>
+    <div class="auth-stats">
+      <div><div class="auth-sv" id="authStatBooks">0</div><div class="auth-sl">Books</div></div>
+      <div><div class="auth-sv" id="authStatReads">0</div><div class="auth-sl">Reads</div></div>
+      <div><div class="auth-sv" id="authStatRating">—</div><div class="auth-sl">Avg Rating</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="sec-hdr"><h2 class="sec-title">Works</h2></div>
+    <div class="book-grid" id="authBookGrid"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page">
+  <div class="dash-grid">
+    <div>
+      <div class="stat-card" style="border-color:var(--gold);border-top:3px solid var(--gold)">
+        <div class="stat-lbl">Pending Earnings</div>
+        <div class="stat-val" id="dashEarn" style="color:var(--gold)">$0.00</div>
+        <div class="earn-bar"><div class="earn-fill" id="earnFill" style="width:0%"></div></div>
+        <div class="pay-note" id="payNote">$0 / $50 threshold</div>
+        <button class="btn btn-violet" style="width:100%;justify-content:center;margin-top:14px" onclick="reqPayout()">Request Payout</button>
+      </div>
+      <div class="stat-card"><div class="stat-lbl">Total Reads</div><div class="stat-val" id="dashReads">0</div><div class="stat-sub">across all your books</div></div>
+      <div class="stat-card"><div class="stat-lbl">Published Books</div><div class="stat-val" id="dashBkCt">0</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px;font-size:13px;color:var(--text3);line-height:1.75">
+        <strong style="color:var(--text);display:block;margin-bottom:8px">💜 Revenue model</strong>
+        <strong style="color:var(--violet)">$0.003</strong> per ad view · Ads every ~500 words · <strong style="color:var(--violet)">55%</strong> author share · $50 minimum payout
+      </div>
+    </div>
+    <div>
+      <div class="sec-hdr" style="margin-bottom:20px">
+        <h2 class="sec-title">My Books</h2>
+        <button class="btn btn-violet" onclick="goPg('publish')">✦ New Book</button>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden">
+        <table class="dash-table"><thead><tr><th>Title</th><th>Status</th><th>Reads</th><th>Rating</th><th>Earnings</th><th></th></tr></thead>
+        <tbody id="dashBkBody"></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLISH -->
+<div id="page-publish" class="page">
+  <div class="subhdr"><div class="subhdr-in">
+    <button class="btn btn-ghost" onclick="goPg('dashboard')">← Back</button>
+    <h2 style="font-family:var(--f-serif);font-size:22px;font-weight:700">Share your story with the world</h2>
+  </div></div>
+  <div class="pub-grid">
+    <div>
+      <div class="fg"><label class="fl">Title *</label><input class="fi" id="pubTitle" placeholder="What is your story called?"></div>
+      <div class="fg"><label class="fl">Synopsis *</label><textarea class="fta" id="pubDesc" placeholder="Intrigue your readers in a few sentences…" style="min-height:90px"></textarea></div>
+      <div class="fg">
+        <label class="fl">Genre Tags *</label>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px" id="pubTagsSel"></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" id="pubTagOpts"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Your Story *</label>
+        <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
+          <div class="toolbar">
+            <button class="tbtn" onclick="fmtText('bold')"><b>B</b></button>
+            <button class="tbtn" onclick="fmtText('italic')"><i>I</i></button>
+            <button class="tbtn" onclick="insertChapter()">+ Chapter</button>
+            <button class="tbtn" onclick="insertAd()">📢 Ad break</button>
+          </div>
+          <textarea class="fta" id="pubContent" placeholder="Begin writing here…
+
+Use '--- Chapter One ---' to add chapter breaks.
+Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:none;border-radius:0;background:var(--bg);font-family:var(--f-serif);font-size:17px;line-height:1.85;padding:20px"></textarea>
+        </div>
+      </div>
+      <div id="origBox" style="display:none" class="orig-box orig-chk">
+        <h4 id="origTitle" style="font-size:13px;font-weight:600"></h4>
+        <p id="origMsg" style="font-size:12px;color:var(--text3);margin-top:3px"></p>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap">
+        <button class="btn btn-outline" onclick="checkOrig()">🔍 Check Originality</button>
+        <button class="btn btn-violet" onclick="publishBook()">Publish Story →</button>
+      </div>
+    </div>
+    <div>
+      <div class="fg">
+        <label class="fl">Cover Image</label>
+        <div class="cover-up" id="coverUp" onclick="document.getElementById('coverFile').click()">
+          <div class="cover-up-icon">📚</div>
+          <div class="cover-up-lbl">Click to upload cover<br><span style="font-size:11px;opacity:.6">400×600px JPG/PNG</span></div>
+          <div class="cover-up-over">Change cover</div>
+        </div>
+        <input type="file" id="coverFile" accept="image/*" style="display:none" onchange="prevCover(this)">
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px;font-size:13px;color:var(--text3);margin-top:16px;line-height:1.9">
+        <strong style="color:var(--text);display:block;margin-bottom:10px">📋 Posting guidelines</strong>
+        ✅ Must be your original work<br>✅ You hold the copyright<br>✅ Any genre, any length<br>❌ No plagiarised content<br>❌ No AI-generated text<br>❌ No copyrighted characters
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="page-admin" class="page">
+  <div class="admin-wrap">
+    <div style="margin-bottom:32px">
+      <h2 style="font-family:var(--f-serif);font-size:32px;font-weight:700">Admin Panel</h2>
+      <p style="color:var(--text3);margin-top:4px">Manage copyright claims, content, and users.</p>
+    </div>
+    <div class="admin-card">
+      <div class="admin-chdr">⚠ Copyright Claims <span class="badge bred" id="claimsBadge">0</span><button class="btn btn-ghost btn-sm" onclick="renderAdmin()">↺</button></div>
+      <div id="adminClaims"></div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-chdr">📚 All Books <span class="badge bv" id="adminBkBadge">0</span></div>
+      <div id="adminBooks"></div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-chdr">👥 Users <span class="badge bgray" id="adminUserBadge">0</span></div>
+      <div id="adminUsers"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div id="page-search" class="page">
+  <div class="section">
+    <div class="sec-hdr">
+      <h2 class="sec-title">Results: <em id="searchLabel" style="font-style:italic;color:var(--text3)"></em></h2>
+      <button class="btn btn-ghost" onclick="goPg('home')">← Home</button>
+    </div>
+    <div class="book-grid" id="searchGrid"></div>
+    <div id="noResults" class="hidden" style="text-align:center;padding:70px 0;color:var(--text3)">
+      <div style="font-size:52px;margin-bottom:16px">📭</div>
+      <h3 style="font-family:var(--f-serif);font-size:24px;margin-bottom:8px">No stories found</h3>
+      <p>Try different keywords or browse by genre.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /search page -->
+</div><!-- /app end, footer outside so it always shows -->
+
+<!-- ══ FOOTER ══ -->
+<footer class="site-footer" id="siteFooter">
+  <div class="footer-top">
+
+    <!-- Brand -->
+    <div class="footer-brand">
+      <div class="logo" onclick="goPg('home')" style="cursor:pointer">
+        <div class="logo-dot">✦</div>Thalia
+      </div>
+      <p>A publishing platform for everyone. No gatekeepers, no agents, no minimum follower count. Your story is valid — and it deserves to be read.</p>
+      <span class="footer-brand-tagline">"The muse of every story not yet told."</span>
+    </div>
+
+    <!-- Explore -->
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <button onclick="goPg('home')">Browse Stories</button>
+      <button onclick="filterTag(document.querySelector('.tags-strip .tag'),'Fiction')">Fiction</button>
+      <button onclick="filterTag(document.querySelector('.tags-strip .tag'),'Poetry')">Poetry</button>
+      <button onclick="filterTag(document.querySelector('.tags-strip .tag'),'Non-Fiction')">Non-Fiction</button>
+      <button onclick="filterTag(document.querySelector('.tags-strip .tag'),'Romance')">Romance</button>
+    </div>
+
+    <!-- Authors -->
+    <div class="footer-col">
+      <h4>For Authors</h4>
+      <button onclick="openM('registerModal')">Start Writing Free</button>
+      <button onclick="goPg('publish')">Publish a Story</button>
+      <button onclick="goPg('dashboard')">Dashboard</button>
+      <a href="mailto:authors@thalia.com">Author Support</a>
+    </div>
+
+    <!-- Contact -->
+    <div class="footer-col">
+      <h4>Contact Us</h4>
+      <div class="footer-contact">
+        <div class="footer-contact-title">✦ Get in touch</div>
+        <div class="footer-contact-row">
+          <span class="footer-contact-icon">📧</span>
+          <a href="mailto:hello@thalia.com">hello@thalia.com</a>
+        </div>
+        <div class="footer-contact-row">
+          <span class="footer-contact-icon">🛡</span>
+          <a href="mailto:legal@thalia.com">legal@thalia.com</a>
+        </div>
+        <div class="footer-contact-row">
+          <span class="footer-contact-icon">✍️</span>
+          <a href="mailto:authors@thalia.com">authors@thalia.com</a>
+        </div>
+        <div class="footer-contact-row">
+          <span class="footer-contact-icon">🐛</span>
+          <a href="mailto:support@thalia.com">support@thalia.com</a>
+        </div>
+        <div class="footer-contact-row" style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)">
+          <span class="footer-contact-icon">⏱</span>
+          <span style="font-size:12px;color:rgba(237,229,247,.5)">We reply within 48 hours</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-in">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <span>© 2025 Thalia. All rights reserved.</span>
+        <a href="mailto:legal@thalia.com">Privacy Policy</a>
+        <a href="mailto:legal@thalia.com">Terms of Service</a>
+        <a href="mailto:legal@thalia.com">Copyright Policy</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="footer-badge">✦ 55% author revenue share</span>
+        <span class="footer-badge">🔒 DMCA protected</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ DM PANEL ══ -->
+<div id="dmPanel" class="dm-panel">
+  <div class="dm-hdr">
+    <span class="dm-hdr-title">💬 Messages</span>
+    <button class="btn btn-ghost btn-sm" onclick="closeDM()">✕</button>
+  </div>
+  <!-- Conversation list -->
+  <div id="dmConvList" class="dm-list"></div>
+  <!-- Thread view (hidden until conv selected) -->
+  <div id="dmThread" class="dm-thread">
+    <div class="dm-thread-hdr">
+      <button class="btn btn-ghost btn-xs" onclick="closeDMThread()">←</button>
+      <div class="avatar" id="dmThreadAv" style="width:32px;height:32px;font-size:13px"></div>
+      <strong id="dmThreadName" style="font-size:14px"></strong>
+    </div>
+    <div class="dm-messages" id="dmMessages"></div>
+    <div class="dm-input-row">
+      <input class="dm-input" id="dmInput" placeholder="Write a message…" onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="dm-send" onclick="sendMsg()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODALS ══ -->
+
+<!-- Login -->
+<div class="overlay hidden" id="loginModal" onclick="if(event.target===this)closeM('loginModal')">
+  <div class="modal">
+    <div class="m-hdr"><h2 class="m-title">Welcome back</h2><button class="m-close" onclick="closeM('loginModal')">✕</button></div>
+    <div class="m-body">
+      <div class="fg"><label class="fl">Email</label><input class="fi" id="loginEmail" type="email" placeholder="your@email.com"></div>
+      <div class="fg"><label class="fl">Password</label><input class="fi" id="loginPass" type="password" placeholder="••••••••"><div class="ferr hidden" id="loginErr">Invalid email or password.</div></div>
+      <button class="btn btn-violet" style="width:100%;justify-content:center;padding:12px;font-size:15px" onclick="doLogin()">Sign in</button>
+      <div class="fdiv">or</div>
+      <p style="text-align:center;font-size:14px;color:var(--text3)">No account? <a href="#" onclick="swModal('loginModal','registerModal')" style="color:var(--plum-light)">Join Thalia free →</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Register -->
+<div class="overlay hidden" id="registerModal" onclick="if(event.target===this)closeM('registerModal')">
+  <div class="modal">
+    <div class="m-hdr"><h2 class="m-title">Become an author</h2><button class="m-close" onclick="closeM('registerModal')">✕</button></div>
+    <div class="m-body">
+      <div style="background:linear-gradient(135deg,var(--plum),var(--plum-mid));color:#fff;border-radius:var(--r);padding:14px 16px;margin-bottom:20px;font-size:14px;line-height:1.6">
+        ✦ <strong>You're already an author.</strong> You just haven't published yet. Join thousands of writers earning from their stories on Thalia.
+      </div>
+      <div class="fg"><label class="fl">Pen name or real name *</label><input class="fi" id="regName" placeholder="How readers will know you"></div>
+      <div class="fg"><label class="fl">Email *</label><input class="fi" id="regEmail" type="email" placeholder="your@email.com"></div>
+      <div class="fg"><label class="fl">Password *</label><input class="fi" id="regPass" type="password" placeholder="min. 8 characters"></div>
+      <div class="fg"><label class="fl">Short bio <span style="color:var(--text3)">(optional)</span></label><input class="fi" id="regBio" placeholder="Tell readers who you are…"></div>
+      <div class="fg">
+        <label class="fl">Social links <span style="color:var(--text3)">(optional)</span></label>
+        <div class="soc-inputs">
+          <div class="soc-row"><span class="soc-icon">𝕏</span><input class="fi" id="regTwitter" placeholder="Twitter/X username (no @)"></div>
+          <div class="soc-row"><span class="soc-icon">📷</span><input class="fi" id="regInstagram" placeholder="Instagram username"></div>
+          <div class="soc-row"><span class="soc-icon">🌐</span><input class="fi" id="regWebsite" placeholder="Website URL"></div>
+        </div>
+      </div>
+      <div style="font-size:12.5px;color:var(--text3);background:var(--surface2);padding:12px;border-radius:var(--r);margin-bottom:16px">By joining you confirm all content you publish is original and you hold the copyright.</div>
+      <div class="ferr hidden" id="regErr"></div>
+      <button class="btn btn-violet" style="width:100%;justify-content:center;padding:12px;font-size:15px" onclick="doRegister()">Create free account</button>
+      <div class="fdiv">or</div>
+      <p style="text-align:center;font-size:14px;color:var(--text3)">Have an account? <a href="#" onclick="swModal('registerModal','loginModal')" style="color:var(--plum-light)">Sign in →</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Profile -->
+<div class="overlay hidden" id="editProfileModal" onclick="if(event.target===this)closeM('editProfileModal')">
+  <div class="modal">
+    <div class="m-hdr"><h2 class="m-title">Edit Profile</h2><button class="m-close" onclick="closeM('editProfileModal')">✕</button></div>
+    <div class="m-body">
+      <div class="fg"><label class="fl">Display name</label><input class="fi" id="epName"></div>
+      <div class="fg"><label class="fl">Bio</label><textarea class="fta" id="epBio" style="min-height:80px"></textarea></div>
+      <div class="fg">
+        <label class="fl">Social links</label>
+        <div class="soc-inputs">
+          <div class="soc-row"><span class="soc-icon">𝕏</span><input class="fi" id="epTwitter" placeholder="Twitter/X (no @)"></div>
+          <div class="soc-row"><span class="soc-icon">📷</span><input class="fi" id="epInstagram" placeholder="Instagram"></div>
+          <div class="soc-row"><span class="soc-icon">🌐</span><input class="fi" id="epWebsite" placeholder="Website URL"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeM('editProfileModal')">Cancel</button>
+        <button class="btn btn-violet" style="flex:1;justify-content:center" onclick="saveProfile()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New DM (start conversation) -->
+<div class="overlay hidden" id="newDMModal" onclick="if(event.target===this)closeM('newDMModal')">
+  <div class="modal">
+    <div class="m-hdr"><h2 class="m-title">New Message</h2><button class="m-close" onclick="closeM('newDMModal')">✕</button></div>
+    <div class="m-body">
+      <div class="fg">
+        <label class="fl">Send to</label>
+        <div id="dmToInfo" style="display:flex;align-items:center;gap:12px;background:var(--surface2);padding:12px;border-radius:var(--r)">
+          <div class="avatar" id="dmToAv" style="width:36px;height:36px;font-size:15px"></div>
+          <strong id="dmToName"></strong>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Message *</label><textarea class="fta" id="newDMText" placeholder="Write your message…" style="min-height:100px"></textarea></div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeM('newDMModal')">Cancel</button>
+        <button class="btn btn-violet" style="flex:1;justify-content:center" onclick="sendNewDM()">Send →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Copyright Claim -->
+<div class="overlay hidden" id="copyrightModal" onclick="if(event.target===this)closeM('copyrightModal')">
+  <div class="modal">
+    <div class="m-hdr"><h2 class="m-title" style="color:var(--crimson)">⚠ Copyright Claim</h2><button class="m-close" onclick="closeM('copyrightModal')">✕</button></div>
+    <div class="m-body">
+      <div class="claim-step"><div class="claim-num">1</div><div><strong>Verify ownership</strong><br><span style="font-size:13px;color:var(--text3)">Only the rightful copyright holder may file.</span></div></div>
+      <div class="claim-step"><div class="claim-num">2</div><div><strong>Submit evidence</strong><br><span style="font-size:13px;color:var(--text3)">Provide proof of original authorship.</span></div></div>
+      <div class="claim-step"><div class="claim-num">3</div><div><strong>Review & takedown</strong><br><span style="font-size:13px;color:var(--text3)">Admin reviews within 48h.</span></div></div>
+      <div class="fg"><label class="fl">Legal name / org *</label><input class="fi" id="claimName"></div>
+      <div class="fg"><label class="fl">Contact email *</label><input class="fi" id="claimEmail" type="email"></div>
+      <div class="fg"><label class="fl">Description *</label><textarea class="fta" id="claimDesc" placeholder="Describe the infringement…"></textarea></div>
+      <div style="background:var(--surface2);border-radius:var(--r);padding:12px;font-size:12px;color:var(--text3);margin-bottom:18px">⚠ Filing a false claim is a legal offence. By submitting you confirm under penalty of perjury that you are the rightful copyright holder.</div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeM('copyrightModal')">Cancel</button>
+        <button class="btn btn-danger" style="flex:1;justify-content:center" onclick="submitClaim()">Submit Claim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ban Reason Modal -->
+<div class="overlay hidden" id="banModal" onclick="if(event.target===this)closeM('banModal')">
+  <div class="modal">
+    <div class="m-hdr"><h2 class="m-title" style="color:var(--crimson)">🚫 Ban User</h2><button class="m-close" onclick="closeM('banModal')">✕</button></div>
+    <div class="m-body">
+      <div id="banTargetInfo" style="display:flex;align-items:center;gap:12px;background:var(--surface2);padding:14px;border-radius:var(--r);margin-bottom:18px"></div>
+      <div class="fg"><label class="fl">Reason for ban *</label>
+        <select class="fsel" id="banReason">
+          <option value="">Select a reason…</option>
+          <option value="Copyright infringement">Repeated copyright infringement</option>
+          <option value="Plagiarism">Plagiarism</option>
+          <option value="Spam">Spam / low-quality content</option>
+          <option value="Harassment">Harassment of other users</option>
+          <option value="Harmful content">Harmful or illegal content</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Additional notes <span style="color:var(--text3)">(optional)</span></label><textarea class="fta" id="banNotes" style="min-height:80px" placeholder="Internal admin notes…"></textarea></div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeM('banModal')">Cancel</button>
+        <button class="btn btn-danger" style="flex:1;justify-content:center" onclick="confirmBan()">Ban User</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ══════════════════════════════════════════════
+//  CONSTANTS
+// ══════════════════════════════════════════════
+const AD_RATE = 0.003, PAYOUT_MIN = 50;
+const ALL_TAGS = ['Fiction','Mystery','Romance','Sci-Fi','Fantasy','Thriller','Horror','Non-Fiction','Poetry','Drama','Adventure','Self-Help','Biography','Historical','Comedy','Memoir'];
+const EMOJIS = ['📖','📚','✍️','🌟','🔮','🌊','🏔️','🌙','🔥','⚡','🌿','🎭','🗺️','📻','✉️'];
+
+// ══════════════════════════════════════════════
+//  SEED DATA
+// ══════════════════════════════════════════════
+const SEED_USERS = [
+  {id:'u1',name:'Thalia Admin',email:'admin@thalia.com',password:'admin123',bio:'Platform steward.',books:[],earnings:0,reads:0,isAdmin:true,banned:false,socials:{}},
+  {id:'u2',name:'Elena Vasquez',email:'elena@example.com',password:'pass123',bio:'Fantasy and speculative fiction. Three novels, countless notebooks.',books:['b1','b5'],earnings:7.36,reads:2454,isAdmin:false,banned:false,socials:{twitter:'elenavasquez',instagram:'elenavasquez_writes',website:'https://elenavasquez.com'}},
+  {id:'u3',name:'James Okonkwo',email:'james@example.com',password:'pass123',bio:'Short fiction and letters. Based in Lagos.',books:['b2','b6'],earnings:10.94,reads:3646,isAdmin:false,banned:false,socials:{twitter:'jamesokonkwo',website:'https://jamesokonkwo.ng'}},
+  {id:'u4',name:'Sarah Chen',email:'sarah@example.com',password:'pass123',bio:'Former athlete, now writer. Stories about people who run.',books:['b3'],earnings:2.96,reads:987,isAdmin:false,banned:false,socials:{instagram:'sarahchen_writes'}},
+  {id:'u5',name:'Priya Nair',email:'priya@example.com',password:'pass123',bio:'Marine biologist & climate fiction author.',books:['b4'],earnings:7.67,reads:2556,isAdmin:false,banned:false,socials:{twitter:'priyanairwrites',website:'https://priyanair.earth'}},
+];
+
+const SEED_BOOKS = [
+  {id:'b1',title:'The Midnight Cartographer',author:'u2',authorName:'Elena Vasquez',desc:'A cartographer discovers maps that predict the future.',tags:['Fantasy','Mystery'],reads:1842,earnings:5.52,emoji:'🗺️',cover:null,flagged:false,takedown:false,createdAt:Date.now()-864000000,comments:[
+    {id:'c1',userId:'u3',userName:'James Okonkwo',rating:5,text:"Absolutely spellbinding. The world-building is unlike anything I've read.",date:Date.now()-500000000},
+    {id:'c2',userId:'u4',userName:'Sarah Chen',rating:4,text:'Beautiful prose. Slight pacing issues mid-book but totally worth it.',date:Date.now()-300000000}
+  ],content:`--- Chapter One: The Map Room ---
+
+The smell of old paper and ink had always comforted Elena. She had spent most of her thirty-two years surrounded by maps — hand-drawn, machine-printed, satellite-rendered — and in their precise lines she found a clarity the real world never offered.
+
+But tonight, the map on her desk was different.
+
+It had arrived in a plain brown envelope, no return address, slipped under the door of her studio at the Institute. At first glance it resembled a standard topographical survey of the city. Then she noticed the timestamp in the corner.
+
+It was dated three months from now. And it showed a bridge that didn't exist yet.
+
+[AD]
+
+--- Chapter Two: The Sender ---
+
+She spent the night cross-referencing the map with every survey database she could access. The bridge wasn't in any planning document, any city proposal, any developer portfolio.
+
+Yet there it was — a precise architectural rendering, with load tolerances noted in the margins in handwriting she almost recognised.
+
+It wasn't until dawn that she saw the watermark: a compass rose with twelve points instead of eight. She had only ever seen that symbol in one place before. Her grandfather's studio. The studio that burned down twenty years ago, taking him with it.`},
+  {id:'b2',title:'Static & Silence',author:'u3',authorName:'James Okonkwo',desc:'Two strangers connect through a broken radio across an impossible distance.',tags:['Romance','Drama'],reads:3201,earnings:9.60,emoji:'📻',cover:null,flagged:false,takedown:false,createdAt:Date.now()-432000000,comments:[
+    {id:'c3',userId:'u5',userName:'Priya Nair',rating:5,text:"I cried. James writes with such warmth — every line feels earned.",date:Date.now()-200000000}
+  ],content:`--- Part One: Frequencies ---
+
+The radio had belonged to his father. It sat in the corner of the spare room like a patient animal — valves glowing amber at dusk, crackling with frequencies that came and went like weather.
+
+Marcus wasn't trying to reach anyone the first time he spoke into the microphone. He was just testing the old equipment, reading a recipe aloud from the newspaper.
+
+[AD]
+
+Her voice came back on 7.195 MHz, steady and amused.
+
+"That's not how you make jollof rice," she said.
+
+He nearly knocked the whole set off the table.`},
+  {id:'b3',title:'Eleven Seconds',author:'u4',authorName:'Sarah Chen',desc:'An Olympic sprinter uncovers corruption that goes all the way to the top.',tags:['Thriller','Non-Fiction'],reads:987,earnings:2.96,emoji:'🏃',cover:null,flagged:false,takedown:false,createdAt:Date.now()-172800000,comments:[],content:`--- The Race ---
+
+Eleven seconds. That is all that stands between Amara Diallo and everything she has worked for since she was seven years old.
+
+Eleven seconds and she will either become the fastest woman alive, or the woman who knew too much and ran anyway.
+
+[AD]
+
+The starting blocks feel different today. A slight give on the left, a micro-adjustment in the angle. She mentioned it to her coach. He told her it was nerves. She knows the difference between nerves and physics.
+
+The gun fires. She runs.`},
+  {id:'b4',title:'Everything Underwater',author:'u5',authorName:'Priya Nair',desc:'Climate fiction 2089: a marine biologist preserves the last coral reef archive.',tags:['Sci-Fi','Fiction'],reads:2556,earnings:7.67,emoji:'🌊',cover:null,flagged:false,takedown:false,createdAt:Date.now()-86400000,comments:[
+    {id:'c4',userId:'u2',userName:'Elena Vasquez',rating:5,text:"One of the most important books I've read. Priya makes you feel the weight of each disappearing species.",date:Date.now()-40000000}
+  ],content:`--- Year 2089. Indian Ocean ---
+
+The reef was not dead. That was the important thing Lena kept reminding herself as she descended through warming water.
+
+It was not dead. It was archived.
+
+Every polyp, every calcium lattice — mapped, catalogued, preserved in a server farm two kilometres below the surface in a vault her team had spent eleven years building.
+
+[AD]
+
+But archived was not alive. And alive was what the world needed.`},
+  {id:'b5',title:"The Cartographer's Ghost",author:'u2',authorName:'Elena Vasquez',desc:'A sequel novella — the maps show places that no longer exist.',tags:['Fantasy','Horror'],reads:612,earnings:1.84,emoji:'👻',cover:null,flagged:false,takedown:false,createdAt:Date.now()-50000000,comments:[],content:`A ghost does not know it is a ghost. That is the first thing they teach you at the Institute.
+
+A mapmaker traces a coastline. Another copies it. The ghost — the original error — becomes the coastline. The coastline becomes real.
+
+[AD]
+
+The maps arriving on her desk now had errors. But every time she tried to locate the source, the map would be different by morning. As if correcting itself. As if aware of her scrutiny.
+
+She started sleeping in the studio.`},
+  {id:'b6',title:'Letters from Nowhere',author:'u3',authorName:'James Okonkwo',desc:'Stories about letters written and never sent — and what happens when they arrive.',tags:['Fiction','Drama','Poetry'],reads:445,earnings:1.34,emoji:'✉️',cover:null,flagged:false,takedown:false,createdAt:Date.now()-20000000,comments:[
+    {id:'c5',userId:'u4',userName:'Sarah Chen',rating:4,text:'"To Whom It May Concern" made me put the book down and stare at the wall for ten minutes.',date:Date.now()-10000000}
+  ],content:`"To Whom It May Concern —
+
+I am writing from a place I cannot name to tell you something I should have said in person.
+
+You were right. About all of it.
+
+[AD]
+
+I am sending this letter to the last address I have for you, which is probably wrong. But I am sending it anyway.
+
+If it reaches you: hello. If it doesn't: it reached someone, and that someone will know that somewhere, a person they have never met wanted very badly to tell the truth.
+
+That seems like enough.
+
+— Someone who should have written sooner"`},
+];
+
+// Seed DM conversations
+const SEED_DMS = [
+  {id:'dm1',participants:['u2','u3'],messages:[
+    {from:'u3',text:"Elena, your maps book is incredible. How long did the worldbuilding take?",ts:Date.now()-86400000},
+    {from:'u2',text:"James! About three months of notes before I wrote a word. The compass-rose symbol was the key that unlocked everything.",ts:Date.now()-80000000},
+    {from:'u3',text:"That's the dedication. I can feel it on every page.",ts:Date.now()-76000000},
+  ]},
+];
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let S = {
+  books:[], users:[], claims:[], dms:[],
+  currentUser:null, viewBook:null,
+  pendingCover:null, selTags:[], pendingStars:0,
+  dmOpen:false, activeDM:null, banTargetId:null,
+};
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem('thalia_v3');
+    if(raw){const d=JSON.parse(raw);S.books=d.books||clone(SEED_BOOKS);S.users=d.users||clone(SEED_USERS);S.claims=d.claims||[];S.dms=d.dms||clone(SEED_DMS);}
+    else{S.books=clone(SEED_BOOKS);S.users=clone(SEED_USERS);S.claims=[];S.dms=clone(SEED_DMS);}
+  }catch{S.books=clone(SEED_BOOKS);S.users=clone(SEED_USERS);S.claims=[];S.dms=clone(SEED_DMS);}
+  const raw=localStorage.getItem('thalia_user');
+  if(raw){S.currentUser=JSON.parse(raw);syncUser();}
+  const th=localStorage.getItem('thalia_theme')||'light';
+  document.documentElement.setAttribute('data-theme',th);
+}
+function saveState(){localStorage.setItem('thalia_v3',JSON.stringify({books:S.books,users:S.users,claims:S.claims,dms:S.dms}));}
+function syncUser(){if(!S.currentUser)return;const u=S.users.find(x=>x.id===S.currentUser.id);if(u){S.currentUser={...u};localStorage.setItem('thalia_user',JSON.stringify(S.currentUser));}}
+function clone(x){return JSON.parse(JSON.stringify(x));}
+
+// ══════════════════════════════════════════════
+//  THEME
+// ══════════════════════════════════════════════
+function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme');const n=cur==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('thalia_theme',n);}
+
+// ══════════════════════════════════════════════
+//  BAN CHECK
+// ══════════════════════════════════════════════
+function checkBan(){
+  if(S.currentUser){const u=S.users.find(x=>x.id===S.currentUser.id);if(u&&u.banned){document.getElementById('app').classList.add('hidden');document.getElementById('banWall').classList.remove('hidden');return true;}}
+  document.getElementById('app').classList.remove('hidden');document.getElementById('banWall').classList.add('hidden');return false;
+}
+
+// ══════════════════════════════════════════════
+//  NAV
+// ══════════════════════════════════════════════
+function goPg(id){
+  if(checkBan())return;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='dashboard')renderDashboard();
+  if(id==='admin')renderAdmin();
+  if(id==='publish'){buildTagOpts();S.selTags=[];S.pendingCover=null;renderTagsSel();}
+}
+function toggleDD(){document.getElementById('avDD').classList.toggle('hidden');}
+function cDD(){document.getElementById('avDD').classList.add('hidden');}
+document.addEventListener('click',e=>{if(!e.target.closest('.nav-av-wrap'))cDD();});
+
+function updateNav(){
+  const u=S.currentUser;
+  document.getElementById('navGuest').classList.toggle('hidden',!!u);
+  document.getElementById('navUser').classList.toggle('hidden',!u);
+  if(u){const av=document.getElementById('navAv');av.textContent=u.name[0].toUpperCase();av.title=u.name;}
+  updateProofStats();updateDMDot();
+}
+function updateProofStats(){
+  const live=S.books.filter(b=>!b.takedown);
+  const reads=live.reduce((s,b)=>s+(b.reads||0),0);
+  const authors=new Set(live.map(b=>b.author)).size;
+  document.getElementById('hBooks').textContent=live.length;
+  document.getElementById('hReads').textContent=reads>=1000?(reads/1000).toFixed(1)+'k':reads;
+  document.getElementById('hAuthors').textContent=authors;
+}
+
+// ══════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const u=S.users.find(x=>x.email===email&&x.password===pass);
+  if(!u){document.getElementById('loginErr').classList.remove('hidden');return;}
+  document.getElementById('loginErr').classList.add('hidden');
+  S.currentUser={...u};localStorage.setItem('thalia_user',JSON.stringify(S.currentUser));
+  closeM('loginModal');updateNav();
+  if(u.banned){checkBan();return;}
+  toast(`Welcome back, ${u.name}! ✦`,'success');
+}
+function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const bio=document.getElementById('regBio').value.trim();
+  const tw=document.getElementById('regTwitter').value.trim();
+  const ig=document.getElementById('regInstagram').value.trim();
+  const wb=document.getElementById('regWebsite').value.trim();
+  const err=document.getElementById('regErr');
+  if(!name||!email||!pass){err.textContent='Please fill in all required fields.';err.classList.remove('hidden');return;}
+  if(pass.length<8){err.textContent='Password must be 8+ characters.';err.classList.remove('hidden');return;}
+  if(S.users.find(u=>u.email===email)){err.textContent='Email already in use.';err.classList.remove('hidden');return;}
+  err.classList.add('hidden');
+  const nu={id:'u'+Date.now(),name,email,password:pass,bio:bio||'Author on Thalia.',books:[],earnings:0,reads:0,isAdmin:false,banned:false,socials:{twitter:tw,instagram:ig,website:wb}};
+  S.users.push(nu);S.currentUser={...nu};
+  localStorage.setItem('thalia_user',JSON.stringify(S.currentUser));
+  saveState();closeM('registerModal');updateNav();
+  toast(`Welcome to Thalia, ${name}! Your story starts now. ✦`,'success');
+}
+function logout(){S.currentUser=null;localStorage.removeItem('thalia_user');updateNav();goPg('home');toast('Signed out.','info');}
+
+function openEditProfile(){
+  if(!S.currentUser)return;
+  const u=S.users.find(x=>x.id===S.currentUser.id);
+  document.getElementById('epName').value=u.name||'';
+  document.getElementById('epBio').value=u.bio||'';
+  document.getElementById('epTwitter').value=(u.socials||{}).twitter||'';
+  document.getElementById('epInstagram').value=(u.socials||{}).instagram||'';
+  document.getElementById('epWebsite').value=(u.socials||{}).website||'';
+  openM('editProfileModal');
+}
+function saveProfile(){
+  if(!S.currentUser)return;
+  const u=S.users.find(x=>x.id===S.currentUser.id);
+  u.name=document.getElementById('epName').value.trim()||u.name;
+  u.bio=document.getElementById('epBio').value.trim();
+  u.socials={twitter:document.getElementById('epTwitter').value.trim(),instagram:document.getElementById('epInstagram').value.trim(),website:document.getElementById('epWebsite').value.trim()};
+  S.currentUser={...u};localStorage.setItem('thalia_user',JSON.stringify(S.currentUser));
+  saveState();closeM('editProfileModal');updateNav();toast('Profile updated.','success');
+}
+
+// ══════════════════════════════════════════════
+//  BOOK CARDS
+// ══════════════════════════════════════════════
+function avgRating(b){const cs=(b.comments||[]).filter(c=>c.rating);if(!cs.length)return null;return(cs.reduce((s,c)=>s+c.rating,0)/cs.length).toFixed(1);}
+
+function bookCardHTML(b){
+  if(b.takedown)return'';
+  const cover=b.cover?`<img src="${b.cover}" alt="">`:`<div class="bcover-grad"></div><div class="bcover-emoji">${b.emoji||'📖'}</div>`;
+  const tags=(b.tags||[]).slice(0,2).map(t=>`<span class="btag">${t}</span>`).join('');
+  const r=avgRating(b);
+  return`<div class="book-card" onclick="openBook('${b.id}')">
+    <div class="book-cover">${cover}</div>
+    <div class="book-info">
+      <div class="book-title">${b.title}</div>
+      <div class="book-author">by <span onclick="event.stopPropagation();openAuthor('${b.author}')">${b.authorName}</span></div>
+      <div class="book-tags">${tags}</div>
+      <div class="book-meta">
+        <span class="book-reads">👁 ${(b.reads||0).toLocaleString()}</span>
+        ${r?`<span class="book-rating">★ ${r}</span>`:''}
+      </div>
+      ${b.flagged?'<div style="margin-top:6px"><span class="badge bred">⚠ Claimed</span></div>':''}
+    </div>
+  </div>`;
+}
+
+function renderGrid(books,tid){
+  const el=document.getElementById(tid);if(!el)return;
+  const html=books.filter(b=>!b.takedown).map(bookCardHTML).join('');
+  el.innerHTML=html||'<p style="color:var(--text3);grid-column:1/-1;padding:40px 0;text-align:center">No stories found.</p>';
+}
+
+// ══════════════════════════════════════════════
+//  BOOK READER
+// ══════════════════════════════════════════════
+function openBook(id){
+  const b=S.books.find(x=>x.id===id);
+  if(!b||b.takedown){toast('This story has been removed.','error');return;}
+  S.viewBook=b;
+  const cEl=document.getElementById('rdrCover');
+  cEl.innerHTML=b.cover?`<img src="${b.cover}" alt="">`:`<div style="font-size:36px;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--plum),var(--violet))">${b.emoji||'📖'}</div>`;
+  document.getElementById('rdrTitle').textContent=b.title;
+  document.getElementById('rdrAuthorLnk').innerHTML=`by <strong>${b.authorName}</strong> &nbsp;→ View profile`;
+  document.getElementById('rdrTags').innerHTML=(b.tags||[]).map(t=>`<span class="badge bv">${t}</span>`).join(' ')+(avgRating(b)?` <span style="color:var(--gold);font-size:13px;margin-left:8px">★ ${avgRating(b)}</span>`:'');
+  // Hide DM button if viewing own book
+  const dmBtn=document.getElementById('dmAuthorBtn');
+  if(S.currentUser&&S.currentUser.id===b.author)dmBtn.classList.add('hidden');
+  else{dmBtn.classList.remove('hidden');dmBtn.setAttribute('data-author',b.author);}
+  renderReaderContent(b);renderComments(b);
+  goPg('reader');recordRead(b);
+}
+
+function goAuthorFromReader(){if(S.viewBook)openAuthor(S.viewBook.author);}
+
+function renderReaderContent(b){
+  let html='';
+  if(b.flagged)html+=`<div class="claim-banner"><span style="font-size:20px">⚠️</span><div><strong style="color:var(--crimson)">Copyright claim in review</strong><br><span style="font-size:13px;color:var(--text3)">This content may be taken down pending admin review.</span></div></div>`;
+  for(const line of(b.content||'').split('\n')){
+    if(line.startsWith('--- ')&&line.endsWith(' ---'))html+=`<h2 class="chap-hdr">${line.slice(4,-4)}</h2>`;
+    else if(line.trim()==='[AD]')html+=`<div class="ad-block"><strong>Sponsored by Thalia Ads</strong>${b.authorName} earns 55% of this ad's revenue</div>`;
+    else if(line.trim())html+=`<p>${line}</p>`;
+  }
+  document.getElementById('rdrContent').innerHTML=html;
+}
+
+function recordRead(b){
+  const bk=S.books.find(x=>x.id===b.id);if(!bk)return;
+  bk.reads=(bk.reads||0)+1;
+  const words=(bk.content||'').split(/\s+/).length;
+  const earn=+((Math.max(1,Math.floor(words/500)))*AD_RATE).toFixed(4);
+  bk.earnings=+((bk.earnings||0)+earn).toFixed(4);
+  const au=S.users.find(u=>u.id===bk.author);
+  if(au){au.reads=(au.reads||0)+1;au.earnings=+((au.earnings||0)+earn).toFixed(4);}
+  syncUser();saveState();updateProofStats();
+}
+
+// ══════════════════════════════════════════════
+//  COMMENTS
+// ══════════════════════════════════════════════
+function renderComments(b){
+  const sec=document.getElementById('commentsSection');
+  const cs=b.comments||[];
+  let html=`<div style="max-width:680px;margin:0 auto;padding:0 24px 80px"><h2 style="font-family:var(--f-serif);font-size:24px;font-weight:700;margin-bottom:24px">Reviews <span style="font-size:18px;color:var(--text3)">(${cs.length})</span></h2>`;
+  if(S.currentUser){
+    html+=`<div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:32px">
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--text2)">Leave a review</div>
+      <div class="star-row" id="starRow">${[1,2,3,4,5].map(n=>`<span class="star" onclick="setStar(${n})">★</span>`).join('')}</div>
+      <textarea class="fta" id="cmtText" placeholder="Share your thoughts…" style="min-height:90px"></textarea>
+      <button class="btn btn-violet btn-sm" style="margin-top:10px" onclick="submitComment('${b.id}')">Post review</button>
+    </div>`;
+  }else{
+    html+=`<div style="background:var(--surface);border:1px dashed var(--border2);border-radius:var(--r);padding:18px;text-align:center;margin-bottom:24px;color:var(--text3);font-size:14px"><a href="#" onclick="openM('loginModal')" style="color:var(--plum-light)">Sign in</a> to leave a review</div>`;
+  }
+  if(!cs.length)html+=`<p style="color:var(--text3);text-align:center;padding:32px 0">No reviews yet. Be the first!</p>`;
+  else html+=cs.map(c=>`<div class="cmt-card"><div class="avatar" style="width:38px;height:38px;font-size:15px">${(c.userName||'?')[0]}</div><div class="cmt-body"><div class="cmt-author">${c.userName}</div>${c.rating?`<div class="cmt-rating">${'★'.repeat(c.rating)}${'☆'.repeat(5-c.rating)} <span style="color:var(--text3);font-size:12px">${c.rating}/5</span></div>`:''}<div class="cmt-text">${c.text}</div><div class="cmt-date">${new Date(c.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div></div></div>`).join('');
+  sec.innerHTML=html+'</div>';
+  S.pendingStars=0;
+}
+function setStar(n){S.pendingStars=n;document.querySelectorAll('#starRow .star').forEach((el,i)=>el.classList.toggle('active',i<n));}
+function submitComment(bid){
+  if(!S.currentUser){openM('loginModal');return;}
+  const text=(document.getElementById('cmtText').value||'').trim();
+  if(!text){toast('Please write a comment.','error');return;}
+  const b=S.books.find(x=>x.id===bid);if(!b)return;
+  b.comments=b.comments||[];
+  b.comments.unshift({id:'cm'+Date.now(),userId:S.currentUser.id,userName:S.currentUser.name,rating:S.pendingStars||0,text,date:Date.now()});
+  saveState();renderComments(b);toast('Review posted!','success');
+}
+
+// ══════════════════════════════════════════════
+//  AUTHOR PROFILE
+// ══════════════════════════════════════════════
+function openAuthor(uid){
+  const u=S.users.find(x=>x.id===uid);if(!u)return;
+  const bks=S.books.filter(b=>b.author===uid&&!b.takedown);
+  const reads=bks.reduce((s,b)=>s+(b.reads||0),0);
+  const allR=bks.flatMap(b=>(b.comments||[]).filter(c=>c.rating).map(c=>c.rating));
+  const avg=allR.length?(allR.reduce((s,r)=>s+r,0)/allR.length).toFixed(1):'—';
+  document.getElementById('authAv').textContent=u.name[0].toUpperCase();
+  document.getElementById('authName').textContent=u.name;
+  document.getElementById('authBio').textContent=u.bio||'Author on Thalia.';
+  document.getElementById('authStatBooks').textContent=bks.length;
+  document.getElementById('authStatReads').textContent=reads>=1000?(reads/1000).toFixed(1)+'k':reads;
+  document.getElementById('authStatRating').textContent=avg;
+  const soc=u.socials||{};
+  document.getElementById('authSocials').innerHTML=
+    (soc.twitter?`<a class="social-lnk" href="https://twitter.com/${soc.twitter}" target="_blank">𝕏 @${soc.twitter}</a>`:'')+
+    (soc.instagram?`<a class="social-lnk" href="https://instagram.com/${soc.instagram}" target="_blank">📷 @${soc.instagram}</a>`:'')+
+    (soc.website?`<a class="social-lnk" href="${soc.website}" target="_blank">🌐 Website</a>`:'');
+  // DM button — don't show for self
+  const dmWrap=document.getElementById('authDMBtnWrap');
+  if(S.currentUser&&S.currentUser.id!==uid){
+    dmWrap.innerHTML=`<button class="btn btn-outline" style="color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25)" onclick="openNewDM('${uid}')">💬 Message ${u.name}</button>`;
+  }else{dmWrap.innerHTML='';}
+  renderGrid(bks,'authBookGrid');
+  goPg('author');
+}
+function goMyProfile(){if(S.currentUser)openAuthor(S.currentUser.id);}
+
+// ══════════════════════════════════════════════
+//  DMs
+// ══════════════════════════════════════════════
+function toggleDM(){
+  if(!S.currentUser){openM('loginModal');return;}
+  S.dmOpen=!S.dmOpen;
+  document.getElementById('dmPanel').classList.toggle('open',S.dmOpen);
+  if(S.dmOpen){renderDMList();closeDMThread();}
+}
+function closeDM(){S.dmOpen=false;document.getElementById('dmPanel').classList.remove('open');}
+
+function getMyConvs(){
+  if(!S.currentUser)return[];
+  return S.dms.filter(d=>d.participants.includes(S.currentUser.id));
+}
+
+function updateDMDot(){
+  if(!S.currentUser){document.getElementById('dmDot').classList.add('hidden');return;}
+  const hasUnread=getMyConvs().some(d=>{
+    const lastMsg=d.messages[d.messages.length-1];
+    return lastMsg&&lastMsg.from!==S.currentUser.id&&!lastMsg.read;
+  });
+  document.getElementById('dmDot').classList.toggle('hidden',!hasUnread);
+}
+
+function renderDMList(){
+  const convs=getMyConvs();
+  const list=document.getElementById('dmConvList');
+  if(!convs.length){list.innerHTML=`<div class="dm-empty"><div class="dm-empty-icon">💬</div><div style="font-weight:600">No messages yet</div><div style="font-size:13px;color:var(--text3)">Message an author from their profile or a book page.</div></div>`;return;}
+  list.innerHTML=convs.map(d=>{
+    const otherId=d.participants.find(p=>p!==S.currentUser.id);
+    const other=S.users.find(u=>u.id===otherId);
+    const last=d.messages[d.messages.length-1];
+    const unread=last&&last.from!==S.currentUser.id&&!last.read;
+    return`<div class="dm-conv-item${S.activeDM===d.id?' active':''}" onclick="openDMThread('${d.id}')">
+      <div class="avatar" style="width:36px;height:36px;font-size:14px">${other?other.name[0]:'?'}</div>
+      <div style="flex:1;min-width:0">
+        <div class="dm-conv-name">${other?other.name:'Unknown'}</div>
+        <div class="dm-conv-preview">${last?last.text:'No messages'}</div>
+      </div>
+      ${last?`<div class="dm-conv-time">${timeSince(last.ts)}</div>`:''}
+      ${unread?'<div class="dm-unread"></div>':''}
+    </div>`;
+  }).join('');
+}
+
+function openDMThread(dmId){
+  S.activeDM=dmId;
+  const d=S.dms.find(x=>x.id===dmId);if(!d)return;
+  const otherId=d.participants.find(p=>p!==S.currentUser.id);
+  const other=S.users.find(u=>u.id===otherId);
+  document.getElementById('dmConvList').style.display='none';
+  const thread=document.getElementById('dmThread');thread.classList.add('open');
+  document.getElementById('dmThreadAv').textContent=other?other.name[0]:'?';
+  document.getElementById('dmThreadName').textContent=other?other.name:'Unknown';
+  // Mark as read
+  d.messages.forEach(m=>{if(m.from!==S.currentUser.id)m.read=true;});
+  saveState();updateDMDot();
+  renderDMMessages(d);
+}
+
+function renderDMMessages(d){
+  const el=document.getElementById('dmMessages');
+  el.innerHTML=d.messages.map(m=>{
+    const isMe=m.from===S.currentUser.id;
+    return`<div style="display:flex;flex-direction:column;align-items:${isMe?'flex-end':'flex-start'}">
+      <div class="dm-msg ${isMe?'me':'them'}">${m.text}<div class="dm-msg-time">${timeSince(m.ts)}</div></div>
+    </div>`;
+  }).join('');
+  el.scrollTop=el.scrollHeight;
+}
+
+function closeDMThread(){
+  S.activeDM=null;
+  document.getElementById('dmConvList').style.display='';
+  document.getElementById('dmThread').classList.remove('open');
+}
+
+function sendMsg(){
+  if(!S.currentUser||!S.activeDM)return;
+  const input=document.getElementById('dmInput');
+  const text=(input.value||'').trim();if(!text)return;
+  const d=S.dms.find(x=>x.id===S.activeDM);if(!d)return;
+  d.messages.push({from:S.currentUser.id,text,ts:Date.now(),read:false});
+  input.value='';saveState();
+  renderDMMessages(d);
+  // update list preview
+  renderDMList();
+}
+
+function openNewDM(targetUserId){
+  const u=S.users.find(x=>x.id===targetUserId);if(!u)return;
+  document.getElementById('dmToAv').textContent=u.name[0];
+  document.getElementById('dmToName').textContent=u.name;
+  document.getElementById('newDMText').value='';
+  document.getElementById('newDMModal').setAttribute('data-target',targetUserId);
+  openM('newDMModal');
+}
+
+function dmAuthor(){
+  const btn=document.getElementById('dmAuthorBtn');
+  const authorId=btn.getAttribute('data-author');
+  if(!S.currentUser){openM('loginModal');return;}
+  if(!authorId)return;
+  openNewDM(authorId);
+}
+
+function sendNewDM(){
+  const targetId=document.getElementById('newDMModal').getAttribute('data-target');
+  const text=(document.getElementById('newDMText').value||'').trim();
+  if(!text){toast('Please write a message.','error');return;}
+  if(!S.currentUser)return;
+  // Find existing conversation
+  let conv=S.dms.find(d=>d.participants.includes(S.currentUser.id)&&d.participants.includes(targetId));
+  if(!conv){conv={id:'dm'+Date.now(),participants:[S.currentUser.id,targetId],messages:[]};S.dms.push(conv);}
+  conv.messages.push({from:S.currentUser.id,text,ts:Date.now(),read:false});
+  saveState();closeM('newDMModal');
+  S.dmOpen=true;document.getElementById('dmPanel').classList.add('open');
+  renderDMList();openDMThread(conv.id);
+  toast('Message sent!','success');
+}
+
+function timeSince(ts){
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return'now';if(s<3600)return Math.floor(s/60)+'m';
+  if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';
+}
+
+// ══════════════════════════════════════════════
+//  SEARCH & FILTER
+// ══════════════════════════════════════════════
+function doSearch(){
+  const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();if(!q)return;
+  document.getElementById('searchLabel').textContent=`"${q}"`;
+  const res=S.books.filter(b=>!b.takedown&&(b.title.toLowerCase().includes(q)||b.authorName.toLowerCase().includes(q)||b.desc.toLowerCase().includes(q)||(b.tags||[]).some(t=>t.toLowerCase().includes(q))));
+  renderGrid(res,'searchGrid');
+  document.getElementById('noResults').classList.toggle('hidden',res.length>0);
+  goPg('search');
+}
+function filterTag(el,tag){
+  document.querySelectorAll('.tags-strip .tag').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  const bks=tag==='all'?S.books:S.books.filter(b=>!b.takedown&&(b.tags||[]).includes(tag));
+  renderGrid(bks,'bookGrid');goPg('home');
+  setTimeout(()=>document.getElementById('booksSection').scrollIntoView({behavior:'smooth'}),80);
+}
+function scrollToBooks(){goPg('home');setTimeout(()=>document.getElementById('booksSection').scrollIntoView({behavior:'smooth'}),80);}
+document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+
+// ══════════════════════════════════════════════
+//  PUBLISH
+// ══════════════════════════════════════════════
+function buildTagOpts(){const el=document.getElementById('pubTagOpts');if(!el)return;el.innerHTML=ALL_TAGS.map(t=>`<span class="tag" onclick="togglePubTag(this,'${t}')">${t}</span>`).join('');}
+function togglePubTag(el,tag){const i=S.selTags.indexOf(tag);if(i>-1){S.selTags.splice(i,1);el.classList.remove('active');}else if(S.selTags.length<5){S.selTags.push(tag);el.classList.add('active');}renderTagsSel();}
+function renderTagsSel(){document.getElementById('pubTagsSel').innerHTML=S.selTags.map(t=>`<span class="badge bv">${t} <span style="cursor:pointer;margin-left:4px" onclick="removePubTag('${t}')">×</span></span>`).join('');}
+function removePubTag(tag){S.selTags=S.selTags.filter(t=>t!==tag);document.querySelectorAll('#pubTagOpts .tag').forEach(el=>{if(el.textContent.trim()===tag)el.classList.remove('active');});renderTagsSel();}
+function prevCover(input){if(!input.files||!input.files[0])return;const r=new FileReader();r.onload=e=>{S.pendingCover=e.target.result;const up=document.getElementById('coverUp');let img=up.querySelector('img');if(!img){img=document.createElement('img');up.prepend(img);}img.src=e.target.result;up.querySelector('.cover-up-icon').style.display='none';up.querySelector('.cover-up-lbl').style.display='none';};r.readAsDataURL(input.files[0]);}
+function fmtText(t){const ta=document.getElementById('pubContent');const s=ta.selectionStart,e=ta.selectionEnd;if(s===e)return;const sel=ta.value.slice(s,e);ta.value=ta.value.slice(0,s)+(t==='bold'?`**${sel}**`:`_${sel}_`)+ta.value.slice(e);}
+function insertChapter(){const ta=document.getElementById('pubContent');const p=ta.selectionStart;ta.value=ta.value.slice(0,p)+'\n\n--- Chapter: Title ---\n\n'+ta.value.slice(p);}
+function insertAd(){const ta=document.getElementById('pubContent');const p=ta.selectionStart;ta.value=ta.value.slice(0,p)+'\n[AD]\n'+ta.value.slice(p);}
+function checkOrig(){
+  const content=(document.getElementById('pubContent').value||'').trim();
+  const box=document.getElementById('origBox');box.style.display='block';
+  if(content.length<100){box.className='orig-box orig-fail';document.getElementById('origTitle').textContent='⚠ Too short';document.getElementById('origMsg').textContent='Write at least 100 characters.';return;}
+  box.className='orig-box orig-chk';document.getElementById('origTitle').textContent='⏳ Scanning…';document.getElementById('origMsg').textContent='Cross-referencing against known works…';
+  setTimeout(()=>{box.className='orig-box orig-pass';document.getElementById('origTitle').textContent='✅ Originality check passed';document.getElementById('origMsg').textContent='No significant matches found. Your work appears original.';toast('Originality check passed!','success');},1600);
+}
+function publishBook(){
+  if(!S.currentUser){openM('registerModal');return;}
+  const title=(document.getElementById('pubTitle').value||'').trim();
+  const desc=(document.getElementById('pubDesc').value||'').trim();
+  const content=(document.getElementById('pubContent').value||'').trim();
+  if(!title){toast('Please enter a title.','error');return;}if(!desc){toast('Please add a synopsis.','error');return;}
+  if(content.length<100){toast('Content too short (min 100 chars).','error');return;}if(!S.selTags.length){toast('Select at least one genre.','error');return;}
+  const bk={id:'b'+Date.now(),title,desc,content,tags:[...S.selTags],author:S.currentUser.id,authorName:S.currentUser.name,reads:0,earnings:0,comments:[],emoji:EMOJIS[Math.floor(Math.random()*EMOJIS.length)],cover:S.pendingCover||null,flagged:false,takedown:false,createdAt:Date.now()};
+  S.books.unshift(bk);
+  const u=S.users.find(x=>x.id===S.currentUser.id);if(u){u.books=u.books||[];u.books.push(bk.id);}
+  saveState();renderGrid(S.books,'bookGrid');updateProofStats();
+  document.getElementById('pubTitle').value='';document.getElementById('pubDesc').value='';document.getElementById('pubContent').value='';
+  S.selTags=[];S.pendingCover=null;renderTagsSel();buildTagOpts();document.getElementById('origBox').style.display='none';
+  const up=document.getElementById('coverUp');const img=up.querySelector('img');if(img)img.remove();up.querySelector('.cover-up-icon').style.display='';up.querySelector('.cover-up-lbl').style.display='';
+  toast(`"${title}" is now live on Thalia! ✦`,'success');goPg('dashboard');
+}
+
+// ══════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════
+function renderDashboard(){
+  if(!S.currentUser)return;
+  const u=S.users.find(x=>x.id===S.currentUser.id);if(!u)return;
+  const bks=S.books.filter(b=>b.author===u.id);
+  const reads=bks.reduce((s,b)=>s+(b.reads||0),0);
+  const earn=bks.reduce((s,b)=>s+(b.earnings||0),0);
+  document.getElementById('dashEarn').textContent='$'+earn.toFixed(2);
+  document.getElementById('dashReads').textContent=reads.toLocaleString();
+  document.getElementById('dashBkCt').textContent=bks.filter(b=>!b.takedown).length;
+  document.getElementById('earnFill').style.width=Math.min(100,(earn/PAYOUT_MIN)*100)+'%';
+  document.getElementById('payNote').textContent=`$${earn.toFixed(2)} / $${PAYOUT_MIN} threshold`;
+  const tbody=document.getElementById('dashBkBody');
+  if(!bks.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text3)">No stories yet. <a href="#" onclick="goPg('publish')" style="color:var(--plum-light)">Publish your first →</a></td></tr>`;return;}
+  tbody.innerHTML=bks.map(b=>{const r=avgRating(b);return`<tr><td><strong>${b.title}</strong><br><span style="font-size:11px;color:var(--text3)">${(b.tags||[]).join(', ')}</span></td><td>${b.takedown?'<span class="badge bred">Removed</span>':b.flagged?'<span class="badge bred">⚠</span>':'<span class="badge bgrn">Live</span>'}</td><td style="font-family:var(--f-mono)">${(b.reads||0).toLocaleString()}</td><td style="color:var(--gold)">${r?`★ ${r}`:'-'}</td><td style="font-family:var(--f-mono);color:var(--gold)">$${(b.earnings||0).toFixed(2)}</td><td><button class="btn btn-ghost btn-sm" onclick="openBook('${b.id}')">Read</button></td></tr>`;}).join('');
+}
+function reqPayout(){
+  if(!S.currentUser)return;
+  const earn=S.books.filter(b=>b.author===S.currentUser.id).reduce((s,b)=>s+(b.earnings||0),0);
+  if(earn<PAYOUT_MIN){toast(`Minimum $${PAYOUT_MIN}. You have $${earn.toFixed(2)}.`,'error');return;}
+  toast('Payout requested! Processing in 5–7 business days.','success');
+}
+
+// ══════════════════════════════════════════════
+//  COPYRIGHT
+// ══════════════════════════════════════════════
+function submitClaim(){
+  const name=(document.getElementById('claimName').value||'').trim();
+  const email=(document.getElementById('claimEmail').value||'').trim();
+  const desc=(document.getElementById('claimDesc').value||'').trim();
+  if(!name||!email||!desc){toast('Please fill in all fields.','error');return;}
+  const claim={id:'cl'+Date.now(),bookId:S.viewBook.id,bookTitle:S.viewBook.title,claimant:name,email,desc,status:'pending',date:Date.now()};
+  S.claims.push(claim);
+  const b=S.books.find(x=>x.id===S.viewBook.id);if(b)b.flagged=true;
+  saveState();closeM('copyrightModal');
+  toast('Copyright claim submitted. Admin review within 48h.','info');
+  if(S.viewBook)renderReaderContent(S.viewBook);
+}
+
+// ══════════════════════════════════════════════
+//  ADMIN
+// ══════════════════════════════════════════════
+function renderAdmin(){
+  const pending=S.claims.filter(c=>c.status==='pending');
+  document.getElementById('claimsBadge').textContent=pending.length+' pending';
+  document.getElementById('adminBkBadge').textContent=S.books.length+' total';
+  document.getElementById('adminUserBadge').textContent=S.users.length+' users';
+
+  document.getElementById('adminClaims').innerHTML=pending.length
+    ?pending.map(c=>`<div class="admin-row"><div style="flex:1"><strong>${c.bookTitle}</strong><br><span style="font-size:12px;color:var(--text3)">By ${c.claimant} (${c.email})</span><br><span style="font-size:12px">${c.desc.slice(0,120)}…</span></div><button class="btn btn-danger btn-xs" onclick="approveAndTakedown('${c.id}')">Approve &amp; Remove</button><button class="btn btn-outline btn-xs" onclick="dismissClaim('${c.id}')">Dismiss</button></div>`).join('')
+    :'<div class="admin-row" style="color:var(--text3)">No pending claims.</div>';
+
+  document.getElementById('adminBooks').innerHTML=S.books.map(b=>`<div class="admin-row"><span style="font-size:18px">${b.emoji||'📖'}</span><div style="flex:1"><strong>${b.title}</strong> <span style="font-size:12px;color:var(--text3)">by ${b.authorName} · ${(b.reads||0).toLocaleString()} reads</span></div>${b.takedown?'<span class="badge bred">Down</span>':b.flagged?'<span class="badge bred">⚠</span>':'<span class="badge bgrn">Live</span>'}${!b.takedown?`<button class="btn btn-danger btn-xs" onclick="adminTakedown('${b.id}')">Remove</button>`:`<button class="btn btn-outline btn-xs" onclick="adminRestore('${b.id}')">Restore</button>`}</div>`).join('');
+
+  document.getElementById('adminUsers').innerHTML=S.users.map(u=>`<div class="admin-row">
+    <div class="avatar" style="width:34px;height:34px;font-size:14px">${u.name[0]}</div>
+    <div style="flex:1"><strong>${u.name}</strong>${u.isAdmin?' <span class="badge bg2">Admin</span>':''}${u.banned?` <span class="badge bred">Banned</span>`:''}<br><span style="font-size:12px;color:var(--text3)">${u.email} · ${(u.books||[]).length} books</span></div>
+    ${!u.isAdmin&&!u.banned?`<button class="btn btn-danger btn-xs" onclick="openBanModal('${u.id}')">🚫 Ban</button>`:''}
+    ${u.banned&&!u.isAdmin?`<button class="btn btn-sage btn-xs" onclick="unbanUser('${u.id}')">✓ Unban</button>`:''}
+  </div>`).join('');
+}
+
+function approveAndTakedown(cid){const c=S.claims.find(x=>x.id===cid);if(!c)return;c.status='approved';const b=S.books.find(x=>x.id===c.bookId);if(b){b.takedown=true;b.flagged=false;}saveState();renderAdmin();renderGrid(S.books,'bookGrid');toast(`"${c.bookTitle}" removed.`,'info');}
+function dismissClaim(cid){const c=S.claims.find(x=>x.id===cid);if(!c)return;c.status='dismissed';const b=S.books.find(x=>x.id===c.bookId);if(b)b.flagged=false;saveState();renderAdmin();toast('Claim dismissed.','info');}
+function adminTakedown(id){const b=S.books.find(x=>x.id===id);if(!b)return;b.takedown=true;saveState();renderAdmin();renderGrid(S.books,'bookGrid');toast('Book removed.','info');}
+function adminRestore(id){const b=S.books.find(x=>x.id===id);if(!b)return;b.takedown=false;b.flagged=false;saveState();renderAdmin();renderGrid(S.books,'bookGrid');toast('Book restored.','success');}
+
+function openBanModal(uid){
+  const u=S.users.find(x=>x.id===uid);if(!u)return;
+  S.banTargetId=uid;
+  document.getElementById('banTargetInfo').innerHTML=`<div class="avatar" style="width:36px;height:36px;font-size:15px">${u.name[0]}</div><div><strong>${u.name}</strong><br><span style="font-size:13px;color:var(--text3)">${u.email}</span></div>`;
+  document.getElementById('banReason').value='';document.getElementById('banNotes').value='';
+  openM('banModal');
+}
+function confirmBan(){
+  const reason=document.getElementById('banReason').value;
+  if(!reason){toast('Please select a reason.','error');return;}
+  const u=S.users.find(x=>x.id===S.banTargetId);if(!u)return;
+  u.banned=true;u.banReason=reason;u.banNotes=document.getElementById('banNotes').value;
+  // If this is the current user, show ban wall
+  if(S.currentUser&&S.currentUser.id===u.id){S.currentUser=null;localStorage.removeItem('thalia_user');}
+  saveState();closeM('banModal');renderAdmin();
+  toast(`${u.name} has been banned.`,'info');
+}
+function unbanUser(uid){
+  const u=S.users.find(x=>x.id===uid);if(!u)return;
+  u.banned=false;delete u.banReason;delete u.banNotes;
+  saveState();renderAdmin();toast(`${u.name} has been unbanned.`,'success');
+}
+
+// ══════════════════════════════════════════════
+//  MODALS
+// ══════════════════════════════════════════════
+function openM(id){document.getElementById(id).classList.remove('hidden');}
+function closeM(id){document.getElementById(id).classList.add('hidden');}
+function swModal(a,b){closeM(a);openM(b);}
+
+// ══════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════
+function toast(msg,type='info'){
+  const icons={success:'✓',error:'✕',info:'✦'};
+  const el=document.createElement('div');el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]}</span><span>${msg}</span>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>el.remove(),4200);
+}
+
+
+// Expose all functions to window for inline onclick handlers
+Object.assign(window, {
+  toggleTheme, goPg, toggleDD, cDD, updateNav,
+  doLogin, doRegister, logout, openEditProfile, saveProfile,
+  openBook, goAuthorFromReader, openAuthor, goMyProfile,
+  setStar, submitComment,
+  toggleDM, closeDM, openDMThread, closeDMThread, sendMsg, openNewDM, dmAuthor, sendNewDM,
+  doSearch, filterTag, scrollToBooks,
+  buildTagOpts, togglePubTag, removePubTag, prevCover, fmtText, insertChapter, insertAd, checkOrig, publishBook,
+  renderDashboard, reqPayout, submitClaim,
+  renderAdmin, approveAndTakedown, dismissClaim, adminTakedown, adminRestore, openBanModal, confirmBan, unbanUser,
+  openM, closeM, swModal, toast
+});
+
+// INIT
+loadState();
+checkBan();
+renderGrid(S.books,'bookGrid');
+updateNav();
+buildTagOpts();
+</script>
+</body>
+</html>
