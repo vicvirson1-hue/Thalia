@@ -337,6 +337,63 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .claim-step{display:flex;gap:14px;margin-bottom:16px}
 .claim-num{width:28px;height:28px;border-radius:50%;background:var(--crimson);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
 
+/* ── ADSENSE SIDEBAR LAYOUT ── */
+.with-sidebar {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 32px;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 24px;
+  align-items: start;
+}
+.sidebar-col {
+  position: sticky;
+  top: calc(var(--nav) + 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+/* The ad unit wrapper */
+.ad-unit {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+}
+.ad-unit-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text3);
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.ad-unit-placeholder {
+  background: var(--surface2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text3);
+  font-size: 12px;
+  text-align: center;
+  padding: 16px;
+}
+.ad-unit-placeholder .ad-ph-icon { font-size: 28px; opacity: .4; }
+/* 300x250 — Medium Rectangle */
+.ad-300x250 { width: 300px; }
+.ad-300x250 .ad-unit-placeholder { height: 250px; width: 268px; }
+/* 160x600 — Wide Skyscraper */
+.ad-160x600 { width: 160px; }
+.ad-160x600 .ad-unit-placeholder { height: 600px; width: 128px; }
+
 /* FOOTER */
 .site-footer{background:var(--plum);color:rgba(237,229,247,.7);margin-top:80px}
 .footer-top{max-width:1320px;margin:0 auto;padding:60px 24px 40px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px}
@@ -362,14 +419,25 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 @media(max-width:860px){
   .footer-top{grid-template-columns:1fr 1fr;gap:32px}
   .footer-brand{grid-column:1/-1}
-}
   .dash-grid,.pub-grid{grid-template-columns:1fr}
   .book-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
   .rdr-hero-in{flex-wrap:wrap}
   .dm-panel{width:100%;right:0;left:0}
   .hero-proof{gap:20px}
+  .with-sidebar{grid-template-columns:1fr}
+  .sidebar-col{display:none}
 }
 </style>
+
+<!-- ═══════════════════════════════════════════════════════════
+     GOOGLE ADSENSE SCRIPT
+     Step 1: Replace YOUR_PUB_ID with your ca-pub-XXXXXXXXXXXXXXXX
+     Step 2: Delete the  and  comment tags around the script
+     Step 3: Save and redeploy — ads go live automatically
+════════════════════════════════════════════════════════════ -->
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUB_ID" crossorigin="anonymous"></script>
+-->
 </head>
 <body>
 
@@ -481,10 +549,58 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
     </div>
   </div>
 
-  <div class="section" id="booksSection">
-    <div class="sec-hdr"><h2 class="sec-title">Stories from the community</h2></div>
-    <div class="book-grid" id="bookGrid"></div>
-  </div>
+  <div class="with-sidebar" id="booksSection" style="padding-top:48px;padding-bottom:48px">
+    <!-- Main content column -->
+    <div>
+      <div class="sec-hdr"><h2 class="sec-title">Stories from the community</h2></div>
+      <div class="book-grid" id="bookGrid"></div>
+    </div>
+
+    <!-- Right sidebar — Adsterra ad units -->
+    <div class="sidebar-col">
+
+      <!-- ═══════════════════════════════════════════
+           AD SLOT 1 — Homepage sidebar — 300×250
+           PASTE your Adsterra 300x250 code below,
+           replacing the placeholder div entirely.
+      ════════════════════════════════════════════ -->
+      <div class="ad-unit ad-300x250">
+        <div class="ad-unit-label">Advertisement</div>
+        <script>
+          atOptions = {
+            'key' : '40248aa8a3372469020608e1be0c352f',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/40248aa8a3372469020608e1be0c352f/invoke.js"></script>
+        <!-- END AD SLOT 1 -->
+      </div>
+
+      <!-- ═══════════════════════════════════════════
+           AD SLOT 2 — Homepage sidebar — 160×600
+           PASTE your Adsterra 160x600 code below,
+           replacing the placeholder div entirely.
+      ════════════════════════════════════════════ -->
+      <div class="ad-unit ad-160x600">
+        <div class="ad-unit-label">Advertisement</div>
+        <script>
+          atOptions = {
+            'key' : '2a76266bdcf748eb88ee696b8c356418',
+            'format' : 'iframe',
+            'height' : 600,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/2a76266bdcf748eb88ee696b8c356418/invoke.js"></script>
+        <!-- END AD SLOT 2 -->
+      </div>
+
+    </div><!-- /sidebar-col -->
+  </div><!-- /with-sidebar -->
 </div>
 
 <!-- READER -->
@@ -504,8 +620,62 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
       <button class="btn btn-outline" style="color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25);font-size:13px" id="dmAuthorBtn" onclick="dmAuthor()">💬 Message Author</button>
     </div>
   </div>
-  <div class="rdr-body"><div id="rdrContent" class="rdr-content"></div></div>
-  <div id="commentsSection"></div>
+  <!-- Reader body with sidebar -->
+  <div class="with-sidebar" style="padding-top:0">
+
+    <!-- Reading content column -->
+    <div>
+      <div class="rdr-body" style="max-width:100%;padding-left:0;padding-right:0">
+        <div id="rdrContent" class="rdr-content"></div>
+      </div>
+      <div id="commentsSection"></div>
+    </div>
+
+    <!-- Right sidebar — Adsterra ad units (sticky, follows scroll) -->
+    <div class="sidebar-col">
+
+      <!-- ═══════════════════════════════════════════
+           AD SLOT 3 — Reader sidebar — 300×250
+           PASTE your Adsterra 300x250 code below,
+           replacing the placeholder div entirely.
+      ════════════════════════════════════════════ -->
+      <div class="ad-unit ad-300x250">
+        <div class="ad-unit-label">Advertisement</div>
+        <script>
+          atOptions = {
+            'key' : '40248aa8a3372469020608e1be0c352f',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/40248aa8a3372469020608e1be0c352f/invoke.js"></script>
+        <!-- END AD SLOT 3 -->
+      </div>
+
+      <!-- ═══════════════════════════════════════════
+           AD SLOT 4 — Reader sidebar — 160×600
+           PASTE your Adsterra 160x600 code below,
+           replacing the placeholder div entirely.
+      ════════════════════════════════════════════ -->
+      <div class="ad-unit ad-160x600">
+        <div class="ad-unit-label">Advertisement</div>
+        <script>
+          atOptions = {
+            'key' : '2a76266bdcf748eb88ee696b8c356418',
+            'format' : 'iframe',
+            'height' : 600,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/2a76266bdcf748eb88ee696b8c356418/invoke.js"></script>
+        <!-- END AD SLOT 4 -->
+      </div>
+
+    </div><!-- /sidebar-col -->
+  </div><!-- /with-sidebar -->
 </div>
 
 <!-- AUTHOR PROFILE -->
@@ -687,7 +857,7 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
       <button onclick="openM('registerModal')">Start Writing Free</button>
       <button onclick="goPg('publish')">Publish a Story</button>
       <button onclick="goPg('dashboard')">Dashboard</button>
-      <a href="mailto:authors@thalia.com">Author Support</a>
+      <a href="/cdn-cgi/l/email-protection#e48591908c8b9697a4908c85888d85ca878b89">Author Support</a>
     </div>
 
     <!-- Contact -->
@@ -697,19 +867,19 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
         <div class="footer-contact-title">✦ Get in touch</div>
         <div class="footer-contact-row">
           <span class="footer-contact-icon">📧</span>
-          <a href="mailto:hello@thalia.com">hello@thalia.com</a>
+          <a href="/cdn-cgi/l/email-protection#0f676a6363604f7b676e63666e216c6062"><span class="__cf_email__" data-cfemail="88e0ede4e4e7c8fce0e9e4e1e9a6ebe7e5">[email&#160;protected]</span></a>
         </div>
         <div class="footer-contact-row">
           <span class="footer-contact-icon">🛡</span>
-          <a href="mailto:legal@thalia.com">legal@thalia.com</a>
+          <a href="/cdn-cgi/l/email-protection#04686163656844706c65686d652a676b69"><span class="__cf_email__" data-cfemail="f69a9391979ab6829e979a9f97d895999b">[email&#160;protected]</span></a>
         </div>
         <div class="footer-contact-row">
           <span class="footer-contact-icon">✍️</span>
-          <a href="mailto:authors@thalia.com">authors@thalia.com</a>
+          <a href="/cdn-cgi/l/email-protection#20415554484f5253605448414c49410e434f4d"><span class="__cf_email__" data-cfemail="573622233f38252417233f363b3e367934383a">[email&#160;protected]</span></a>
         </div>
         <div class="footer-contact-row">
           <span class="footer-contact-icon">🐛</span>
-          <a href="mailto:support@thalia.com">support@thalia.com</a>
+          <a href="/cdn-cgi/l/email-protection#72010702021d000632061a131e1b135c111d1f"><span class="__cf_email__" data-cfemail="10636560607f6264506478717c79713e737f7d">[email&#160;protected]</span></a>
         </div>
         <div class="footer-contact-row" style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)">
           <span class="footer-contact-icon">⏱</span>
@@ -724,9 +894,9 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
     <div class="footer-bottom-in">
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
         <span>© 2025 Thalia. All rights reserved.</span>
-        <a href="mailto:legal@thalia.com">Privacy Policy</a>
-        <a href="mailto:legal@thalia.com">Terms of Service</a>
-        <a href="mailto:legal@thalia.com">Copyright Policy</a>
+        <a href="/cdn-cgi/l/email-protection#f49891939598b4809c95989d95da979b99">Privacy Policy</a>
+        <a href="/cdn-cgi/l/email-protection#f59990929499b5819d94999c94db969a98">Terms of Service</a>
+        <a href="/cdn-cgi/l/email-protection#dbb7bebcbab79bafb3bab7b2baf5b8b4b6">Copyright Policy</a>
       </div>
       <div style="display:flex;align-items:center;gap:12px">
         <span class="footer-badge">✦ 55% author revenue share</span>
@@ -896,7 +1066,7 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
 
 <div id="toasts"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══════════════════════════════════════════════
 //  CONSTANTS
 // ══════════════════════════════════════════════
@@ -1571,26 +1741,4 @@ function toast(msg,type='info'){
 }
 
 
-// Expose all functions to window for inline onclick handlers
-Object.assign(window, {
-  toggleTheme, goPg, toggleDD, cDD, updateNav,
-  doLogin, doRegister, logout, openEditProfile, saveProfile,
-  openBook, goAuthorFromReader, openAuthor, goMyProfile,
-  setStar, submitComment,
-  toggleDM, closeDM, openDMThread, closeDMThread, sendMsg, openNewDM, dmAuthor, sendNewDM,
-  doSearch, filterTag, scrollToBooks,
-  buildTagOpts, togglePubTag, removePubTag, prevCover, fmtText, insertChapter, insertAd, checkOrig, publishBook,
-  renderDashboard, reqPayout, submitClaim,
-  renderAdmin, approveAndTakedown, dismissClaim, adminTakedown, adminRestore, openBanModal, confirmBan, unbanUser,
-  openM, closeM, swModal, toast
-});
-
-// INIT
-loadState();
-checkBan();
-renderGrid(S.books,'bookGrid');
-updateNav();
-buildTagOpts();
-</script>
-</body>
-</html>
+// Expose all functions to window for inline
