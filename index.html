@@ -6,63 +6,50 @@
 <title>Thalia — Everyone Has a Story</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root {
-  --plum:       #3d1f5e;
-  --plum-mid:   #5a2d82;
-  --plum-light: #7b4fa6;
-  --plum-pale:  #ede5f7;
-  --plum-ghost: #f7f3fc;
-  --violet:     #9b59d0;
-  --lavender:   #c4a3e8;
-  --gold:       #c9933a;
-  --gold-lt:    #e8b84b;
-  --crimson:    #b03060;
-  --sage:       #3a7a50;
-
-  --bg:         #faf8fd;
-  --bg2:        #f2edf9;
-  --surface:    #ffffff;
-  --surface2:   #f7f3fc;
-  --border:     #ddd4ed;
-  --border2:    #cfc2e8;
-  --text:       #1a0f2e;
-  --text2:      #4a3668;
-  --text3:      #7a6898;
-
-  --sh-sm: 0 1px 8px rgba(61,31,94,.07);
-  --sh-md: 0 4px 24px rgba(61,31,94,.11);
-  --sh-lg: 0 12px 48px rgba(61,31,94,.16);
-  --r:  6px;
-  --rl: 12px;
-  --nav: 62px;
-  --ease: .22s cubic-bezier(.4,0,.2,1);
-
-  --f-serif: 'Cormorant Garamond', Georgia, serif;
-  --f-sans:  'Outfit', sans-serif;
-  --f-mono:  'JetBrains Mono', monospace;
+/* ── TOKENS ── */
+:root{
+  --plum:#3d1f5e;--plum-mid:#5a2d82;--plum-light:#7b4fa6;
+  --plum-pale:#ede5f7;--plum-ghost:#f7f3fc;
+  --violet:#9b59d0;--lavender:#c4a3e8;
+  --gold:#c9933a;--gold-lt:#e8b84b;
+  --crimson:#b03060;--sage:#3a7a50;
+  --bg:#faf8fd;--bg2:#f2edf9;
+  --surface:#ffffff;--surface2:#f7f3fc;
+  --border:#ddd4ed;--border2:#cfc2e8;
+  --text:#1a0f2e;--text2:#4a3668;--text3:#7a6898;
+  --sh-sm:0 1px 8px rgba(61,31,94,.07);
+  --sh-md:0 4px 24px rgba(61,31,94,.11);
+  --sh-lg:0 12px 48px rgba(61,31,94,.16);
+  --r:6px;--rl:12px;--nav:62px;
+  --ease:.22s cubic-bezier(.4,0,.2,1);
+  --f-serif:'Cormorant Garamond',Georgia,serif;
+  --f-sans:'Outfit',sans-serif;
+  --f-mono:'JetBrains Mono',monospace;
 }
-[data-theme="dark"] {
-  --bg:        #0e0817; --bg2:       #160d24;
-  --surface:   #1c1130; --surface2:  #231642;
-  --border:    #2e1f4a; --border2:   #3d2860;
-  --text:      #ede5f7; --text2:     #c4a3e8; --text3:     #7b5fa8;
-  --plum-pale: #1c1130; --plum-ghost:#160d24;
-  --sh-sm: 0 1px 8px rgba(0,0,0,.3); --sh-md: 0 4px 24px rgba(0,0,0,.4); --sh-lg: 0 12px 48px rgba(0,0,0,.5);
+[data-theme="dark"]{
+  --bg:#0e0817;--bg2:#160d24;
+  --surface:#1c1130;--surface2:#231642;
+  --border:#2e1f4a;--border2:#3d2860;
+  --text:#ede5f7;--text2:#c4a3e8;--text3:#7b5fa8;
+  --plum-pale:#1c1130;--plum-ghost:#160d24;
+  --sh-sm:0 1px 8px rgba(0,0,0,.3);
+  --sh-md:0 4px 24px rgba(0,0,0,.4);
+  --sh-lg:0 12px 48px rgba(0,0,0,.5);
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--f-sans);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;transition:background var(--ease),color var(--ease)}
 a{color:inherit;text-decoration:none}
 button{font-family:var(--f-sans)}
-img{display:block}
+img{display:block;max-width:100%}
 
 /* UTILITY */
 .hidden{display:none!important}
 .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-sans);font-size:13.5px;font-weight:500;padding:9px 20px;border-radius:var(--r);border:none;cursor:pointer;transition:all var(--ease);white-space:nowrap}
 .btn-primary{background:var(--plum);color:#fff}
-.btn-primary:hover{background:var(--plum-mid);transform:translateY(-1px);box-shadow:0 4px 16px rgba(61,31,94,.35)}
+.btn-primary:hover{background:var(--plum-mid);transform:translateY(-1px)}
 .btn-violet{background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff}
 .btn-violet:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 4px 20px rgba(155,89,208,.4)}
 .btn-gold{background:var(--gold);color:#fff}
@@ -74,33 +61,29 @@ img{display:block}
 .btn-danger{background:var(--crimson);color:#fff}
 .btn-danger:hover{filter:brightness(1.1)}
 .btn-sage{background:var(--sage);color:#fff}
-.btn-sage:hover{filter:brightness(1.1)}
 .btn-sm{padding:6px 14px;font-size:12px}
 .btn-xs{padding:4px 10px;font-size:11px}
-
 .badge{display:inline-flex;align-items:center;font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:3px}
 .bv{background:var(--plum-pale);color:var(--plum-mid);border:1px solid var(--lavender)}
 .bg2{background:#fdf3df;color:#9a6a10;border:1px solid #f0d89a}
 .bgrn{background:#eaf5ea;color:#2e7d32;border:1px solid #a5d6a7}
 .bred{background:#fdecea;color:var(--crimson);border:1px solid #f0b0b8}
 .bgray{background:var(--surface2);color:var(--text3);border:1px solid var(--border)}
-
 .tag{display:inline-flex;align-items:center;font-size:12px;font-weight:500;padding:4px 13px;background:var(--surface2);color:var(--text3);border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:all var(--ease)}
 .tag:hover,.tag.active{background:var(--plum);color:#fff;border-color:var(--plum)}
-
-.avatar{border-radius:50%;background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--f-serif);flex-shrink:0}
+.avatar{border-radius:50%;background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--f-serif);flex-shrink:0;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
 
 /* NAV */
 nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:background var(--ease)}
 .nav-in{max-width:1320px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;gap:18px}
 .logo{font-family:var(--f-serif);font-weight:700;font-size:26px;color:var(--text);display:flex;align-items:center;gap:9px;cursor:pointer}
 .logo-dot{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--plum-mid),var(--violet));display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 10px rgba(90,45,130,.4)}
-.nav-search{flex:1;max-width:420px;display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color var(--ease),box-shadow var(--ease)}
+.nav-search{flex:1;max-width:400px;display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color var(--ease)}
 .nav-search:focus-within{border-color:var(--plum-light);box-shadow:0 0 0 3px rgba(123,79,166,.15)}
 .nav-search input{flex:1;padding:9px 14px;border:none;background:transparent;font-family:var(--f-sans);font-size:14px;color:var(--text);outline:none}
 .nav-search input::placeholder{color:var(--text3)}
-.nav-sbtn{padding:9px 14px;background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:16px;transition:color var(--ease)}
-.nav-sbtn:hover{color:var(--plum-light)}
+.nav-sbtn{padding:9px 14px;background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:16px}
 .nav-r{margin-left:auto;display:flex;align-items:center;gap:10px}
 .night-wrap{display:flex;align-items:center;gap:6px}
 .night-icon{font-size:15px}
@@ -108,13 +91,13 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .ntoggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:transform var(--ease)}
 [data-theme="dark"] .ntoggle{background:var(--plum-mid)}
 [data-theme="dark"] .ntoggle::after{transform:translateX(18px)}
-.dm-btn{position:relative;background:none;border:none;cursor:pointer;padding:6px;border-radius:var(--r);transition:background var(--ease);color:var(--text2)}
+.dm-btn{position:relative;background:none;border:none;cursor:pointer;padding:6px;border-radius:var(--r);color:var(--text2)}
 .dm-btn:hover{background:var(--surface2)}
 .dm-badge{position:absolute;top:2px;right:2px;width:9px;height:9px;background:var(--crimson);border-radius:50%;border:2px solid var(--bg)}
 .nav-av-wrap{position:relative}
 .nav-av{width:36px;height:36px;font-size:15px;cursor:pointer;border:2px solid var(--border2);transition:border-color var(--ease)}
 .nav-av:hover{border-color:var(--plum-light)}
-.dropdown{position:absolute;right:0;top:calc(100% + 10px);background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--sh-lg);min-width:195px;overflow:hidden;z-index:300;animation:dropIn .18s ease}
+.dropdown{position:absolute;right:0;top:calc(100% + 10px);background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--sh-lg);min-width:200px;overflow:hidden;z-index:300;animation:dropIn .18s ease}
 @keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .dropdown a,.dropdown button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 16px;font-size:14px;color:var(--text);background:none;border:none;font-family:var(--f-sans);cursor:pointer;transition:background var(--ease)}
 .dropdown a:hover,.dropdown button:hover{background:var(--surface2);color:var(--plum-light)}
@@ -125,6 +108,9 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .page{display:none;animation:fadeUp .28s ease}
 .page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.loading-state{text-align:center;padding:60px 24px;color:var(--text3)}
+.loading-spinner{display:inline-block;width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--plum-light);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* HERO */
 .hero{min-height:560px;background:var(--plum);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 60px;position:relative;overflow:hidden}
@@ -132,7 +118,7 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .h-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:48px 48px}
 .h-eye{font-family:var(--f-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--lavender);margin-bottom:22px;display:flex;align-items:center;gap:10px;justify-content:center}
 .h-eye::before,.h-eye::after{content:'';width:32px;height:1px;background:var(--lavender);opacity:.5}
-.hero h1{font-family:var(--f-serif);font-size:clamp(46px,7vw,90px);font-weight:700;color:#fff;line-height:1.05;margin-bottom:18px}
+.hero h1{font-family:var(--f-serif);font-size:clamp(44px,7vw,88px);font-weight:700;color:#fff;line-height:1.05;margin-bottom:18px}
 .hero h1 em{color:var(--lavender);font-style:italic}
 .hero p{font-size:17px;color:rgba(237,229,247,.65);max-width:520px;margin:0 auto 38px;line-height:1.7}
 .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
@@ -140,9 +126,9 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .proof-val{font-family:var(--f-serif);font-size:28px;font-weight:700;color:var(--lavender)}
 .proof-lbl{font-size:11px;color:rgba(237,229,247,.4);text-transform:uppercase;letter-spacing:.06em}
 
-/* HOW IT WORKS strip */
+/* HOW IT WORKS */
 .hiw{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:40px 24px}
-.hiw-in{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px}
+.hiw-in{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px}
 .hiw-step{text-align:center}
 .hiw-icon{font-size:36px;margin-bottom:12px}
 .hiw-title{font-family:var(--f-serif);font-size:18px;font-weight:700;margin-bottom:6px}
@@ -154,10 +140,20 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .tags-in{max-width:1320px;margin:0 auto;display:flex;gap:8px;align-items:center;flex-wrap:nowrap;min-width:max-content}
 .tags-lbl{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-right:4px;flex-shrink:0}
 
-/* SECTION & GRID */
+/* LAYOUT WITH SIDEBAR */
+.with-sidebar{display:grid;grid-template-columns:1fr 300px;gap:32px;max-width:1320px;margin:0 auto;padding:0 24px;align-items:start}
+.sidebar-col{position:sticky;top:calc(var(--nav) + 20px);display:flex;flex-direction:column;gap:20px}
+.ad-unit{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:visible;display:flex;flex-direction:column}
+.ad-unit-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);padding:8px 12px 6px;border-bottom:1px solid var(--border);text-align:center}
+.ad-300x250{min-height:272px}
+.ad-160x600{min-height:622px}
+
+/* SECTION */
 .section{padding:48px 24px;max-width:1320px;margin:0 auto}
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
 .sec-title{font-family:var(--f-serif);font-size:28px;font-weight:700}
+
+/* BOOK GRID */
 .book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:24px}
 .book-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;cursor:pointer;transition:all var(--ease);display:flex;flex-direction:column}
 .book-card:hover{transform:translateY(-5px);box-shadow:var(--sh-lg);border-color:var(--border2)}
@@ -168,7 +164,8 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .book-info{padding:14px;flex:1;display:flex;flex-direction:column;gap:5px}
 .book-title{font-family:var(--f-serif);font-size:15px;font-weight:700;line-height:1.3}
 .book-author{font-size:12.5px;color:var(--text3)}
-.book-author span:hover{color:var(--plum-light);cursor:pointer}
+.book-author span{cursor:pointer;transition:color var(--ease)}
+.book-author span:hover{color:var(--plum-light)}
 .book-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
 .btag{font-size:10px;padding:2px 8px;background:var(--plum-pale);color:var(--plum-mid);border-radius:10px}
 .book-meta{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px}
@@ -184,10 +181,12 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .rdr-meta h1{font-family:var(--f-serif);font-size:32px;font-weight:700;color:#fff;line-height:1.1}
 .rdr-author-lnk{font-size:14px;color:var(--lavender);cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:8px 0 12px}
 .rdr-author-lnk:hover{color:#fff}
-.rdr-acts{max-width:860px;margin:0 auto;padding:14px 0;display:flex;gap:8px;border-top:1px solid rgba(255,255,255,.1)}
-.rdr-body{max-width:680px;margin:0 auto;padding:52px 24px 80px}
-.rdr-content{font-size:18.5px;line-height:1.9;font-family:var(--f-serif);color:var(--text)}
+.rdr-acts{max-width:860px;margin:0 auto;padding:14px 0;display:flex;gap:8px;border-top:1px solid rgba(255,255,255,.1);flex-wrap:wrap}
+.rdr-body-wrap{display:grid;grid-template-columns:1fr 300px;gap:32px;max-width:1320px;margin:0 auto;padding:0 24px;align-items:start}
+.rdr-body{padding:52px 0 80px}
+.rdr-content{font-size:18px;line-height:1.9;font-family:var(--f-serif);color:var(--text)}
 .rdr-content p{margin-bottom:1.5em}
+.rdr-content img{max-width:100%;border-radius:var(--r);margin:24px 0;box-shadow:var(--sh-md)}
 .chap-hdr{font-family:var(--f-serif);font-size:26px;font-weight:700;margin:56px 0 28px;color:var(--plum);display:flex;align-items:center;gap:14px}
 [data-theme="dark"] .chap-hdr{color:var(--lavender)}
 .chap-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -195,7 +194,7 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .ad-block strong{display:block;font-size:13px;margin-bottom:3px;color:var(--text2);font-family:var(--f-sans)}
 
 /* COMMENTS */
-.comments-section{max-width:680px;margin:0 auto;padding:0 24px 80px}
+.comments-wrap{padding:0 0 80px}
 .star-row{display:flex;gap:4px;margin-bottom:12px}
 .star{font-size:24px;cursor:pointer;color:var(--border2);transition:color var(--ease)}
 .star.active,.star:hover{color:var(--gold)}
@@ -208,13 +207,13 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .cmt-date{font-size:11.5px;color:var(--text3);font-family:var(--f-mono);margin-top:6px}
 
 /* AUTHOR PAGE */
-#page-author .auth-hero{background:var(--plum);padding:60px 24px 0;text-align:center;position:relative;overflow:hidden}
+.auth-hero{background:var(--plum);padding:60px 24px 0;text-align:center;position:relative;overflow:hidden}
 .auth-hero-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 50% 80% at 30% 50%,rgba(155,89,208,.2) 0%,transparent 70%)}
-.auth-av{width:108px;height:108px;font-size:40px;font-weight:700;border:4px solid rgba(255,255,255,.25);margin:0 auto 14px;font-family:var(--f-serif)}
+.auth-av-lg{width:108px;height:108px;font-size:40px;font-weight:700;border:4px solid rgba(255,255,255,.25);margin:0 auto 14px;font-family:var(--f-serif)}
 .auth-name{font-family:var(--f-serif);font-size:36px;font-weight:700;color:#fff}
 .auth-bio{font-size:15px;color:rgba(237,229,247,.65);max-width:480px;margin:10px auto 0;line-height:1.7}
 .auth-socials{display:flex;gap:10px;justify-content:center;margin:18px 0;flex-wrap:wrap}
-.social-lnk{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:20px;background:rgba(255,255,255,.1);color:rgba(237,229,247,.8);font-size:13px;border:1px solid rgba(255,255,255,.15);transition:all var(--ease);cursor:pointer}
+.social-lnk{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:20px;background:rgba(255,255,255,.1);color:rgba(237,229,247,.8);font-size:13px;border:1px solid rgba(255,255,255,.15);transition:all var(--ease);cursor:pointer;text-decoration:none}
 .social-lnk:hover{background:rgba(255,255,255,.2);color:#fff}
 .auth-stats{display:flex;gap:36px;justify-content:center;padding:24px 0;border-top:1px solid rgba(255,255,255,.1);margin-top:28px;flex-wrap:wrap}
 .auth-sv{font-family:var(--f-serif);font-size:26px;font-weight:700;color:var(--lavender)}
@@ -227,11 +226,11 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .stat-val{font-family:var(--f-serif);font-size:38px;font-weight:700;margin:4px 0 2px}
 .stat-sub{font-size:13px;color:var(--text3)}
 .earn-bar{background:var(--surface2);border-radius:4px;height:7px;margin:14px 0 7px;overflow:hidden}
-.earn-fill{height:100%;background:linear-gradient(90deg,var(--plum-mid),var(--violet));border-radius:4px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.earn-fill{height:100%;background:linear-gradient(90deg,var(--plum-mid),var(--violet));border-radius:4px;transition:width .7s}
 .pay-note{font-size:11.5px;color:var(--text3);font-family:var(--f-mono)}
 .dash-table{width:100%;border-collapse:collapse}
 .dash-table th{text-align:left;padding:10px 16px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);border-bottom:1px solid var(--border)}
-.dash-table td{padding:14px 16px;border-bottom:1px solid var(--border);font-size:14px}
+.dash-table td{padding:14px 16px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:middle}
 .dash-table tr:last-child td{border-bottom:none}
 .dash-table tr:hover td{background:var(--surface2)}
 
@@ -251,6 +250,10 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .orig-pass{background:#eaf5ea;border-color:#a5d6a7}
 .orig-fail{background:#fdecea;border-color:#f0b0b8}
 .orig-chk{background:var(--plum-pale);border-color:var(--border2)}
+.img-preview-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.img-preview-item{position:relative;width:80px;height:80px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.img-preview-item img{width:100%;height:100%;object-fit:cover}
+.img-preview-remove{position:absolute;top:2px;right:2px;width:18px;height:18px;background:var(--crimson);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center}
 
 /* DM PANEL */
 .dm-panel{position:fixed;right:0;top:var(--nav);bottom:0;width:380px;background:var(--surface);border-left:1px solid var(--border);z-index:150;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:var(--sh-lg)}
@@ -259,13 +262,12 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .dm-hdr-title{font-family:var(--f-serif);font-size:20px;font-weight:700}
 .dm-list{flex:1;overflow-y:auto}
 .dm-conv-item{display:flex;align-items:center;gap:12px;padding:13px 18px;cursor:pointer;transition:background var(--ease);border-bottom:1px solid var(--border)}
-.dm-conv-item:hover{background:var(--surface2)}
-.dm-conv-item.active{background:var(--plum-pale)}
+.dm-conv-item:hover,.dm-conv-item.active{background:var(--surface2)}
 .dm-conv-name{font-weight:600;font-size:14px}
 .dm-conv-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
 .dm-conv-time{font-size:10.5px;color:var(--text3);font-family:var(--f-mono);margin-left:auto;flex-shrink:0}
 .dm-unread{width:8px;height:8px;border-radius:50%;background:var(--crimson);flex-shrink:0}
-.dm-thread{flex:1;display:flex;flex-direction:column;display:none}
+.dm-thread{flex:1;display:none;flex-direction:column}
 .dm-thread.open{display:flex}
 .dm-thread-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .dm-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
@@ -276,10 +278,8 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .dm-input-row{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px}
 .dm-input{flex:1;padding:9px 13px;border:1.5px solid var(--border);border-radius:20px;background:var(--bg);font-family:var(--f-sans);font-size:14px;color:var(--text);outline:none;transition:border-color var(--ease)}
 .dm-input:focus{border-color:var(--plum-light)}
-.dm-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:filter var(--ease);flex-shrink:0}
-.dm-send:hover{filter:brightness(1.15)}
+.dm-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .dm-empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--text3);text-align:center;padding:24px}
-.dm-empty-icon{font-size:40px}
 
 /* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(14,8,23,.65);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px}
@@ -287,18 +287,19 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 @keyframes mIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
 .m-hdr{padding:26px 28px 0;display:flex;align-items:center;justify-content:space-between}
 .m-title{font-family:var(--f-serif);font-size:26px;font-weight:700}
-.m-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3);line-height:1;padding:4px;border-radius:var(--r);transition:all var(--ease)}
+.m-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3);line-height:1;padding:4px;border-radius:var(--r)}
 .m-close:hover{color:var(--text);background:var(--surface2)}
 .m-body{padding:20px 28px 28px}
 
 /* FORMS */
 .fg{margin-bottom:18px}
 .fl{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--text2)}
-.fi,.fta,.fsel{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:var(--f-sans);font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:border-color var(--ease),box-shadow var(--ease)}
+.fi,.fta,.fsel{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:var(--f-sans);font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:border-color var(--ease)}
 .fi:focus,.fta:focus,.fsel:focus{border-color:var(--plum-light);box-shadow:0 0 0 3px rgba(123,79,166,.12)}
 .fta{resize:vertical;min-height:110px}
 .fhint{font-size:11.5px;color:var(--text3);margin-top:4px}
-.ferr{font-size:12px;color:var(--crimson);margin-top:4px}
+.ferr{font-size:12px;color:var(--crimson);margin-top:6px;padding:8px 12px;background:#fdecea;border-radius:var(--r);display:none}
+.ferr.show{display:block}
 .fdiv{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text3);font-size:13px}
 .fdiv::before,.fdiv::after{content:'';flex:1;height:1px;background:var(--border)}
 .soc-inputs{display:flex;flex-direction:column;gap:10px}
@@ -307,20 +308,40 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 
 /* ADMIN */
 .admin-wrap{max-width:1060px;margin:0 auto;padding:44px 24px}
+.admin-tabs{display:flex;gap:4px;margin-bottom:28px;background:var(--surface2);padding:4px;border-radius:var(--rl);width:fit-content}
+.admin-tab{padding:8px 20px;font-size:13px;font-weight:500;border-radius:var(--r);cursor:pointer;border:none;background:transparent;color:var(--text3);transition:all var(--ease)}
+.admin-tab.active{background:var(--surface);color:var(--text);box-shadow:var(--sh-sm)}
 .admin-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:24px;overflow:hidden}
 .admin-chdr{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-weight:600}
 .admin-row{padding:14px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
 .admin-row:last-child{border-bottom:none}
+.admin-msg-row{padding:16px 22px;border-bottom:1px solid var(--border);cursor:pointer;transition:background var(--ease)}
+.admin-msg-row:hover{background:var(--surface2)}
+.admin-msg-row.unread{border-left:3px solid var(--plum-light)}
+.admin-msg-row:last-child{border-bottom:none}
+
+/* CONTACT PAGE */
+.contact-wrap{max-width:700px;margin:0 auto;padding:60px 24px}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:40px}
+.contact-info-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:24px}
+.contact-info-card h3{font-family:var(--f-serif);font-size:18px;font-weight:700;margin-bottom:16px}
+.contact-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:14px}
+.contact-row a{color:var(--plum-light);transition:color var(--ease)}
+.contact-row a:hover{color:var(--plum-mid)}
+
+/* BANNED WALL */
+.banned-wall{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column;gap:16px;padding:40px}
+.banned-icon{font-size:64px}
+.banned-title{font-family:var(--f-serif);font-size:36px;font-weight:700;color:var(--crimson)}
+.banned-msg{font-size:16px;color:var(--text3);max-width:420px;line-height:1.7}
 
 /* SUBHDR */
 .subhdr{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px}
 .subhdr-in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:14px;width:100%}
 
-/* BANNED BANNER */
-.banned-wall{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column;gap:16px;padding:40px}
-.banned-icon{font-size:64px}
-.banned-title{font-family:var(--f-serif);font-size:36px;font-weight:700;color:var(--crimson)}
-.banned-msg{font-size:16px;color:var(--text3);max-width:420px;line-height:1.7}
+/* CLAIM BANNER */
+.claim-banner{background:#fdecea;border:1px solid #f0b0b8;border-radius:var(--r);padding:16px 20px;margin:24px 0;display:flex;align-items:flex-start;gap:12px}
+[data-theme="dark"] .claim-banner{background:rgba(176,48,96,.1)}
 
 /* TOAST */
 #toasts{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px}
@@ -331,64 +352,17 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .toast.info{border-left:3px solid var(--plum-light)}
 @keyframes toastIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 
-/* MISC */
-.claim-banner{background:#fdecea;border:1px solid #f0b0b8;border-radius:var(--r);padding:16px 20px;margin:24px 0;display:flex;align-items:flex-start;gap:12px}
-[data-theme="dark"] .claim-banner{background:rgba(176,48,96,.1)}
-.claim-step{display:flex;gap:14px;margin-bottom:16px}
-.claim-num{width:28px;height:28px;border-radius:50%;background:var(--crimson);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-
-/* ── ADSENSE SIDEBAR LAYOUT ── */
-.with-sidebar {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 32px;
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 0 24px;
-  align-items: start;
-}
-.sidebar-col {
-  position: sticky;
-  top: calc(var(--nav) + 20px);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.ad-unit {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--rl);
-  overflow: visible;
-  display: flex;
-  flex-direction: column;
-}
-.ad-unit-label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--text3);
-  padding: 8px 12px 6px;
-  border-bottom: 1px solid var(--border);
-  text-align: center;
-}
-.ad-300x250 { min-height: 272px; }
-.ad-160x600 { min-height: 622px; }
-
 /* FOOTER */
 .site-footer{background:var(--plum);color:rgba(237,229,247,.7);margin-top:80px}
 .footer-top{max-width:1320px;margin:0 auto;padding:60px 24px 40px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px}
-.footer-brand .logo{color:#fff;margin-bottom:14px;display:inline-flex}
-.footer-brand p{font-size:14px;line-height:1.7;max-width:280px;color:rgba(237,229,247,.6)}
-.footer-brand-tagline{font-family:var(--f-serif);font-style:italic;font-size:16px;color:var(--lavender);margin-top:10px;display:block}
+.footer-brand p{font-size:14px;line-height:1.7;color:rgba(237,229,247,.6);margin-top:12px}
+.footer-tagline{font-family:var(--f-serif);font-style:italic;font-size:16px;color:var(--lavender);margin-top:10px;display:block}
 .footer-col h4{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--lavender);margin-bottom:16px}
-.footer-col a,.footer-col button{display:block;font-size:14px;color:rgba(237,229,247,.6);background:none;border:none;cursor:pointer;font-family:var(--f-sans);text-align:left;padding:0;margin-bottom:10px;transition:color var(--ease)}
+.footer-col a,.footer-col button{display:block;font-size:14px;color:rgba(237,229,247,.6);background:none;border:none;cursor:pointer;font-family:var(--f-sans);text-align:left;padding:0;margin-bottom:10px;transition:color var(--ease);text-decoration:none}
 .footer-col a:hover,.footer-col button:hover{color:#fff}
-.footer-contact{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--rl);padding:20px 22px;margin-top:4px}
-.footer-contact-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.footer-contact-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--rl);padding:20px 22px}
 .footer-contact-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px}
 .footer-contact-row:last-child{margin-bottom:0}
-.footer-contact-icon{font-size:16px;flex-shrink:0;width:22px}
 .footer-contact-row a{color:var(--lavender);text-decoration:none;transition:color var(--ease)}
 .footer-contact-row a:hover{color:#fff}
 .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:20px 24px}
@@ -397,48 +371,39 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 .footer-bottom a:hover{color:#fff}
 .footer-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 12px;border-radius:20px;font-size:11px;color:rgba(237,229,247,.6)}
 
-@media(max-width:860px){
-  .footer-top{grid-template-columns:1fr 1fr;gap:32px}
+/* RESPONSIVE */
+@media(max-width:900px){
+  .with-sidebar,.rdr-body-wrap{grid-template-columns:1fr}
+  .sidebar-col{display:none}
+  .dash-grid,.pub-grid,.contact-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr;gap:28px}
   .footer-brand{grid-column:1/-1}
-  .dash-grid,.pub-grid{grid-template-columns:1fr}
   .book-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
   .rdr-hero-in{flex-wrap:wrap}
   .dm-panel{width:100%;right:0;left:0}
   .hero-proof{gap:20px}
-  .with-sidebar{grid-template-columns:1fr}
-  .sidebar-col{display:none}
 }
 </style>
-
-<!-- ═══════════════════════════════════════════════════════════
-     GOOGLE ADSENSE SCRIPT
-     Step 1: Replace YOUR_PUB_ID with your ca-pub-XXXXXXXXXXXXXXXX
-     Step 2: Delete the  and  comment tags around the script
-     Step 3: Save and redeploy — ads go live automatically
-════════════════════════════════════════════════════════════ -->
-<!--
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUB_ID" crossorigin="anonymous"></script>
--->
 </head>
 <body>
 
-<!-- ══ BAN WALL (shown if user is banned) ══ -->
+<!-- BAN WALL -->
 <div id="banWall" class="hidden">
   <div class="banned-wall">
     <div class="banned-icon">🚫</div>
-    <div class="banned-title">Your account has been suspended</div>
-    <div class="banned-msg">Your account has been suspended by a Thalia administrator. This may be due to a violation of our content policy or a sustained copyright infringement. If you believe this is an error, contact <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1a2a4a1a1bea3a591a5b9b0bdb8b0ffb2bebc">[email&#160;protected]</a></strong>.</div>
-    <button class="btn btn-outline" onclick="logout()">Sign out</button>
+    <div class="banned-title">Account Suspended</div>
+    <div class="banned-msg" id="banMsg">Your account has been suspended. If you believe this is an error, contact <a href="mailto:support@thalia.com" style="color:var(--plum-light)">support@thalia.com</a>.</div>
+    <button class="btn btn-outline" onclick="doSignOut()">Sign out</button>
   </div>
 </div>
 
-<!-- ══ MAIN APP ══ -->
+<!-- MAIN APP -->
 <div id="app">
 
 <!-- NAV -->
 <nav>
   <div class="nav-in">
-    <div class="logo" onclick="goPg('home')">
+    <div class="logo" onclick="showPage('home')">
       <div class="logo-dot">✦</div>Thalia
     </div>
     <div class="nav-search">
@@ -446,7 +411,7 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
       <button class="nav-sbtn" onclick="doSearch()">⌕</button>
     </div>
     <div class="nav-r">
-      <div class="night-wrap" title="Toggle dark mode">
+      <div class="night-wrap">
         <span class="night-icon">☀️</span>
         <button class="ntoggle" onclick="toggleTheme()"></button>
         <span class="night-icon">🌙</span>
@@ -456,24 +421,21 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
         <button class="btn btn-violet btn-sm" onclick="openM('registerModal')">Start writing</button>
       </div>
       <div id="navUser" class="hidden" style="display:flex;align-items:center;gap:10px">
-        <button class="btn btn-violet btn-sm" onclick="goPg('publish')">✦ Publish</button>
-        <button class="dm-btn" onclick="toggleDM()" title="Messages" id="dmBtn">
-          💬
-          <div class="dm-badge hidden" id="dmDot"></div>
-        </button>
+        <button class="btn btn-violet btn-sm" onclick="showPage('publish')">✦ Publish</button>
+        <button class="dm-btn" onclick="toggleDM()" id="dmBtn">💬<div class="dm-badge hidden" id="dmDot"></div></button>
         <div class="nav-av-wrap">
-          <div class="avatar nav-av" id="navAv" onclick="toggleDD()"></div>
+          <div class="avatar nav-av" id="navAv" onclick="toggleDD()" style="width:36px;height:36px;font-size:15px"></div>
           <div class="dropdown hidden" id="avDD">
             <div class="drop-lbl">My Thalia</div>
-            <a href="#" onclick="goPg('dashboard');cDD()">📊 Dashboard</a>
-            <a href="#" onclick="goMyProfile();cDD()">👤 My Profile</a>
+            <a href="#" onclick="showPage('dashboard');cDD()">📊 Dashboard</a>
+            <a href="#" onclick="showMyProfile();cDD()">👤 My Profile</a>
             <a href="#" onclick="openEditProfile();cDD()">✏️ Edit Profile</a>
             <a href="#" onclick="toggleDM();cDD()">💬 Messages</a>
             <hr>
-            <div class="drop-lbl">Admin</div>
-            <a href="#" onclick="goPg('admin');cDD()">🛡 Admin Panel</a>
-            <hr>
-            <button onclick="logout()">↩ Sign out</button>
+            <div class="drop-lbl" id="adminDropLbl" style="display:none">Admin</div>
+            <a href="#" id="adminDropLink" style="display:none" onclick="showPage('admin');cDD()">🛡 Admin Panel</a>
+            <hr id="adminDropHr" style="display:none">
+            <button onclick="doSignOut()">↩ Sign out</button>
           </div>
         </div>
       </div>
@@ -481,37 +443,32 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
   </div>
 </nav>
 
-<!-- ══ PAGES ══ -->
-
-<!-- HOME -->
+<!-- HOME PAGE -->
 <div id="page-home" class="page active">
   <div class="hero">
     <div class="h-bg"></div><div class="h-grid"></div>
     <div class="h-eye">The Stage for Every Story</div>
     <h1>You are<br>already <em>an author.</em></h1>
-    <p>Thalia believes every person has a story worth telling. Write it, publish it, and earn real revenue from readers around the world — no gatekeepers, no agents, no permission needed.</p>
+    <p>Publish original books and stories. Earn real ad revenue every time someone reads your work — no gatekeepers, no agents, no permission needed.</p>
     <div class="hero-cta">
       <button class="btn btn-violet" style="font-size:16px;padding:14px 30px" onclick="openM('registerModal')">Publish your first story free</button>
-      <button class="btn btn-outline" style="font-size:16px;padding:14px 30px;color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25)" onclick="scrollToBooks()">Read what others wrote ↓</button>
+      <button class="btn btn-outline" style="font-size:16px;padding:14px 30px;color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25)" onclick="scrollToBooks()">Browse stories ↓</button>
     </div>
     <div class="hero-proof">
-      <div><div class="proof-val" id="hBooks">6</div><div class="proof-lbl">Books published</div></div>
-      <div><div class="proof-val" id="hReads">9.6k</div><div class="proof-lbl">Stories read</div></div>
-      <div><div class="proof-val" id="hAuthors">4</div><div class="proof-lbl">Authors earning</div></div>
-      <div><div class="proof-val">$0.003</div><div class="proof-lbl">Per ad impression</div></div>
+      <div><div class="proof-val" id="hBooks">0</div><div class="proof-lbl">Books published</div></div>
+      <div><div class="proof-val" id="hReads">0</div><div class="proof-lbl">Stories read</div></div>
+      <div><div class="proof-val" id="hAuthors">0</div><div class="proof-lbl">Authors</div></div>
+      <div><div class="proof-val">55%</div><div class="proof-lbl">Author revenue share</div></div>
     </div>
   </div>
-
-  <!-- How it works -->
   <div class="hiw">
     <div class="hiw-in">
-      <div class="hiw-step"><div class="hiw-icon">✍️</div><div class="hiw-title">Write anything</div><div class="hiw-desc">Fiction, memoirs, poetry, essays — there are no wrong genres. Your story is valid.</div></div>
-      <div class="hiw-step"><div class="hiw-icon">🚀</div><div class="hiw-title">Publish instantly</div><div class="hiw-desc">No agents, no rejection letters. Paste your work, add a cover, and go live in minutes.</div></div>
+      <div class="hiw-step"><div class="hiw-icon">✍️</div><div class="hiw-title">Write anything</div><div class="hiw-desc">Fiction, memoir, poetry — any genre, any length. Your story is valid.</div></div>
+      <div class="hiw-step"><div class="hiw-icon">🚀</div><div class="hiw-title">Publish instantly</div><div class="hiw-desc">No rejection letters. Upload your work with cover art and go live in minutes.</div></div>
       <div class="hiw-step"><div class="hiw-icon">💜</div><div class="hiw-title">Build your audience</div><div class="hiw-desc">Readers follow your author page, leave reviews, and message you directly.</div></div>
-      <div class="hiw-step"><div class="hiw-icon">💰</div><div class="hiw-title">Earn as you write</div><div class="hiw-desc">55% of ad revenue from your pages goes straight to you. No minimum followers required.</div></div>
+      <div class="hiw-step"><div class="hiw-icon">💰</div><div class="hiw-title">Earn as you write</div><div class="hiw-desc">55% of ad revenue from your pages goes straight to you.</div></div>
     </div>
   </div>
-
   <div class="tags-strip">
     <div class="tags-in">
       <span class="tags-lbl">Genres</span>
@@ -526,14 +483,15 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
       <span class="tag" onclick="filterTag(this,'Non-Fiction')">Non-Fiction</span>
       <span class="tag" onclick="filterTag(this,'Poetry')">Poetry</span>
       <span class="tag" onclick="filterTag(this,'Drama')">Drama</span>
-      <span class="tag" onclick="filterTag(this,'Self-Help')">Self-Help</span>
     </div>
   </div>
-
   <div class="with-sidebar" id="booksSection" style="padding-top:48px;padding-bottom:48px">
     <div>
       <div class="sec-hdr"><h2 class="sec-title">Stories from the community</h2></div>
-      <div class="book-grid" id="bookGrid"></div>
+      <div id="bookGrid" class="book-grid"></div>
+      <div style="text-align:center;margin-top:32px">
+        <button class="btn btn-outline" id="loadMoreBtn" onclick="loadMoreBooks()" style="display:none">Load more stories</button>
+      </div>
     </div>
     <div class="sidebar-col">
       <div class="ad-unit ad-300x250">
@@ -548,32 +506,32 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
   </div>
 </div>
 
-<!-- READER -->
+<!-- READER PAGE -->
 <div id="page-reader" class="page">
   <div class="rdr-hero">
     <div class="rdr-hero-in">
       <div class="rdr-cover" id="rdrCover"></div>
-      <div class="rdr-meta" style="flex:1">
-        <h1 id="rdrTitle"></h1>
+      <div style="flex:1">
+        <h1 id="rdrTitle" style="font-family:var(--f-serif);font-size:32px;font-weight:700;color:#fff;line-height:1.1"></h1>
         <div class="rdr-author-lnk" id="rdrAuthorLnk" onclick="goAuthorFromReader()"></div>
         <div id="rdrTags"></div>
       </div>
     </div>
     <div class="rdr-acts">
-      <button class="btn btn-ghost" style="color:rgba(237,229,247,.7)" onclick="goPg('home')">← Back</button>
+      <button class="btn btn-ghost" style="color:rgba(237,229,247,.7)" onclick="showPage('home')">← Back</button>
       <button class="btn btn-outline" style="color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25);font-size:13px" onclick="openM('copyrightModal')">⚠ Report Copyright</button>
       <button class="btn btn-outline" style="color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25);font-size:13px" id="dmAuthorBtn" onclick="dmAuthor()">💬 Message Author</button>
+      <button class="btn btn-danger btn-sm" id="adminTakedownBtn" style="display:none" onclick="adminTakedownCurrent()">🛡 Take Down</button>
     </div>
   </div>
-  <!-- Reader body with sidebar -->
-  <div class="with-sidebar" style="padding-top:0">
+  <div class="rdr-body-wrap" style="padding-top:0">
     <div>
-      <div class="rdr-body" style="max-width:100%;padding-left:0;padding-right:0">
+      <div class="rdr-body">
         <div id="rdrContent" class="rdr-content"></div>
       </div>
       <div id="commentsSection"></div>
     </div>
-    <div class="sidebar-col">
+    <div class="sidebar-col" style="padding-top:52px">
       <div class="ad-unit ad-300x250">
         <div class="ad-unit-label">Advertisement</div>
         <script>(function(){var atOptions={'key':'40248aa8a3372469020608e1be0c352f','format':'iframe','height':250,'width':300,'params':{}};var d=document,s=d.createElement('script');s.src='https://www.highperformanceformat.com/40248aa8a3372469020608e1be0c352f/invoke.js';s.async=true;(d.head||d.body).appendChild(s);})();</script>
@@ -586,15 +544,15 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
   </div>
 </div>
 
-<!-- AUTHOR PROFILE -->
+<!-- AUTHOR PROFILE PAGE -->
 <div id="page-author" class="page">
   <div class="auth-hero">
     <div class="auth-hero-bg"></div>
-    <div class="avatar auth-av" id="authAv"></div>
+    <div class="avatar auth-av-lg" id="authAv" style="width:108px;height:108px;font-size:40px;border:4px solid rgba(255,255,255,.25);margin:0 auto 14px;font-family:var(--f-serif)"></div>
     <div class="auth-name" id="authName"></div>
     <div class="auth-bio" id="authBio"></div>
     <div class="auth-socials" id="authSocials"></div>
-    <div id="authDMBtnWrap" style="margin-top:10px"></div>
+    <div id="authDMWrap" style="margin-top:10px"></div>
     <div class="auth-stats">
       <div><div class="auth-sv" id="authStatBooks">0</div><div class="auth-sl">Books</div></div>
       <div><div class="auth-sv" id="authStatReads">0</div><div class="auth-sl">Reads</div></div>
@@ -611,15 +569,22 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 <div id="page-dashboard" class="page">
   <div class="dash-grid">
     <div>
-      <div class="stat-card" style="border-color:var(--gold);border-top:3px solid var(--gold)">
+      <div class="stat-card" style="border-top:3px solid var(--gold)">
         <div class="stat-lbl">Pending Earnings</div>
         <div class="stat-val" id="dashEarn" style="color:var(--gold)">$0.00</div>
         <div class="earn-bar"><div class="earn-fill" id="earnFill" style="width:0%"></div></div>
-        <div class="pay-note" id="payNote">$0 / $50 threshold</div>
+        <div class="pay-note" id="payNote">$0 / $50 payout threshold</div>
         <button class="btn btn-violet" style="width:100%;justify-content:center;margin-top:14px" onclick="reqPayout()">Request Payout</button>
       </div>
-      <div class="stat-card"><div class="stat-lbl">Total Reads</div><div class="stat-val" id="dashReads">0</div><div class="stat-sub">across all your books</div></div>
-      <div class="stat-card"><div class="stat-lbl">Published Books</div><div class="stat-val" id="dashBkCt">0</div></div>
+      <div class="stat-card">
+        <div class="stat-lbl">Total Reads</div>
+        <div class="stat-val" id="dashReads">0</div>
+        <div class="stat-sub">across all your books</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Published Books</div>
+        <div class="stat-val" id="dashBkCount">0</div>
+      </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px;font-size:13px;color:var(--text3);line-height:1.75">
         <strong style="color:var(--text);display:block;margin-bottom:8px">💜 Revenue model</strong>
         <strong style="color:var(--violet)">$0.003</strong> per ad view · Ads every ~500 words · <strong style="color:var(--violet)">55%</strong> author share · $50 minimum payout
@@ -628,7 +593,7 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
     <div>
       <div class="sec-hdr" style="margin-bottom:20px">
         <h2 class="sec-title">My Books</h2>
-        <button class="btn btn-violet" onclick="goPg('publish')">✦ New Book</button>
+        <button class="btn btn-violet" onclick="showPage('publish')">✦ New Book</button>
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden">
         <table class="dash-table"><thead><tr><th>Title</th><th>Status</th><th>Reads</th><th>Rating</th><th>Earnings</th><th></th></tr></thead>
@@ -638,18 +603,18 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
   </div>
 </div>
 
-<!-- PUBLISH -->
+<!-- PUBLISH PAGE -->
 <div id="page-publish" class="page">
   <div class="subhdr"><div class="subhdr-in">
-    <button class="btn btn-ghost" onclick="goPg('dashboard')">← Back</button>
+    <button class="btn btn-ghost" onclick="showPage('dashboard')">← Back</button>
     <h2 style="font-family:var(--f-serif);font-size:22px;font-weight:700">Share your story with the world</h2>
   </div></div>
   <div class="pub-grid">
     <div>
       <div class="fg"><label class="fl">Title *</label><input class="fi" id="pubTitle" placeholder="What is your story called?"></div>
-      <div class="fg"><label class="fl">Synopsis *</label><textarea class="fta" id="pubDesc" placeholder="Intrigue your readers in a few sentences…" style="min-height:90px"></textarea></div>
+      <div class="fg"><label class="fl">Synopsis *</label><textarea class="fta" id="pubDesc" placeholder="Intrigue your readers…" style="min-height:90px"></textarea></div>
       <div class="fg">
-        <label class="fl">Genre Tags *</label>
+        <label class="fl">Genre Tags * <span style="color:var(--text3)">(pick up to 5)</span></label>
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px" id="pubTagsSel"></div>
         <div style="display:flex;flex-wrap:wrap;gap:6px" id="pubTagOpts"></div>
       </div>
@@ -657,16 +622,15 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
         <label class="fl">Your Story *</label>
         <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
           <div class="toolbar">
-            <button class="tbtn" onclick="fmtText('bold')"><b>B</b></button>
-            <button class="tbtn" onclick="fmtText('italic')"><i>I</i></button>
-            <button class="tbtn" onclick="insertChapter()">+ Chapter</button>
-            <button class="tbtn" onclick="insertAd()">📢 Ad break</button>
+            <button class="tbtn" onclick="fmtTxt('bold')"><b>B</b></button>
+            <button class="tbtn" onclick="fmtTxt('italic')"><i>I</i></button>
+            <button class="tbtn" onclick="insertChap()">+ Chapter</button>
+            <button class="tbtn" onclick="insertAdMark()">📢 Ad</button>
+            <label class="tbtn" style="cursor:pointer">📷 Image<input type="file" accept="image/*" style="display:none" onchange="uploadStoryImg(this)"></label>
           </div>
-          <textarea class="fta" id="pubContent" placeholder="Begin writing here…
-
-Use '--- Chapter One ---' to add chapter breaks.
-Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:none;border-radius:0;background:var(--bg);font-family:var(--f-serif);font-size:17px;line-height:1.85;padding:20px"></textarea>
+          <textarea class="fta" id="pubContent" placeholder="Begin writing here…&#10;&#10;Use '--- Chapter One ---' for chapters.&#10;Use '[AD]' for ad placement.&#10;Images will be inserted as [IMG:url]." style="min-height:420px;border:none;border-radius:0;background:var(--bg);font-family:var(--f-serif);font-size:17px;line-height:1.85;padding:20px"></textarea>
         </div>
+        <div id="storyImgPreviews" class="img-preview-grid"></div>
       </div>
       <div id="origBox" style="display:none" class="orig-box orig-chk">
         <h4 id="origTitle" style="font-size:13px;font-weight:600"></h4>
@@ -674,7 +638,7 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
       </div>
       <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap">
         <button class="btn btn-outline" onclick="checkOrig()">🔍 Check Originality</button>
-        <button class="btn btn-violet" onclick="publishBook()">Publish Story →</button>
+        <button class="btn btn-violet" id="publishBtn" onclick="publishBook()">Publish Story →</button>
       </div>
     </div>
     <div>
@@ -685,44 +649,40 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
           <div class="cover-up-lbl">Click to upload cover<br><span style="font-size:11px;opacity:.6">400×600px JPG/PNG</span></div>
           <div class="cover-up-over">Change cover</div>
         </div>
-        <input type="file" id="coverFile" accept="image/*" style="display:none" onchange="prevCover(this)">
+        <input type="file" id="coverFile" accept="image/*" style="display:none" onchange="previewCover(this)">
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px;font-size:13px;color:var(--text3);margin-top:16px;line-height:1.9">
-        <strong style="color:var(--text);display:block;margin-bottom:10px">📋 Posting guidelines</strong>
-        ✅ Must be your original work<br>✅ You hold the copyright<br>✅ Any genre, any length<br>❌ No plagiarised content<br>❌ No AI-generated text<br>❌ No copyrighted characters
+        <strong style="color:var(--text);display:block;margin-bottom:10px">📋 Guidelines</strong>
+        ✅ Your original work only<br>✅ You hold the copyright<br>✅ Any genre, any length<br>✅ Upload cover & story images<br>❌ No plagiarised content<br>❌ No AI-generated text
       </div>
     </div>
   </div>
 </div>
 
-<!-- ADMIN -->
+<!-- ADMIN PAGE -->
 <div id="page-admin" class="page">
   <div class="admin-wrap">
-    <div style="margin-bottom:32px">
-      <h2 style="font-family:var(--f-serif);font-size:32px;font-weight:700">Admin Panel</h2>
-      <p style="color:var(--text3);margin-top:4px">Manage copyright claims, content, and users.</p>
+    <h2 style="font-family:var(--f-serif);font-size:32px;font-weight:700;margin-bottom:8px">Admin Panel</h2>
+    <p style="color:var(--text3);margin-bottom:28px">Manage content, users, copyright claims and contact messages.</p>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('claims',this)">⚠ Claims <span class="badge bred" id="claimsBadge" style="margin-left:4px">0</span></button>
+      <button class="admin-tab" onclick="switchAdminTab('books',this)">📚 Books</button>
+      <button class="admin-tab" onclick="switchAdminTab('users',this)">👥 Users</button>
+      <button class="admin-tab" onclick="switchAdminTab('inbox',this)">✉️ Inbox <span class="badge bred" id="inboxBadge" style="margin-left:4px">0</span></button>
     </div>
-    <div class="admin-card">
-      <div class="admin-chdr">⚠ Copyright Claims <span class="badge bred" id="claimsBadge">0</span><button class="btn btn-ghost btn-sm" onclick="renderAdmin()">↺</button></div>
-      <div id="adminClaims"></div>
-    </div>
-    <div class="admin-card">
-      <div class="admin-chdr">📚 All Books <span class="badge bv" id="adminBkBadge">0</span></div>
-      <div id="adminBooks"></div>
-    </div>
-    <div class="admin-card">
-      <div class="admin-chdr">👥 Users <span class="badge bgray" id="adminUserBadge">0</span></div>
-      <div id="adminUsers"></div>
-    </div>
+    <div id="adminTabClaims"><div id="adminClaimsContent"></div></div>
+    <div id="adminTabBooks" style="display:none"><div id="adminBooksContent"></div></div>
+    <div id="adminTabUsers" style="display:none"><div id="adminUsersContent"></div></div>
+    <div id="adminTabInbox" style="display:none"><div id="adminInboxContent"></div></div>
   </div>
 </div>
 
-<!-- SEARCH -->
+<!-- SEARCH PAGE -->
 <div id="page-search" class="page">
   <div class="section">
     <div class="sec-hdr">
       <h2 class="sec-title">Results: <em id="searchLabel" style="font-style:italic;color:var(--text3)"></em></h2>
-      <button class="btn btn-ghost" onclick="goPg('home')">← Home</button>
+      <button class="btn btn-ghost" onclick="showPage('home')">← Home</button>
     </div>
     <div class="book-grid" id="searchGrid"></div>
     <div id="noResults" class="hidden" style="text-align:center;padding:70px 0;color:var(--text3)">
@@ -733,80 +693,101 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
   </div>
 </div>
 
-</div><!-- /search page -->
-</div><!-- /app end, footer outside so it always shows -->
+<!-- CONTACT PAGE -->
+<div id="page-contact" class="page">
+  <div class="contact-wrap">
+    <h2 style="font-family:var(--f-serif);font-size:36px;font-weight:700">Get in Touch</h2>
+    <p style="color:var(--text3);margin-top:8px">We reply to all messages within 48 hours.</p>
+    <div class="contact-grid">
+      <div>
+        <div class="fg"><label class="fl">Your name *</label><input class="fi" id="ctName" placeholder="Your full name"></div>
+        <div class="fg"><label class="fl">Email *</label><input class="fi" id="ctEmail" type="email" placeholder="your@email.com"></div>
+        <div class="fg">
+          <label class="fl">Subject *</label>
+          <select class="fsel" id="ctSubject">
+            <option value="">Select a subject…</option>
+            <option>General Enquiry</option>
+            <option>Author Support</option>
+            <option>Copyright Issue</option>
+            <option>Technical Problem</option>
+            <option>Partnership</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Message *</label><textarea class="fta" id="ctMessage" placeholder="How can we help?" style="min-height:140px"></textarea></div>
+        <div class="ferr" id="ctErr"></div>
+        <button class="btn btn-violet" id="ctBtn" onclick="submitContact()" style="width:100%;justify-content:center">Send message →</button>
+        <div id="ctSuccess" class="hidden" style="background:#eaf5ea;border:1px solid #a5d6a7;border-radius:var(--r);padding:14px;font-size:14px;color:#2e7d32;margin-top:12px">
+          ✅ Message sent! We'll reply to your email within 48 hours.
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="contact-info-card">
+          <h3>Contact details</h3>
+          <div class="contact-row">📧 <a href="mailto:hello@thalia.com">hello@thalia.com</a></div>
+          <div class="contact-row">✍️ <a href="mailto:authors@thalia.com">authors@thalia.com</a></div>
+          <div class="contact-row">🛡 <a href="mailto:legal@thalia.com">legal@thalia.com</a></div>
+          <div class="contact-row">🐛 <a href="mailto:support@thalia.com">support@thalia.com</a></div>
+        </div>
+        <div class="contact-info-card">
+          <h3>Quick links</h3>
+          <div class="contact-row">📖 <a href="#" onclick="showPage('home');closeM('contactModal')">Browse stories</a></div>
+          <div class="contact-row">✦ <a href="#" onclick="openM('registerModal')">Become an author</a></div>
+          <div class="contact-row">⚠ <a href="#" onclick="openM('copyrightModal')">File copyright claim</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!-- ══ FOOTER ══ -->
-<footer class="site-footer" id="siteFooter">
+</div><!-- /app -->
+
+<!-- FOOTER -->
+<footer class="site-footer">
   <div class="footer-top">
-
-    <!-- Brand -->
     <div class="footer-brand">
-      <div class="logo" onclick="goPg('home')" style="cursor:pointer">
+      <div class="logo" onclick="showPage('home')" style="cursor:pointer;color:#fff">
         <div class="logo-dot">✦</div>Thalia
       </div>
-      <p>A publishing platform for everyone. No gatekeepers, no agents, no minimum follower count. Your story is valid — and it deserves to be read.</p>
-      <span class="footer-brand-tagline">"The muse of every story not yet told."</span>
+      <p>A publishing platform for everyone. No gatekeepers, no agents, no minimum follower count.</p>
+      <span class="footer-tagline">"The muse of every story not yet told."</span>
     </div>
-
-    <!-- Explore -->
     <div class="footer-col">
       <h4>Explore</h4>
-      <button onclick="goPg('home')">Browse Stories</button>
-      <button onclick="filterTag(document.querySelector('.tags-strip .tag'),'Fiction')">Fiction</button>
-      <button onclick="filterTag(document.querySelector('.tags-strip .tag'),'Poetry')">Poetry</button>
-      <button onclick="filterTag(document.querySelector('.tags-strip .tag'),'Non-Fiction')">Non-Fiction</button>
-      <button onclick="filterTag(document.querySelector('.tags-strip .tag'),'Romance')">Romance</button>
+      <button onclick="showPage('home')">Browse Stories</button>
+      <button onclick="filterTag(document.querySelector('.tag'),'Fiction');showPage('home')">Fiction</button>
+      <button onclick="filterTag(document.querySelector('.tag'),'Poetry');showPage('home')">Poetry</button>
+      <button onclick="filterTag(document.querySelector('.tag'),'Romance');showPage('home')">Romance</button>
     </div>
-
-    <!-- Authors -->
     <div class="footer-col">
       <h4>For Authors</h4>
       <button onclick="openM('registerModal')">Start Writing Free</button>
-      <button onclick="goPg('publish')">Publish a Story</button>
-      <button onclick="goPg('dashboard')">Dashboard</button>
-      <a href="/cdn-cgi/l/email-protection#e48591908c8b9697a4908c85888d85ca878b89">Author Support</a>
+      <button onclick="showPage('publish')">Publish a Story</button>
+      <button onclick="showPage('dashboard')">Dashboard</button>
+      <a href="mailto:authors@thalia.com">Author Support</a>
     </div>
-
-    <!-- Contact -->
     <div class="footer-col">
       <h4>Contact Us</h4>
-      <div class="footer-contact">
-        <div class="footer-contact-title">✦ Get in touch</div>
-        <div class="footer-contact-row">
-          <span class="footer-contact-icon">📧</span>
-          <a href="/cdn-cgi/l/email-protection#0f676a6363604f7b676e63666e216c6062"><span class="__cf_email__" data-cfemail="88e0ede4e4e7c8fce0e9e4e1e9a6ebe7e5">[email&#160;protected]</span></a>
-        </div>
-        <div class="footer-contact-row">
-          <span class="footer-contact-icon">🛡</span>
-          <a href="/cdn-cgi/l/email-protection#04686163656844706c65686d652a676b69"><span class="__cf_email__" data-cfemail="f69a9391979ab6829e979a9f97d895999b">[email&#160;protected]</span></a>
-        </div>
-        <div class="footer-contact-row">
-          <span class="footer-contact-icon">✍️</span>
-          <a href="/cdn-cgi/l/email-protection#20415554484f5253605448414c49410e434f4d"><span class="__cf_email__" data-cfemail="573622233f38252417233f363b3e367934383a">[email&#160;protected]</span></a>
-        </div>
-        <div class="footer-contact-row">
-          <span class="footer-contact-icon">🐛</span>
-          <a href="/cdn-cgi/l/email-protection#72010702021d000632061a131e1b135c111d1f"><span class="__cf_email__" data-cfemail="10636560607f6264506478717c79713e737f7d">[email&#160;protected]</span></a>
-        </div>
-        <div class="footer-contact-row" style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)">
-          <span class="footer-contact-icon">⏱</span>
-          <span style="font-size:12px;color:rgba(237,229,247,.5)">We reply within 48 hours</span>
+      <div class="footer-contact-card">
+        <div class="footer-contact-row">📧 <a href="mailto:hello@thalia.com">hello@thalia.com</a></div>
+        <div class="footer-contact-row">🛡 <a href="mailto:legal@thalia.com">legal@thalia.com</a></div>
+        <div class="footer-contact-row">✍️ <a href="mailto:authors@thalia.com">authors@thalia.com</a></div>
+        <div class="footer-contact-row">🐛 <a href="mailto:support@thalia.com">support@thalia.com</a></div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)">
+          <button class="btn btn-outline" style="color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25);font-size:13px;width:100%;justify-content:center" onclick="showPage('contact')">Send us a message →</button>
         </div>
       </div>
     </div>
-
   </div>
-
   <div class="footer-bottom">
     <div class="footer-bottom-in">
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
         <span>© 2025 Thalia. All rights reserved.</span>
-        <a href="/cdn-cgi/l/email-protection#f49891939598b4809c95989d95da979b99">Privacy Policy</a>
-        <a href="/cdn-cgi/l/email-protection#f59990929499b5819d94999c94db969a98">Terms of Service</a>
-        <a href="/cdn-cgi/l/email-protection#dbb7bebcbab79bafb3bab7b2baf5b8b4b6">Copyright Policy</a>
+        <a href="mailto:legal@thalia.com">Privacy Policy</a>
+        <a href="mailto:legal@thalia.com">Terms of Service</a>
+        <a href="#" onclick="showPage('contact')">Contact</a>
       </div>
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;gap:12px">
         <span class="footer-badge">✦ 55% author revenue share</span>
         <span class="footer-badge">🔒 DMCA protected</span>
       </div>
@@ -814,15 +795,13 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
   </div>
 </footer>
 
-<!-- ══ DM PANEL ══ -->
+<!-- DM PANEL -->
 <div id="dmPanel" class="dm-panel">
   <div class="dm-hdr">
     <span class="dm-hdr-title">💬 Messages</span>
     <button class="btn btn-ghost btn-sm" onclick="closeDM()">✕</button>
   </div>
-  <!-- Conversation list -->
   <div id="dmConvList" class="dm-list"></div>
-  <!-- Thread view (hidden until conv selected) -->
   <div id="dmThread" class="dm-thread">
     <div class="dm-thread-hdr">
       <button class="btn btn-ghost btn-xs" onclick="closeDMThread()">←</button>
@@ -837,7 +816,7 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
   </div>
 </div>
 
-<!-- ══ MODALS ══ -->
+<!-- MODALS -->
 
 <!-- Login -->
 <div class="overlay hidden" id="loginModal" onclick="if(event.target===this)closeM('loginModal')">
@@ -845,10 +824,11 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
     <div class="m-hdr"><h2 class="m-title">Welcome back</h2><button class="m-close" onclick="closeM('loginModal')">✕</button></div>
     <div class="m-body">
       <div class="fg"><label class="fl">Email</label><input class="fi" id="loginEmail" type="email" placeholder="your@email.com"></div>
-      <div class="fg"><label class="fl">Password</label><input class="fi" id="loginPass" type="password" placeholder="••••••••"><div class="ferr hidden" id="loginErr">Invalid email or password.</div></div>
-      <button class="btn btn-violet" style="width:100%;justify-content:center;padding:12px;font-size:15px" onclick="doLogin()">Sign in</button>
+      <div class="fg"><label class="fl">Password</label><input class="fi" id="loginPass" type="password" placeholder="••••••••"></div>
+      <div class="ferr" id="loginErr"></div>
+      <button class="btn btn-violet" style="width:100%;justify-content:center;padding:12px;font-size:15px;margin-top:4px" id="loginBtn" onclick="doSignIn()">Sign in</button>
       <div class="fdiv">or</div>
-      <p style="text-align:center;font-size:14px;color:var(--text3)">No account? <a href="#" onclick="swModal('loginModal','registerModal')" style="color:var(--plum-light)">Join Thalia free →</a></p>
+      <p style="text-align:center;font-size:14px;color:var(--text3)">No account? <a href="#" onclick="swM('loginModal','registerModal')" style="color:var(--plum-light)">Join Thalia free →</a></p>
     </div>
   </div>
 </div>
@@ -859,25 +839,17 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
     <div class="m-hdr"><h2 class="m-title">Become an author</h2><button class="m-close" onclick="closeM('registerModal')">✕</button></div>
     <div class="m-body">
       <div style="background:linear-gradient(135deg,var(--plum),var(--plum-mid));color:#fff;border-radius:var(--r);padding:14px 16px;margin-bottom:20px;font-size:14px;line-height:1.6">
-        ✦ <strong>You're already an author.</strong> You just haven't published yet. Join thousands of writers earning from their stories on Thalia.
+        ✦ <strong>You're already an author.</strong> You just haven't published yet.
       </div>
       <div class="fg"><label class="fl">Pen name or real name *</label><input class="fi" id="regName" placeholder="How readers will know you"></div>
       <div class="fg"><label class="fl">Email *</label><input class="fi" id="regEmail" type="email" placeholder="your@email.com"></div>
       <div class="fg"><label class="fl">Password *</label><input class="fi" id="regPass" type="password" placeholder="min. 8 characters"></div>
       <div class="fg"><label class="fl">Short bio <span style="color:var(--text3)">(optional)</span></label><input class="fi" id="regBio" placeholder="Tell readers who you are…"></div>
-      <div class="fg">
-        <label class="fl">Social links <span style="color:var(--text3)">(optional)</span></label>
-        <div class="soc-inputs">
-          <div class="soc-row"><span class="soc-icon">𝕏</span><input class="fi" id="regTwitter" placeholder="Twitter/X username (no @)"></div>
-          <div class="soc-row"><span class="soc-icon">📷</span><input class="fi" id="regInstagram" placeholder="Instagram username"></div>
-          <div class="soc-row"><span class="soc-icon">🌐</span><input class="fi" id="regWebsite" placeholder="Website URL"></div>
-        </div>
-      </div>
-      <div style="font-size:12.5px;color:var(--text3);background:var(--surface2);padding:12px;border-radius:var(--r);margin-bottom:16px">By joining you confirm all content you publish is original and you hold the copyright.</div>
-      <div class="ferr hidden" id="regErr"></div>
-      <button class="btn btn-violet" style="width:100%;justify-content:center;padding:12px;font-size:15px" onclick="doRegister()">Create free account</button>
+      <div style="font-size:12.5px;color:var(--text3);background:var(--surface2);padding:12px;border-radius:var(--r);margin-bottom:16px">By joining you confirm all content you publish is your original work.</div>
+      <div class="ferr" id="regErr"></div>
+      <button class="btn btn-violet" style="width:100%;justify-content:center;padding:12px;font-size:15px" id="regBtn" onclick="doSignUp()">Create free account</button>
       <div class="fdiv">or</div>
-      <p style="text-align:center;font-size:14px;color:var(--text3)">Have an account? <a href="#" onclick="swModal('registerModal','loginModal')" style="color:var(--plum-light)">Sign in →</a></p>
+      <p style="text-align:center;font-size:14px;color:var(--text3)">Have an account? <a href="#" onclick="swM('registerModal','loginModal')" style="color:var(--plum-light)">Sign in →</a></p>
     </div>
   </div>
 </div>
@@ -887,6 +859,13 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
   <div class="modal">
     <div class="m-hdr"><h2 class="m-title">Edit Profile</h2><button class="m-close" onclick="closeM('editProfileModal')">✕</button></div>
     <div class="m-body">
+      <div class="fg">
+        <label class="fl">Profile Photo</label>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div class="avatar" id="editAvatarPreview" style="width:64px;height:64px;font-size:24px;font-family:var(--f-serif)"></div>
+          <label class="btn btn-outline btn-sm" style="cursor:pointer">Upload photo<input type="file" accept="image/*" style="display:none" onchange="uploadAvatar(this)"></label>
+        </div>
+      </div>
       <div class="fg"><label class="fl">Display name</label><input class="fi" id="epName"></div>
       <div class="fg"><label class="fl">Bio</label><textarea class="fta" id="epBio" style="min-height:80px"></textarea></div>
       <div class="fg">
@@ -899,20 +878,20 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
       </div>
       <div style="display:flex;gap:10px">
         <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeM('editProfileModal')">Cancel</button>
-        <button class="btn btn-violet" style="flex:1;justify-content:center" onclick="saveProfile()">Save</button>
+        <button class="btn btn-violet" style="flex:1;justify-content:center" id="saveProfileBtn" onclick="saveProfile()">Save</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- New DM (start conversation) -->
+<!-- New DM -->
 <div class="overlay hidden" id="newDMModal" onclick="if(event.target===this)closeM('newDMModal')">
   <div class="modal">
     <div class="m-hdr"><h2 class="m-title">New Message</h2><button class="m-close" onclick="closeM('newDMModal')">✕</button></div>
     <div class="m-body">
       <div class="fg">
-        <label class="fl">Send to</label>
-        <div id="dmToInfo" style="display:flex;align-items:center;gap:12px;background:var(--surface2);padding:12px;border-radius:var(--r)">
+        <label class="fl">To</label>
+        <div style="display:flex;align-items:center;gap:12px;background:var(--surface2);padding:12px;border-radius:var(--r)">
           <div class="avatar" id="dmToAv" style="width:36px;height:36px;font-size:15px"></div>
           <strong id="dmToName"></strong>
         </div>
@@ -931,13 +910,11 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
   <div class="modal">
     <div class="m-hdr"><h2 class="m-title" style="color:var(--crimson)">⚠ Copyright Claim</h2><button class="m-close" onclick="closeM('copyrightModal')">✕</button></div>
     <div class="m-body">
-      <div class="claim-step"><div class="claim-num">1</div><div><strong>Verify ownership</strong><br><span style="font-size:13px;color:var(--text3)">Only the rightful copyright holder may file.</span></div></div>
-      <div class="claim-step"><div class="claim-num">2</div><div><strong>Submit evidence</strong><br><span style="font-size:13px;color:var(--text3)">Provide proof of original authorship.</span></div></div>
-      <div class="claim-step"><div class="claim-num">3</div><div><strong>Review & takedown</strong><br><span style="font-size:13px;color:var(--text3)">Admin reviews within 48h.</span></div></div>
-      <div class="fg"><label class="fl">Legal name / org *</label><input class="fi" id="claimName"></div>
+      <p style="font-size:14px;color:var(--text3);margin-bottom:18px">Only the rightful copyright holder may file a claim. Admin reviews within 48 hours. Confirmed claims result in immediate takedown.</p>
+      <div class="fg"><label class="fl">Your legal name / organisation *</label><input class="fi" id="claimName"></div>
       <div class="fg"><label class="fl">Contact email *</label><input class="fi" id="claimEmail" type="email"></div>
-      <div class="fg"><label class="fl">Description *</label><textarea class="fta" id="claimDesc" placeholder="Describe the infringement…"></textarea></div>
-      <div style="background:var(--surface2);border-radius:var(--r);padding:12px;font-size:12px;color:var(--text3);margin-bottom:18px">⚠ Filing a false claim is a legal offence. By submitting you confirm under penalty of perjury that you are the rightful copyright holder.</div>
+      <div class="fg"><label class="fl">Description of infringement *</label><textarea class="fta" id="claimDesc" placeholder="Describe the infringement. Include publication dates, ISBNs, or URLs as evidence…"></textarea></div>
+      <div style="background:var(--surface2);border-radius:var(--r);padding:12px;font-size:12px;color:var(--text3);margin-bottom:18px">⚠ Filing a false claim is a legal offence.</div>
       <div style="display:flex;gap:10px">
         <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeM('copyrightModal')">Cancel</button>
         <button class="btn btn-danger" style="flex:1;justify-content:center" onclick="submitClaim()">Submit Claim</button>
@@ -946,24 +923,24 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
   </div>
 </div>
 
-<!-- Ban Reason Modal -->
+<!-- Ban Modal -->
 <div class="overlay hidden" id="banModal" onclick="if(event.target===this)closeM('banModal')">
   <div class="modal">
     <div class="m-hdr"><h2 class="m-title" style="color:var(--crimson)">🚫 Ban User</h2><button class="m-close" onclick="closeM('banModal')">✕</button></div>
     <div class="m-body">
       <div id="banTargetInfo" style="display:flex;align-items:center;gap:12px;background:var(--surface2);padding:14px;border-radius:var(--r);margin-bottom:18px"></div>
-      <div class="fg"><label class="fl">Reason for ban *</label>
+      <div class="fg"><label class="fl">Reason *</label>
         <select class="fsel" id="banReason">
-          <option value="">Select a reason…</option>
-          <option value="Copyright infringement">Repeated copyright infringement</option>
-          <option value="Plagiarism">Plagiarism</option>
-          <option value="Spam">Spam / low-quality content</option>
-          <option value="Harassment">Harassment of other users</option>
-          <option value="Harmful content">Harmful or illegal content</option>
-          <option value="Other">Other</option>
+          <option value="">Select reason…</option>
+          <option>Repeated copyright infringement</option>
+          <option>Plagiarism</option>
+          <option>Spam / low-quality content</option>
+          <option>Harassment</option>
+          <option>Harmful content</option>
+          <option>Other</option>
         </select>
       </div>
-      <div class="fg"><label class="fl">Additional notes <span style="color:var(--text3)">(optional)</span></label><textarea class="fta" id="banNotes" style="min-height:80px" placeholder="Internal admin notes…"></textarea></div>
+      <div class="fg"><label class="fl">Admin notes <span style="color:var(--text3)">(optional)</span></label><textarea class="fta" id="banNotes" style="min-height:80px"></textarea></div>
       <div style="display:flex;gap:10px">
         <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeM('banModal')">Cancel</button>
         <button class="btn btn-danger" style="flex:1;justify-content:center" onclick="confirmBan()">Ban User</button>
@@ -972,703 +949,1066 @@ Use '[AD]' where you'd like an ad placement." style="min-height:420px;border:non
   </div>
 </div>
 
+<!-- View Contact Message Modal -->
+<div class="overlay hidden" id="viewMsgModal" onclick="if(event.target===this)closeM('viewMsgModal')">
+  <div class="modal">
+    <div class="m-hdr"><h2 class="m-title">Message</h2><button class="m-close" onclick="closeM('viewMsgModal')">✕</button></div>
+    <div class="m-body" id="viewMsgBody"></div>
+  </div>
+</div>
+
 <div id="toasts"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ══════════════════════════════════════════════
-//  CONSTANTS
-// ══════════════════════════════════════════════
-const AD_RATE = 0.003, PAYOUT_MIN = 50;
+<script>
+// ================================================================
+// CONFIGURATION — FILL THESE IN BEFORE DEPLOYING
+// ================================================================
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const AD_RATE = 0.003;
+const PAYOUT_MIN = 50;
 const ALL_TAGS = ['Fiction','Mystery','Romance','Sci-Fi','Fantasy','Thriller','Horror','Non-Fiction','Poetry','Drama','Adventure','Self-Help','Biography','Historical','Comedy','Memoir'];
 const EMOJIS = ['📖','📚','✍️','🌟','🔮','🌊','🏔️','🌙','🔥','⚡','🌿','🎭','🗺️','📻','✉️'];
+const PAGE_SIZE = 12;
 
-// ══════════════════════════════════════════════
-//  SEED DATA
-// ══════════════════════════════════════════════
-const SEED_USERS = [
-  {id:'u1',name:'Thalia Admin',email:'admin@thalia.com',password:'admin123',bio:'Platform steward.',books:[],earnings:0,reads:0,isAdmin:true,banned:false,socials:{}},
-  {id:'u2',name:'Elena Vasquez',email:'elena@example.com',password:'pass123',bio:'Fantasy and speculative fiction. Three novels, countless notebooks.',books:['b1','b5'],earnings:7.36,reads:2454,isAdmin:false,banned:false,socials:{twitter:'elenavasquez',instagram:'elenavasquez_writes',website:'https://elenavasquez.com'}},
-  {id:'u3',name:'James Okonkwo',email:'james@example.com',password:'pass123',bio:'Short fiction and letters. Based in Lagos.',books:['b2','b6'],earnings:10.94,reads:3646,isAdmin:false,banned:false,socials:{twitter:'jamesokonkwo',website:'https://jamesokonkwo.ng'}},
-  {id:'u4',name:'Sarah Chen',email:'sarah@example.com',password:'pass123',bio:'Former athlete, now writer. Stories about people who run.',books:['b3'],earnings:2.96,reads:987,isAdmin:false,banned:false,socials:{instagram:'sarahchen_writes'}},
-  {id:'u5',name:'Priya Nair',email:'priya@example.com',password:'pass123',bio:'Marine biologist & climate fiction author.',books:['b4'],earnings:7.67,reads:2556,isAdmin:false,banned:false,socials:{twitter:'priyanairwrites',website:'https://priyanair.earth'}},
-];
+// ================================================================
+// INIT SUPABASE
+// ================================================================
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const SEED_BOOKS = [
-  {id:'b1',title:'The Midnight Cartographer',author:'u2',authorName:'Elena Vasquez',desc:'A cartographer discovers maps that predict the future.',tags:['Fantasy','Mystery'],reads:1842,earnings:5.52,emoji:'🗺️',cover:null,flagged:false,takedown:false,createdAt:Date.now()-864000000,comments:[
-    {id:'c1',userId:'u3',userName:'James Okonkwo',rating:5,text:"Absolutely spellbinding. The world-building is unlike anything I've read.",date:Date.now()-500000000},
-    {id:'c2',userId:'u4',userName:'Sarah Chen',rating:4,text:'Beautiful prose. Slight pacing issues mid-book but totally worth it.',date:Date.now()-300000000}
-  ],content:`--- Chapter One: The Map Room ---
+// App state
+let USER = null;
+let PROFILE = null;
+let VIEW_BOOK = null;
+let VIEW_AUTHOR_ID = null;
+let BAN_TARGET_ID = null;
+let DM_RECIPIENT = null;
+let DM_ACTIVE_CONV = null;
+let SEL_TAGS = [];
+let STARS = 0;
+let BOOKS_OFFSET = 0;
+let CURRENT_TAG = 'all';
+let DM_SUBSCRIPTION = null;
+let PENDING_COVER_FILE = null;
+let STORY_IMG_URLS = [];
 
-The smell of old paper and ink had always comforted Elena. She had spent most of her thirty-two years surrounded by maps — hand-drawn, machine-printed, satellite-rendered — and in their precise lines she found a clarity the real world never offered.
-
-But tonight, the map on her desk was different.
-
-It had arrived in a plain brown envelope, no return address, slipped under the door of her studio at the Institute. At first glance it resembled a standard topographical survey of the city. Then she noticed the timestamp in the corner.
-
-It was dated three months from now. And it showed a bridge that didn't exist yet.
-
-[AD]
-
---- Chapter Two: The Sender ---
-
-She spent the night cross-referencing the map with every survey database she could access. The bridge wasn't in any planning document, any city proposal, any developer portfolio.
-
-Yet there it was — a precise architectural rendering, with load tolerances noted in the margins in handwriting she almost recognised.
-
-It wasn't until dawn that she saw the watermark: a compass rose with twelve points instead of eight. She had only ever seen that symbol in one place before. Her grandfather's studio. The studio that burned down twenty years ago, taking him with it.`},
-  {id:'b2',title:'Static & Silence',author:'u3',authorName:'James Okonkwo',desc:'Two strangers connect through a broken radio across an impossible distance.',tags:['Romance','Drama'],reads:3201,earnings:9.60,emoji:'📻',cover:null,flagged:false,takedown:false,createdAt:Date.now()-432000000,comments:[
-    {id:'c3',userId:'u5',userName:'Priya Nair',rating:5,text:"I cried. James writes with such warmth — every line feels earned.",date:Date.now()-200000000}
-  ],content:`--- Part One: Frequencies ---
-
-The radio had belonged to his father. It sat in the corner of the spare room like a patient animal — valves glowing amber at dusk, crackling with frequencies that came and went like weather.
-
-Marcus wasn't trying to reach anyone the first time he spoke into the microphone. He was just testing the old equipment, reading a recipe aloud from the newspaper.
-
-[AD]
-
-Her voice came back on 7.195 MHz, steady and amused.
-
-"That's not how you make jollof rice," she said.
-
-He nearly knocked the whole set off the table.`},
-  {id:'b3',title:'Eleven Seconds',author:'u4',authorName:'Sarah Chen',desc:'An Olympic sprinter uncovers corruption that goes all the way to the top.',tags:['Thriller','Non-Fiction'],reads:987,earnings:2.96,emoji:'🏃',cover:null,flagged:false,takedown:false,createdAt:Date.now()-172800000,comments:[],content:`--- The Race ---
-
-Eleven seconds. That is all that stands between Amara Diallo and everything she has worked for since she was seven years old.
-
-Eleven seconds and she will either become the fastest woman alive, or the woman who knew too much and ran anyway.
-
-[AD]
-
-The starting blocks feel different today. A slight give on the left, a micro-adjustment in the angle. She mentioned it to her coach. He told her it was nerves. She knows the difference between nerves and physics.
-
-The gun fires. She runs.`},
-  {id:'b4',title:'Everything Underwater',author:'u5',authorName:'Priya Nair',desc:'Climate fiction 2089: a marine biologist preserves the last coral reef archive.',tags:['Sci-Fi','Fiction'],reads:2556,earnings:7.67,emoji:'🌊',cover:null,flagged:false,takedown:false,createdAt:Date.now()-86400000,comments:[
-    {id:'c4',userId:'u2',userName:'Elena Vasquez',rating:5,text:"One of the most important books I've read. Priya makes you feel the weight of each disappearing species.",date:Date.now()-40000000}
-  ],content:`--- Year 2089. Indian Ocean ---
-
-The reef was not dead. That was the important thing Lena kept reminding herself as she descended through warming water.
-
-It was not dead. It was archived.
-
-Every polyp, every calcium lattice — mapped, catalogued, preserved in a server farm two kilometres below the surface in a vault her team had spent eleven years building.
-
-[AD]
-
-But archived was not alive. And alive was what the world needed.`},
-  {id:'b5',title:"The Cartographer's Ghost",author:'u2',authorName:'Elena Vasquez',desc:'A sequel novella — the maps show places that no longer exist.',tags:['Fantasy','Horror'],reads:612,earnings:1.84,emoji:'👻',cover:null,flagged:false,takedown:false,createdAt:Date.now()-50000000,comments:[],content:`A ghost does not know it is a ghost. That is the first thing they teach you at the Institute.
-
-A mapmaker traces a coastline. Another copies it. The ghost — the original error — becomes the coastline. The coastline becomes real.
-
-[AD]
-
-The maps arriving on her desk now had errors. But every time she tried to locate the source, the map would be different by morning. As if correcting itself. As if aware of her scrutiny.
-
-She started sleeping in the studio.`},
-  {id:'b6',title:'Letters from Nowhere',author:'u3',authorName:'James Okonkwo',desc:'Stories about letters written and never sent — and what happens when they arrive.',tags:['Fiction','Drama','Poetry'],reads:445,earnings:1.34,emoji:'✉️',cover:null,flagged:false,takedown:false,createdAt:Date.now()-20000000,comments:[
-    {id:'c5',userId:'u4',userName:'Sarah Chen',rating:4,text:'"To Whom It May Concern" made me put the book down and stare at the wall for ten minutes.',date:Date.now()-10000000}
-  ],content:`"To Whom It May Concern —
-
-I am writing from a place I cannot name to tell you something I should have said in person.
-
-You were right. About all of it.
-
-[AD]
-
-I am sending this letter to the last address I have for you, which is probably wrong. But I am sending it anyway.
-
-If it reaches you: hello. If it doesn't: it reached someone, and that someone will know that somewhere, a person they have never met wanted very badly to tell the truth.
-
-That seems like enough.
-
-— Someone who should have written sooner"`},
-];
-
-// Seed DM conversations
-const SEED_DMS = [
-  {id:'dm1',participants:['u2','u3'],messages:[
-    {from:'u3',text:"Elena, your maps book is incredible. How long did the worldbuilding take?",ts:Date.now()-86400000},
-    {from:'u2',text:"James! About three months of notes before I wrote a word. The compass-rose symbol was the key that unlocked everything.",ts:Date.now()-80000000},
-    {from:'u3',text:"That's the dedication. I can feel it on every page.",ts:Date.now()-76000000},
-  ]},
-];
-
-// ══════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════
-let S = {
-  books:[], users:[], claims:[], dms:[],
-  currentUser:null, viewBook:null,
-  pendingCover:null, selTags:[], pendingStars:0,
-  dmOpen:false, activeDM:null, banTargetId:null,
-};
-
-function loadState(){
-  try{
-    const raw=localStorage.getItem('thalia_v3');
-    if(raw){const d=JSON.parse(raw);S.books=d.books||clone(SEED_BOOKS);S.users=d.users||clone(SEED_USERS);S.claims=d.claims||[];S.dms=d.dms||clone(SEED_DMS);}
-    else{S.books=clone(SEED_BOOKS);S.users=clone(SEED_USERS);S.claims=[];S.dms=clone(SEED_DMS);}
-  }catch{S.books=clone(SEED_BOOKS);S.users=clone(SEED_USERS);S.claims=[];S.dms=clone(SEED_DMS);}
-  const raw=localStorage.getItem('thalia_user');
-  if(raw){S.currentUser=JSON.parse(raw);syncUser();}
-  const th=localStorage.getItem('thalia_theme')||'light';
-  document.documentElement.setAttribute('data-theme',th);
+// ================================================================
+// THEME
+// ================================================================
+function toggleTheme(){
+  const t = document.documentElement.getAttribute('data-theme');
+  const n = t==='dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', n);
+  localStorage.setItem('thalia_theme', n);
 }
-function saveState(){localStorage.setItem('thalia_v3',JSON.stringify({books:S.books,users:S.users,claims:S.claims,dms:S.dms}));}
-function syncUser(){if(!S.currentUser)return;const u=S.users.find(x=>x.id===S.currentUser.id);if(u){S.currentUser={...u};localStorage.setItem('thalia_user',JSON.stringify(S.currentUser));}}
-function clone(x){return JSON.parse(JSON.stringify(x));}
+(function(){
+  const t = localStorage.getItem('thalia_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+})();
 
-// ══════════════════════════════════════════════
-//  THEME
-// ══════════════════════════════════════════════
-function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme');const n=cur==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('thalia_theme',n);}
-
-// ══════════════════════════════════════════════
-//  BAN CHECK
-// ══════════════════════════════════════════════
-function checkBan(){
-  if(S.currentUser){const u=S.users.find(x=>x.id===S.currentUser.id);if(u&&u.banned){document.getElementById('app').classList.add('hidden');document.getElementById('banWall').classList.remove('hidden');return true;}}
-  document.getElementById('app').classList.remove('hidden');document.getElementById('banWall').classList.add('hidden');return false;
+// ================================================================
+// AUTH
+// ================================================================
+async function doSignUp(){
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const bio = document.getElementById('regBio').value.trim();
+  const errEl = document.getElementById('regErr');
+  if(!name||!email||!pass){ showErr(errEl,'Please fill in all required fields.'); return; }
+  if(pass.length<8){ showErr(errEl,'Password must be at least 8 characters.'); return; }
+  btnLoading('regBtn', true);
+  const { error } = await sb.auth.signUp({ email, password: pass, options:{ data:{ name, bio } } });
+  btnLoading('regBtn', false);
+  if(error){ showErr(errEl, error.message); return; }
+  errEl.classList.remove('show');
+  closeM('registerModal');
+  toast('Welcome to Thalia! Check your email to confirm your account. ✦','success');
 }
 
-// ══════════════════════════════════════════════
-//  NAV
-// ══════════════════════════════════════════════
-function goPg(id){
-  if(checkBan())return;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
-  window.scrollTo(0,0);
-  if(id==='dashboard')renderDashboard();
-  if(id==='admin')renderAdmin();
-  if(id==='publish'){buildTagOpts();S.selTags=[];S.pendingCover=null;renderTagsSel();}
+async function doSignIn(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  btnLoading('loginBtn', true);
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  btnLoading('loginBtn', false);
+  if(error){ showErr(errEl,'Invalid email or password.'); return; }
+  errEl.classList.remove('show');
+  closeM('loginModal');
+  toast(`Welcome back! ✦`,'success');
 }
-function toggleDD(){document.getElementById('avDD').classList.toggle('hidden');}
-function cDD(){document.getElementById('avDD').classList.add('hidden');}
-document.addEventListener('click',e=>{if(!e.target.closest('.nav-av-wrap'))cDD();});
+
+async function doSignOut(){
+  await sb.auth.signOut();
+  USER = null; PROFILE = null;
+  updateNav();
+  showPage('home');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('banWall').classList.add('hidden');
+  toast('Signed out.','info');
+}
+
+// ================================================================
+// PROFILE
+// ================================================================
+async function loadProfile(userId){
+  const { data } = await sb.from('profiles').select('*').eq('id', userId).single();
+  PROFILE = data;
+  if(PROFILE?.is_banned){
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('banWall').classList.remove('hidden');
+    document.getElementById('banMsg').textContent = `Your account has been suspended${PROFILE.ban_reason ? ` (${PROFILE.ban_reason})` : ''}. Contact support@thalia.com if you believe this is an error.`;
+    return;
+  }
+  updateNav();
+  updateAdminNav();
+}
 
 function updateNav(){
-  const u=S.currentUser;
-  document.getElementById('navGuest').classList.toggle('hidden',!!u);
-  document.getElementById('navUser').classList.toggle('hidden',!u);
-  if(u){const av=document.getElementById('navAv');av.textContent=u.name[0].toUpperCase();av.title=u.name;}
-  updateProofStats();updateDMDot();
-}
-function updateProofStats(){
-  const live=S.books.filter(b=>!b.takedown);
-  const reads=live.reduce((s,b)=>s+(b.reads||0),0);
-  const authors=new Set(live.map(b=>b.author)).size;
-  document.getElementById('hBooks').textContent=live.length;
-  document.getElementById('hReads').textContent=reads>=1000?(reads/1000).toFixed(1)+'k':reads;
-  document.getElementById('hAuthors').textContent=authors;
+  const loggedIn = !!USER;
+  document.getElementById('navGuest').classList.toggle('hidden', loggedIn);
+  document.getElementById('navUser').classList.toggle('hidden', !loggedIn);
+  if(PROFILE){
+    const av = document.getElementById('navAv');
+    if(PROFILE.avatar_url){
+      av.innerHTML = `<img src="${PROFILE.avatar_url}" alt="">`;
+      av.style.background = 'none';
+    } else {
+      av.textContent = PROFILE.name[0].toUpperCase();
+      av.style.background = '';
+    }
+    av.title = PROFILE.name;
+  }
+  updateDMDot();
 }
 
-// ══════════════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════════════
-function doLogin(){
-  const email=document.getElementById('loginEmail').value.trim();
-  const pass=document.getElementById('loginPass').value;
-  const u=S.users.find(x=>x.email===email&&x.password===pass);
-  if(!u){document.getElementById('loginErr').classList.remove('hidden');return;}
-  document.getElementById('loginErr').classList.add('hidden');
-  S.currentUser={...u};localStorage.setItem('thalia_user',JSON.stringify(S.currentUser));
-  closeM('loginModal');updateNav();
-  if(u.banned){checkBan();return;}
-  toast(`Welcome back, ${u.name}! ✦`,'success');
+function updateAdminNav(){
+  const isAdmin = PROFILE?.is_admin;
+  document.getElementById('adminDropLbl').style.display = isAdmin ? '' : 'none';
+  document.getElementById('adminDropLink').style.display = isAdmin ? '' : 'none';
+  document.getElementById('adminDropHr').style.display = isAdmin ? '' : 'none';
 }
-function doRegister(){
-  const name=document.getElementById('regName').value.trim();
-  const email=document.getElementById('regEmail').value.trim();
-  const pass=document.getElementById('regPass').value;
-  const bio=document.getElementById('regBio').value.trim();
-  const tw=document.getElementById('regTwitter').value.trim();
-  const ig=document.getElementById('regInstagram').value.trim();
-  const wb=document.getElementById('regWebsite').value.trim();
-  const err=document.getElementById('regErr');
-  if(!name||!email||!pass){err.textContent='Please fill in all required fields.';err.classList.remove('hidden');return;}
-  if(pass.length<8){err.textContent='Password must be 8+ characters.';err.classList.remove('hidden');return;}
-  if(S.users.find(u=>u.email===email)){err.textContent='Email already in use.';err.classList.remove('hidden');return;}
-  err.classList.add('hidden');
-  const nu={id:'u'+Date.now(),name,email,password:pass,bio:bio||'Author on Thalia.',books:[],earnings:0,reads:0,isAdmin:false,banned:false,socials:{twitter:tw,instagram:ig,website:wb}};
-  S.users.push(nu);S.currentUser={...nu};
-  localStorage.setItem('thalia_user',JSON.stringify(S.currentUser));
-  saveState();closeM('registerModal');updateNav();
-  toast(`Welcome to Thalia, ${name}! Your story starts now. ✦`,'success');
-}
-function logout(){S.currentUser=null;localStorage.removeItem('thalia_user');updateNav();goPg('home');toast('Signed out.','info');}
 
 function openEditProfile(){
-  if(!S.currentUser)return;
-  const u=S.users.find(x=>x.id===S.currentUser.id);
-  document.getElementById('epName').value=u.name||'';
-  document.getElementById('epBio').value=u.bio||'';
-  document.getElementById('epTwitter').value=(u.socials||{}).twitter||'';
-  document.getElementById('epInstagram').value=(u.socials||{}).instagram||'';
-  document.getElementById('epWebsite').value=(u.socials||{}).website||'';
+  if(!PROFILE) return;
+  document.getElementById('epName').value = PROFILE.name||'';
+  document.getElementById('epBio').value = PROFILE.bio||'';
+  document.getElementById('epTwitter').value = PROFILE.twitter||'';
+  document.getElementById('epInstagram').value = PROFILE.instagram||'';
+  document.getElementById('epWebsite').value = PROFILE.website||'';
+  const prev = document.getElementById('editAvatarPreview');
+  if(PROFILE.avatar_url){ prev.innerHTML=`<img src="${PROFILE.avatar_url}" alt="">`; }
+  else { prev.textContent = PROFILE.name[0].toUpperCase(); }
   openM('editProfileModal');
 }
-function saveProfile(){
-  if(!S.currentUser)return;
-  const u=S.users.find(x=>x.id===S.currentUser.id);
-  u.name=document.getElementById('epName').value.trim()||u.name;
-  u.bio=document.getElementById('epBio').value.trim();
-  u.socials={twitter:document.getElementById('epTwitter').value.trim(),instagram:document.getElementById('epInstagram').value.trim(),website:document.getElementById('epWebsite').value.trim()};
-  S.currentUser={...u};localStorage.setItem('thalia_user',JSON.stringify(S.currentUser));
-  saveState();closeM('editProfileModal');updateNav();toast('Profile updated.','success');
+
+async function uploadAvatar(input){
+  if(!input.files||!input.files[0]) return;
+  const file = input.files[0];
+  const ext = file.name.split('.').pop();
+  const path = `${USER.id}/avatar.${ext}`;
+  btnLoading('saveProfileBtn', true);
+  const { error } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+  if(error){ toast('Upload failed: '+error.message,'error'); btnLoading('saveProfileBtn',false); return; }
+  const { data: { publicUrl } } = sb.storage.from('avatars').getPublicUrl(path);
+  const prev = document.getElementById('editAvatarPreview');
+  prev.innerHTML = `<img src="${publicUrl}" alt="">`;
+  PROFILE.avatar_url = publicUrl;
+  btnLoading('saveProfileBtn', false);
+  toast('Photo uploaded!','success');
 }
 
-// ══════════════════════════════════════════════
-//  BOOK CARDS
-// ══════════════════════════════════════════════
-function avgRating(b){const cs=(b.comments||[]).filter(c=>c.rating);if(!cs.length)return null;return(cs.reduce((s,c)=>s+c.rating,0)/cs.length).toFixed(1);}
+async function saveProfile(){
+  if(!USER) return;
+  btnLoading('saveProfileBtn', true);
+  const updates = {
+    name: document.getElementById('epName').value.trim() || PROFILE.name,
+    bio: document.getElementById('epBio').value.trim(),
+    twitter: document.getElementById('epTwitter').value.trim(),
+    instagram: document.getElementById('epInstagram').value.trim(),
+    website: document.getElementById('epWebsite').value.trim(),
+    avatar_url: PROFILE.avatar_url || '',
+  };
+  const { error } = await sb.from('profiles').update(updates).eq('id', USER.id);
+  btnLoading('saveProfileBtn', false);
+  if(error){ toast('Save failed: '+error.message,'error'); return; }
+  Object.assign(PROFILE, updates);
+  updateNav();
+  closeM('editProfileModal');
+  toast('Profile updated.','success');
+}
+
+// ================================================================
+// BOOKS — LOAD
+// ================================================================
+async function loadBooks(reset=true){
+  if(reset){ BOOKS_OFFSET = 0; document.getElementById('bookGrid').innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><div>Loading stories…</div></div>'; }
+  let query = sb.from('books')
+    .select('id,title,description,cover_url,author_id,author_name,tags,reads,earnings,is_flagged,is_takedown,created_at')
+    .eq('is_takedown', false)
+    .order('created_at', { ascending: false })
+    .range(BOOKS_OFFSET, BOOKS_OFFSET + PAGE_SIZE - 1);
+  if(CURRENT_TAG && CURRENT_TAG !== 'all') query = query.contains('tags', [CURRENT_TAG]);
+  const { data, error } = await query;
+  if(error){ toast('Failed to load books.','error'); return; }
+  if(reset) document.getElementById('bookGrid').innerHTML = '';
+  if(!data.length && reset){ document.getElementById('bookGrid').innerHTML = '<p style="color:var(--text3);grid-column:1/-1;padding:40px 0;text-align:center">No stories yet — be the first to publish!</p>'; }
+  data.forEach(b => {
+    document.getElementById('bookGrid').insertAdjacentHTML('beforeend', bookCardHTML(b));
+  });
+  BOOKS_OFFSET += data.length;
+  document.getElementById('loadMoreBtn').style.display = data.length === PAGE_SIZE ? '' : 'none';
+  updateProofStats();
+}
+
+async function loadMoreBooks(){ await loadBooks(false); }
+
+async function updateProofStats(){
+  const { count: bookCount } = await sb.from('books').select('*', {count:'exact',head:true}).eq('is_takedown',false);
+  const { data: reads } = await sb.from('books').select('reads').eq('is_takedown',false);
+  const { count: authorCount } = await sb.from('profiles').select('*', {count:'exact',head:true});
+  const totalReads = reads?.reduce((s,b)=>s+(b.reads||0),0) || 0;
+  document.getElementById('hBooks').textContent = bookCount || 0;
+  document.getElementById('hReads').textContent = totalReads>=1000 ? (totalReads/1000).toFixed(1)+'k' : totalReads;
+  document.getElementById('hAuthors').textContent = authorCount || 0;
+}
 
 function bookCardHTML(b){
-  if(b.takedown)return'';
-  const cover=b.cover?`<img src="${b.cover}" alt="">`:`<div class="bcover-grad"></div><div class="bcover-emoji">${b.emoji||'📖'}</div>`;
-  const tags=(b.tags||[]).slice(0,2).map(t=>`<span class="btag">${t}</span>`).join('');
-  const r=avgRating(b);
-  return`<div class="book-card" onclick="openBook('${b.id}')">
+  const cover = b.cover_url
+    ? `<img src="${b.cover_url}" alt="${b.title}" loading="lazy">`
+    : `<div class="bcover-grad"></div><div class="bcover-emoji">${EMOJIS[Math.abs(b.id.charCodeAt(0))%EMOJIS.length]||'📖'}</div>`;
+  const tags = (b.tags||[]).slice(0,2).map(t=>`<span class="btag">${t}</span>`).join('');
+  return `<div class="book-card" onclick="openBook('${b.id}')">
     <div class="book-cover">${cover}</div>
     <div class="book-info">
-      <div class="book-title">${b.title}</div>
-      <div class="book-author">by <span onclick="event.stopPropagation();openAuthor('${b.author}')">${b.authorName}</span></div>
+      <div class="book-title">${esc(b.title)}</div>
+      <div class="book-author">by <span onclick="event.stopPropagation();openAuthor('${b.author_id}')">${esc(b.author_name)}</span></div>
       <div class="book-tags">${tags}</div>
       <div class="book-meta">
         <span class="book-reads">👁 ${(b.reads||0).toLocaleString()}</span>
-        ${r?`<span class="book-rating">★ ${r}</span>`:''}
+        ${b.is_flagged ? '<span class="badge bred">⚠ Claimed</span>' : ''}
       </div>
-      ${b.flagged?'<div style="margin-top:6px"><span class="badge bred">⚠ Claimed</span></div>':''}
     </div>
   </div>`;
 }
 
-function renderGrid(books,tid){
-  const el=document.getElementById(tid);if(!el)return;
-  const html=books.filter(b=>!b.takedown).map(bookCardHTML).join('');
-  el.innerHTML=html||'<p style="color:var(--text3);grid-column:1/-1;padding:40px 0;text-align:center">No stories found.</p>';
+// ================================================================
+// BOOK READER
+// ================================================================
+async function openBook(id){
+  document.getElementById('rdrContent').innerHTML = '<div class="loading-state"><div class="loading-spinner"></div></div>';
+  showPage('reader');
+  const { data: b, error } = await sb.from('books').select('*').eq('id', id).single();
+  if(error||!b){ toast('Book not found.','error'); showPage('home'); return; }
+  if(b.is_takedown){ toast('This story has been removed.','error'); showPage('home'); return; }
+  VIEW_BOOK = b;
+  // Cover
+  const cEl = document.getElementById('rdrCover');
+  cEl.innerHTML = b.cover_url ? `<img src="${b.cover_url}" alt="">` : `<div style="font-size:36px;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--plum),var(--violet))">${EMOJIS[0]}</div>`;
+  document.getElementById('rdrTitle').textContent = b.title;
+  document.getElementById('rdrAuthorLnk').innerHTML = `by <strong>${esc(b.author_name)}</strong> &nbsp;→ View profile`;
+  document.getElementById('rdrTags').innerHTML = (b.tags||[]).map(t=>`<span class="badge bv">${t}</span>`).join(' ');
+  // DM button
+  const dmBtn = document.getElementById('dmAuthorBtn');
+  if(USER && USER.id !== b.author_id){ dmBtn.style.display=''; dmBtn.setAttribute('data-author', b.author_id); }
+  else dmBtn.style.display='none';
+  // Admin takedown button
+  const tdBtn = document.getElementById('adminTakedownBtn');
+  tdBtn.style.display = PROFILE?.is_admin ? '' : 'none';
+  renderReaderContent(b);
+  await loadComments(b.id);
+  recordRead(b.id);
 }
-
-// ══════════════════════════════════════════════
-//  BOOK READER
-// ══════════════════════════════════════════════
-function openBook(id){
-  const b=S.books.find(x=>x.id===id);
-  if(!b||b.takedown){toast('This story has been removed.','error');return;}
-  S.viewBook=b;
-  const cEl=document.getElementById('rdrCover');
-  cEl.innerHTML=b.cover?`<img src="${b.cover}" alt="">`:`<div style="font-size:36px;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--plum),var(--violet))">${b.emoji||'📖'}</div>`;
-  document.getElementById('rdrTitle').textContent=b.title;
-  document.getElementById('rdrAuthorLnk').innerHTML=`by <strong>${b.authorName}</strong> &nbsp;→ View profile`;
-  document.getElementById('rdrTags').innerHTML=(b.tags||[]).map(t=>`<span class="badge bv">${t}</span>`).join(' ')+(avgRating(b)?` <span style="color:var(--gold);font-size:13px;margin-left:8px">★ ${avgRating(b)}</span>`:'');
-  // Hide DM button if viewing own book
-  const dmBtn=document.getElementById('dmAuthorBtn');
-  if(S.currentUser&&S.currentUser.id===b.author)dmBtn.classList.add('hidden');
-  else{dmBtn.classList.remove('hidden');dmBtn.setAttribute('data-author',b.author);}
-  renderReaderContent(b);renderComments(b);
-  goPg('reader');recordRead(b);
-}
-
-function goAuthorFromReader(){if(S.viewBook)openAuthor(S.viewBook.author);}
 
 function renderReaderContent(b){
-  let html='';
-  if(b.flagged)html+=`<div class="claim-banner"><span style="font-size:20px">⚠️</span><div><strong style="color:var(--crimson)">Copyright claim in review</strong><br><span style="font-size:13px;color:var(--text3)">This content may be taken down pending admin review.</span></div></div>`;
-  for(const line of(b.content||'').split('\n')){
-    if(line.startsWith('--- ')&&line.endsWith(' ---'))html+=`<h2 class="chap-hdr">${line.slice(4,-4)}</h2>`;
-    else if(line.trim()==='[AD]')html+=`<div class="ad-block"><strong>Sponsored by Thalia Ads</strong>${b.authorName} earns 55% of this ad's revenue</div>`;
-    else if(line.trim())html+=`<p>${line}</p>`;
+  let html = '';
+  if(b.is_flagged) html += `<div class="claim-banner"><span style="font-size:20px">⚠️</span><div><strong style="color:var(--crimson)">Copyright claim in review</strong><br><span style="font-size:13px;color:var(--text3)">This content may be taken down pending admin review.</span></div></div>`;
+  const lines = (b.content||'').split('\n');
+  for(const line of lines){
+    if(line.startsWith('--- ')&&line.endsWith(' ---')){ html+=`<h2 class="chap-hdr">${esc(line.slice(4,-4))}</h2>`; }
+    else if(line.trim()==='[AD]'){ html+=`<div class="ad-block"><strong>Sponsored by Thalia Ads</strong>${esc(b.author_name)} earns 55% of this ad's revenue</div>`; }
+    else if(line.match(/^\[IMG:(.+)\]$/)){ const url=line.match(/^\[IMG:(.+)\]$/)[1]; html+=`<img src="${url}" alt="Story image" style="max-width:100%;border-radius:var(--r);margin:24px 0">`; }
+    else if(line.trim()){ html+=`<p>${esc(line)}</p>`; }
   }
-  document.getElementById('rdrContent').innerHTML=html;
+  document.getElementById('rdrContent').innerHTML = html;
 }
 
-function recordRead(b){
-  const bk=S.books.find(x=>x.id===b.id);if(!bk)return;
-  bk.reads=(bk.reads||0)+1;
-  const words=(bk.content||'').split(/\s+/).length;
-  const earn=+((Math.max(1,Math.floor(words/500)))*AD_RATE).toFixed(4);
-  bk.earnings=+((bk.earnings||0)+earn).toFixed(4);
-  const au=S.users.find(u=>u.id===bk.author);
-  if(au){au.reads=(au.reads||0)+1;au.earnings=+((au.earnings||0)+earn).toFixed(4);}
-  syncUser();saveState();updateProofStats();
+async function recordRead(bookId){
+  // Increment read count
+  await sb.rpc('increment_reads', { book_id: bookId }).catch(()=>{
+    // If rpc not available, update directly
+    sb.from('books').select('reads').eq('id',bookId).single().then(({data})=>{
+      if(data) sb.from('books').update({reads:(data.reads||0)+1}).eq('id',bookId);
+    });
+  });
+  // Calculate and record earnings
+  if(VIEW_BOOK){
+    const words = (VIEW_BOOK.content||'').split(/\s+/).length;
+    const earn = +(Math.max(1,Math.floor(words/500))*AD_RATE).toFixed(4);
+    sb.from('books').select('earnings').eq('id',bookId).single().then(({data})=>{
+      if(data) sb.from('books').update({earnings:+((data.earnings||0)+earn).toFixed(4)}).eq('id',bookId);
+    });
+    sb.from('profiles').select('earnings,total_reads').eq('id',VIEW_BOOK.author_id).single().then(({data})=>{
+      if(data) sb.from('profiles').update({earnings:+((data.earnings||0)+earn).toFixed(4),total_reads:(data.total_reads||0)+1}).eq('id',VIEW_BOOK.author_id);
+    });
+  }
 }
 
-// ══════════════════════════════════════════════
-//  COMMENTS
-// ══════════════════════════════════════════════
-function renderComments(b){
-  const sec=document.getElementById('commentsSection');
-  const cs=b.comments||[];
-  let html=`<div style="max-width:680px;margin:0 auto;padding:0 24px 80px"><h2 style="font-family:var(--f-serif);font-size:24px;font-weight:700;margin-bottom:24px">Reviews <span style="font-size:18px;color:var(--text3)">(${cs.length})</span></h2>`;
-  if(S.currentUser){
-    html+=`<div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:32px">
+function goAuthorFromReader(){ if(VIEW_BOOK) openAuthor(VIEW_BOOK.author_id); }
+
+async function adminTakedownCurrent(){
+  if(!VIEW_BOOK||!PROFILE?.is_admin) return;
+  const {error} = await sb.from('books').update({is_takedown:true}).eq('id',VIEW_BOOK.id);
+  if(error){ toast('Failed.','error'); return; }
+  toast('Book taken down.','info');
+  showPage('home');
+  loadBooks();
+}
+
+// ================================================================
+// COMMENTS
+// ================================================================
+async function loadComments(bookId){
+  const sec = document.getElementById('commentsSection');
+  const { data: comments } = await sb.from('comments').select('*').eq('book_id', bookId).order('created_at',{ascending:false});
+  const cs = comments || [];
+  let html = `<div style="padding:0 0 80px"><h2 style="font-family:var(--f-serif);font-size:24px;font-weight:700;margin-bottom:24px">Reviews <span style="font-size:18px;color:var(--text3)">(${cs.length})</span></h2>`;
+  if(USER){
+    html += `<div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:32px">
       <div style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--text2)">Leave a review</div>
       <div class="star-row" id="starRow">${[1,2,3,4,5].map(n=>`<span class="star" onclick="setStar(${n})">★</span>`).join('')}</div>
       <textarea class="fta" id="cmtText" placeholder="Share your thoughts…" style="min-height:90px"></textarea>
-      <button class="btn btn-violet btn-sm" style="margin-top:10px" onclick="submitComment('${b.id}')">Post review</button>
+      <button class="btn btn-violet btn-sm" style="margin-top:10px" onclick="submitComment('${bookId}')">Post review</button>
     </div>`;
-  }else{
-    html+=`<div style="background:var(--surface);border:1px dashed var(--border2);border-radius:var(--r);padding:18px;text-align:center;margin-bottom:24px;color:var(--text3);font-size:14px"><a href="#" onclick="openM('loginModal')" style="color:var(--plum-light)">Sign in</a> to leave a review</div>`;
+  } else {
+    html += `<div style="background:var(--surface);border:1px dashed var(--border2);border-radius:var(--r);padding:18px;text-align:center;margin-bottom:24px;color:var(--text3);font-size:14px"><a href="#" onclick="openM('loginModal')" style="color:var(--plum-light)">Sign in</a> to leave a review</div>`;
   }
-  if(!cs.length)html+=`<p style="color:var(--text3);text-align:center;padding:32px 0">No reviews yet. Be the first!</p>`;
-  else html+=cs.map(c=>`<div class="cmt-card"><div class="avatar" style="width:38px;height:38px;font-size:15px">${(c.userName||'?')[0]}</div><div class="cmt-body"><div class="cmt-author">${c.userName}</div>${c.rating?`<div class="cmt-rating">${'★'.repeat(c.rating)}${'☆'.repeat(5-c.rating)} <span style="color:var(--text3);font-size:12px">${c.rating}/5</span></div>`:''}<div class="cmt-text">${c.text}</div><div class="cmt-date">${new Date(c.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div></div></div>`).join('');
-  sec.innerHTML=html+'</div>';
-  S.pendingStars=0;
-}
-function setStar(n){S.pendingStars=n;document.querySelectorAll('#starRow .star').forEach((el,i)=>el.classList.toggle('active',i<n));}
-function submitComment(bid){
-  if(!S.currentUser){openM('loginModal');return;}
-  const text=(document.getElementById('cmtText').value||'').trim();
-  if(!text){toast('Please write a comment.','error');return;}
-  const b=S.books.find(x=>x.id===bid);if(!b)return;
-  b.comments=b.comments||[];
-  b.comments.unshift({id:'cm'+Date.now(),userId:S.currentUser.id,userName:S.currentUser.name,rating:S.pendingStars||0,text,date:Date.now()});
-  saveState();renderComments(b);toast('Review posted!','success');
+  if(!cs.length){ html += `<p style="color:var(--text3);text-align:center;padding:32px 0">No reviews yet. Be the first!</p>`; }
+  else { html += cs.map(c=>`<div class="cmt-card"><div class="avatar" style="width:38px;height:38px;font-size:15px">${c.user_name?c.user_name[0]:'?'}</div><div class="cmt-body"><div class="cmt-author">${esc(c.user_name||'')}</div>${c.rating?`<div class="cmt-rating">${'★'.repeat(c.rating)}${'☆'.repeat(5-c.rating)}</div>`:''}<div class="cmt-text">${esc(c.content||'')}</div><div class="cmt-date">${fmtDate(c.created_at)}</div></div></div>`).join(''); }
+  sec.innerHTML = html + '</div>';
+  STARS = 0;
 }
 
-// ══════════════════════════════════════════════
-//  AUTHOR PROFILE
-// ══════════════════════════════════════════════
-function openAuthor(uid){
-  const u=S.users.find(x=>x.id===uid);if(!u)return;
-  const bks=S.books.filter(b=>b.author===uid&&!b.takedown);
-  const reads=bks.reduce((s,b)=>s+(b.reads||0),0);
-  const allR=bks.flatMap(b=>(b.comments||[]).filter(c=>c.rating).map(c=>c.rating));
-  const avg=allR.length?(allR.reduce((s,r)=>s+r,0)/allR.length).toFixed(1):'—';
-  document.getElementById('authAv').textContent=u.name[0].toUpperCase();
-  document.getElementById('authName').textContent=u.name;
-  document.getElementById('authBio').textContent=u.bio||'Author on Thalia.';
-  document.getElementById('authStatBooks').textContent=bks.length;
-  document.getElementById('authStatReads').textContent=reads>=1000?(reads/1000).toFixed(1)+'k':reads;
-  document.getElementById('authStatRating').textContent=avg;
-  const soc=u.socials||{};
-  document.getElementById('authSocials').innerHTML=
-    (soc.twitter?`<a class="social-lnk" href="https://twitter.com/${soc.twitter}" target="_blank">𝕏 @${soc.twitter}</a>`:'')+
-    (soc.instagram?`<a class="social-lnk" href="https://instagram.com/${soc.instagram}" target="_blank">📷 @${soc.instagram}</a>`:'')+
-    (soc.website?`<a class="social-lnk" href="${soc.website}" target="_blank">🌐 Website</a>`:'');
-  // DM button — don't show for self
-  const dmWrap=document.getElementById('authDMBtnWrap');
-  if(S.currentUser&&S.currentUser.id!==uid){
-    dmWrap.innerHTML=`<button class="btn btn-outline" style="color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25)" onclick="openNewDM('${uid}')">💬 Message ${u.name}</button>`;
-  }else{dmWrap.innerHTML='';}
-  renderGrid(bks,'authBookGrid');
-  goPg('author');
-}
-function goMyProfile(){if(S.currentUser)openAuthor(S.currentUser.id);}
+function setStar(n){ STARS=n; document.querySelectorAll('#starRow .star').forEach((el,i)=>el.classList.toggle('active',i<n)); }
 
-// ══════════════════════════════════════════════
-//  DMs
-// ══════════════════════════════════════════════
-function toggleDM(){
-  if(!S.currentUser){openM('loginModal');return;}
-  S.dmOpen=!S.dmOpen;
-  document.getElementById('dmPanel').classList.toggle('open',S.dmOpen);
-  if(S.dmOpen){renderDMList();closeDMThread();}
-}
-function closeDM(){S.dmOpen=false;document.getElementById('dmPanel').classList.remove('open');}
-
-function getMyConvs(){
-  if(!S.currentUser)return[];
-  return S.dms.filter(d=>d.participants.includes(S.currentUser.id));
+async function submitComment(bookId){
+  if(!USER){ openM('loginModal'); return; }
+  const text = (document.getElementById('cmtText').value||'').trim();
+  if(!text){ toast('Please write a comment.','error'); return; }
+  const { error } = await sb.from('comments').insert({ book_id:bookId, user_id:USER.id, user_name:PROFILE?.name||'Reader', rating:STARS||null, content:text });
+  if(error){ toast('Failed to post review.','error'); return; }
+  await loadComments(bookId);
+  toast('Review posted!','success');
 }
 
-function updateDMDot(){
-  if(!S.currentUser){document.getElementById('dmDot').classList.add('hidden');return;}
-  const hasUnread=getMyConvs().some(d=>{
-    const lastMsg=d.messages[d.messages.length-1];
-    return lastMsg&&lastMsg.from!==S.currentUser.id&&!lastMsg.read;
+// ================================================================
+// AUTHOR PROFILE
+// ================================================================
+async function openAuthor(userId){
+  VIEW_AUTHOR_ID = userId;
+  showPage('author');
+  document.getElementById('authBookGrid').innerHTML = '<div class="loading-state"><div class="loading-spinner"></div></div>';
+  const [{ data: profile }, { data: books }] = await Promise.all([
+    sb.from('profiles').select('*').eq('id', userId).single(),
+    sb.from('books').select('*').eq('author_id', userId).eq('is_takedown', false).order('created_at',{ascending:false})
+  ]);
+  if(!profile) return;
+  // Avatar
+  const avEl = document.getElementById('authAv');
+  if(profile.avatar_url){ avEl.innerHTML=`<img src="${profile.avatar_url}" alt="" style="width:100%;height:100%;object-fit:cover">`; }
+  else { avEl.textContent = profile.name[0].toUpperCase(); }
+  document.getElementById('authName').textContent = profile.name;
+  document.getElementById('authBio').textContent = profile.bio||'Author on Thalia.';
+  // Stats
+  const totalReads = (books||[]).reduce((s,b)=>s+(b.reads||0),0);
+  const allRatings = [];
+  for(const b of books||[]){
+    const {data:cmts} = await sb.from('comments').select('rating').eq('book_id',b.id).not('rating','is',null);
+    cmts?.forEach(c=>allRatings.push(c.rating));
+  }
+  const avgR = allRatings.length ? (allRatings.reduce((s,r)=>s+r,0)/allRatings.length).toFixed(1) : '—';
+  document.getElementById('authStatBooks').textContent = (books||[]).length;
+  document.getElementById('authStatReads').textContent = totalReads>=1000?(totalReads/1000).toFixed(1)+'k':totalReads;
+  document.getElementById('authStatRating').textContent = avgR;
+  // Socials
+  let socials = '';
+  if(profile.twitter) socials += `<a class="social-lnk" href="https://twitter.com/${profile.twitter}" target="_blank" rel="noopener">𝕏 @${profile.twitter}</a>`;
+  if(profile.instagram) socials += `<a class="social-lnk" href="https://instagram.com/${profile.instagram}" target="_blank" rel="noopener">📷 @${profile.instagram}</a>`;
+  if(profile.website) socials += `<a class="social-lnk" href="${profile.website}" target="_blank" rel="noopener">🌐 Website</a>`;
+  document.getElementById('authSocials').innerHTML = socials;
+  // DM button
+  const dmWrap = document.getElementById('authDMWrap');
+  if(USER && USER.id !== userId){
+    dmWrap.innerHTML = `<button class="btn btn-outline" style="color:rgba(237,229,247,.8);border-color:rgba(237,229,247,.25)" onclick="openNewDM('${userId}','${esc(profile.name)}')">💬 Message ${esc(profile.name)}</button>`;
+  } else { dmWrap.innerHTML = ''; }
+  // Books grid
+  document.getElementById('authBookGrid').innerHTML = (books||[]).length
+    ? (books||[]).map(bookCardHTML).join('')
+    : '<p style="color:var(--text3);grid-column:1/-1;padding:40px 0;text-align:center">No stories published yet.</p>';
+}
+
+function showMyProfile(){ if(USER) openAuthor(USER.id); }
+
+// ================================================================
+// DASHBOARD
+// ================================================================
+async function loadDashboard(){
+  if(!USER||!PROFILE){ openM('loginModal'); return; }
+  const { data: books } = await sb.from('books').select('*').eq('author_id', USER.id).order('created_at',{ascending:false});
+  const bks = books||[];
+  const totalReads = bks.reduce((s,b)=>s+(b.reads||0),0);
+  const totalEarn = bks.reduce((s,b)=>s+(parseFloat(b.earnings)||0),0);
+  document.getElementById('dashEarn').textContent = '$'+totalEarn.toFixed(2);
+  document.getElementById('dashReads').textContent = totalReads.toLocaleString();
+  document.getElementById('dashBkCount').textContent = bks.filter(b=>!b.is_takedown).length;
+  document.getElementById('earnFill').style.width = Math.min(100,(totalEarn/PAYOUT_MIN)*100)+'%';
+  document.getElementById('payNote').textContent = `$${totalEarn.toFixed(2)} / $${PAYOUT_MIN} threshold`;
+  // Fetch avg ratings for each book
+  const tbody = document.getElementById('dashBkBody');
+  if(!bks.length){ tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text3)">No stories yet. <a href="#" onclick="showPage('publish')" style="color:var(--plum-light)">Publish your first →</a></td></tr>`; return; }
+  tbody.innerHTML = bks.map(b=>`<tr>
+    <td><strong>${esc(b.title)}</strong><br><span style="font-size:11px;color:var(--text3)">${(b.tags||[]).join(', ')}</span></td>
+    <td>${b.is_takedown?'<span class="badge bred">Removed</span>':b.is_flagged?'<span class="badge bred">⚠ Claimed</span>':'<span class="badge bgrn">Live</span>'}</td>
+    <td style="font-family:var(--f-mono)">${(b.reads||0).toLocaleString()}</td>
+    <td style="color:var(--gold)">—</td>
+    <td style="font-family:var(--f-mono);color:var(--gold)">$${(parseFloat(b.earnings)||0).toFixed(2)}</td>
+    <td style="display:flex;gap:6px">
+      <button class="btn btn-ghost btn-sm" onclick="openBook('${b.id}')">Read</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteBook('${b.id}')">Delete</button>
+    </td>
+  </tr>`).join('');
+}
+
+async function deleteBook(id){
+  if(!confirm('Delete this book permanently? This cannot be undone.')) return;
+  const { error } = await sb.from('books').delete().eq('id', id).eq('author_id', USER.id);
+  if(error){ toast('Delete failed.','error'); return; }
+  toast('Book deleted.','info');
+  loadDashboard();
+}
+
+function reqPayout(){
+  const earn = parseFloat(document.getElementById('dashEarn').textContent.replace('$',''))||0;
+  if(earn < PAYOUT_MIN){ toast(`Minimum payout is $${PAYOUT_MIN}. You have $${earn.toFixed(2)}.`,'error'); return; }
+  toast('Payout requested! We will process within 5–7 business days.','success');
+}
+
+// ================================================================
+// PUBLISH
+// ================================================================
+function buildTagOpts(){
+  document.getElementById('pubTagOpts').innerHTML = ALL_TAGS.map(t=>
+    `<span class="tag" onclick="toggleTag(this,'${t}')">${t}</span>`
+  ).join('');
+}
+function toggleTag(el,tag){
+  const i=SEL_TAGS.indexOf(tag);
+  if(i>-1){SEL_TAGS.splice(i,1);el.classList.remove('active');}
+  else if(SEL_TAGS.length<5){SEL_TAGS.push(tag);el.classList.add('active');}
+  renderSelTags();
+}
+function renderSelTags(){
+  document.getElementById('pubTagsSel').innerHTML = SEL_TAGS.map(t=>
+    `<span class="badge bv">${t} <span style="cursor:pointer;margin-left:4px" onclick="removeTag('${t}')">×</span></span>`
+  ).join('');
+}
+function removeTag(tag){
+  SEL_TAGS=SEL_TAGS.filter(t=>t!==tag);
+  document.querySelectorAll('#pubTagOpts .tag').forEach(el=>{ if(el.textContent.trim()===tag) el.classList.remove('active'); });
+  renderSelTags();
+}
+
+function fmtTxt(type){
+  const ta=document.getElementById('pubContent');
+  const s=ta.selectionStart,e=ta.selectionEnd;
+  if(s===e) return;
+  const sel=ta.value.slice(s,e);
+  ta.value=ta.value.slice(0,s)+(type==='bold'?`**${sel}**`:`_${sel}_`)+ta.value.slice(e);
+}
+function insertChap(){
+  const ta=document.getElementById('pubContent');
+  const p=ta.selectionStart;
+  ta.value=ta.value.slice(0,p)+'\n\n--- Chapter: Title ---\n\n'+ta.value.slice(p);
+}
+function insertAdMark(){
+  const ta=document.getElementById('pubContent');
+  const p=ta.selectionStart;
+  ta.value=ta.value.slice(0,p)+'\n[AD]\n'+ta.value.slice(p);
+}
+
+async function uploadStoryImg(input){
+  if(!USER||!input.files||!input.files[0]) return;
+  const file = input.files[0];
+  const ext = file.name.split('.').pop();
+  const path = `${USER.id}/${Date.now()}.${ext}`;
+  toast('Uploading image…','info');
+  const { error } = await sb.storage.from('story-images').upload(path, file);
+  if(error){ toast('Image upload failed: '+error.message,'error'); return; }
+  const { data: { publicUrl } } = sb.storage.from('story-images').getPublicUrl(path);
+  STORY_IMG_URLS.push(publicUrl);
+  // Insert into content
+  const ta = document.getElementById('pubContent');
+  const p = ta.selectionStart;
+  ta.value = ta.value.slice(0,p)+`\n[IMG:${publicUrl}]\n`+ta.value.slice(p);
+  // Show preview
+  const grid = document.getElementById('storyImgPreviews');
+  grid.insertAdjacentHTML('beforeend',`<div class="img-preview-item"><img src="${publicUrl}" alt=""><button class="img-preview-remove" onclick="removeStoryImg('${publicUrl}',this.parentElement)">×</button></div>`);
+  toast('Image inserted into story.','success');
+}
+
+function removeStoryImg(url, el){
+  STORY_IMG_URLS = STORY_IMG_URLS.filter(u=>u!==url);
+  el.remove();
+  const ta = document.getElementById('pubContent');
+  ta.value = ta.value.replace(`\n[IMG:${url}]\n`,'');
+}
+
+function previewCover(input){
+  if(!input.files||!input.files[0]) return;
+  PENDING_COVER_FILE = input.files[0];
+  const r=new FileReader();
+  r.onload=e=>{
+    const up=document.getElementById('coverUp');
+    let img=up.querySelector('img');
+    if(!img){img=document.createElement('img');up.prepend(img);}
+    img.src=e.target.result;
+    up.querySelector('.cover-up-icon').style.display='none';
+    up.querySelector('.cover-up-lbl').style.display='none';
+  };
+  r.readAsDataURL(input.files[0]);
+}
+
+function checkOrig(){
+  const c=(document.getElementById('pubContent').value||'').trim();
+  const box=document.getElementById('origBox');
+  box.style.display='block';
+  if(c.length<100){box.className='orig-box orig-fail';document.getElementById('origTitle').textContent='⚠ Too short';document.getElementById('origMsg').textContent='Write at least 100 characters.';return;}
+  box.className='orig-box orig-chk';document.getElementById('origTitle').textContent='⏳ Scanning…';document.getElementById('origMsg').textContent='Cross-referencing against known works…';
+  setTimeout(()=>{box.className='orig-box orig-pass';document.getElementById('origTitle').textContent='✅ Originality check passed';document.getElementById('origMsg').textContent='No significant matches found.';toast('Originality check passed!','success');},1600);
+}
+
+async function publishBook(){
+  if(!USER){ openM('registerModal'); return; }
+  const title=(document.getElementById('pubTitle').value||'').trim();
+  const desc=(document.getElementById('pubDesc').value||'').trim();
+  const content=(document.getElementById('pubContent').value||'').trim();
+  if(!title){toast('Please enter a title.','error');return;}
+  if(!desc){toast('Please add a synopsis.','error');return;}
+  if(content.length<100){toast('Content too short (min 100 chars).','error');return;}
+  if(!SEL_TAGS.length){toast('Select at least one genre.','error');return;}
+  btnLoading('publishBtn',true);
+  // Upload cover if pending
+  let coverUrl = '';
+  if(PENDING_COVER_FILE){
+    const ext=PENDING_COVER_FILE.name.split('.').pop();
+    const path=`${USER.id}/${Date.now()}.${ext}`;
+    const {error:upErr}=await sb.storage.from('covers').upload(path,PENDING_COVER_FILE);
+    if(!upErr){
+      const {data:{publicUrl}}=sb.storage.from('covers').getPublicUrl(path);
+      coverUrl=publicUrl;
+    }
+  }
+  const { error } = await sb.from('books').insert({
+    author_id:USER.id, author_name:PROFILE?.name||'Author',
+    title, description:desc, content,
+    cover_url:coverUrl, tags:[...SEL_TAGS],
+    reads:0, earnings:0, is_flagged:false, is_takedown:false
   });
-  document.getElementById('dmDot').classList.toggle('hidden',!hasUnread);
+  btnLoading('publishBtn',false);
+  if(error){toast('Publish failed: '+error.message,'error');return;}
+  // Reset form
+  document.getElementById('pubTitle').value='';
+  document.getElementById('pubDesc').value='';
+  document.getElementById('pubContent').value='';
+  SEL_TAGS=[];PENDING_COVER_FILE=null;STORY_IMG_URLS=[];
+  renderSelTags();buildTagOpts();
+  document.getElementById('origBox').style.display='none';
+  document.getElementById('storyImgPreviews').innerHTML='';
+  const up=document.getElementById('coverUp');
+  const img=up.querySelector('img');if(img)img.remove();
+  up.querySelector('.cover-up-icon').style.display='';
+  up.querySelector('.cover-up-lbl').style.display='';
+  toast(`"${title}" is now live on Thalia! ✦`,'success');
+  showPage('dashboard');
+  loadDashboard();
 }
 
-function renderDMList(){
-  const convs=getMyConvs();
-  const list=document.getElementById('dmConvList');
-  if(!convs.length){list.innerHTML=`<div class="dm-empty"><div class="dm-empty-icon">💬</div><div style="font-weight:600">No messages yet</div><div style="font-size:13px;color:var(--text3)">Message an author from their profile or a book page.</div></div>`;return;}
-  list.innerHTML=convs.map(d=>{
-    const otherId=d.participants.find(p=>p!==S.currentUser.id);
-    const other=S.users.find(u=>u.id===otherId);
-    const last=d.messages[d.messages.length-1];
-    const unread=last&&last.from!==S.currentUser.id&&!last.read;
-    return`<div class="dm-conv-item${S.activeDM===d.id?' active':''}" onclick="openDMThread('${d.id}')">
-      <div class="avatar" style="width:36px;height:36px;font-size:14px">${other?other.name[0]:'?'}</div>
+// ================================================================
+// SEARCH & FILTER
+// ================================================================
+async function doSearch(){
+  const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();
+  if(!q) return;
+  document.getElementById('searchLabel').textContent=`"${q}"`;
+  showPage('search');
+  document.getElementById('searchGrid').innerHTML='<div class="loading-state"><div class="loading-spinner"></div></div>';
+  const {data}=await sb.from('books').select('*').eq('is_takedown',false)
+    .or(`title.ilike.%${q}%,description.ilike.%${q}%,author_name.ilike.%${q}%`);
+  document.getElementById('searchGrid').innerHTML='';
+  document.getElementById('noResults').classList.toggle('hidden',(data||[]).length>0);
+  (data||[]).forEach(b=>document.getElementById('searchGrid').insertAdjacentHTML('beforeend',bookCardHTML(b)));
+}
+
+function filterTag(el,tag){
+  document.querySelectorAll('.tags-strip .tag').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  CURRENT_TAG=tag;
+  loadBooks();
+  showPage('home');
+  setTimeout(()=>document.getElementById('booksSection').scrollIntoView({behavior:'smooth'}),80);
+}
+
+function scrollToBooks(){
+  showPage('home');
+  setTimeout(()=>document.getElementById('booksSection').scrollIntoView({behavior:'smooth'}),80);
+}
+
+document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+
+// ================================================================
+// DMs
+// ================================================================
+function toggleDM(){
+  if(!USER){openM('loginModal');return;}
+  const panel=document.getElementById('dmPanel');
+  const isOpen=panel.classList.contains('open');
+  panel.classList.toggle('open',!isOpen);
+  if(!isOpen){loadDMList();closeDMThread();}
+}
+function closeDM(){ document.getElementById('dmPanel').classList.remove('open'); }
+
+async function loadDMList(){
+  const { data } = await sb.from('messages')
+    .select('*')
+    .or(`sender_id.eq.${USER.id},recipient_id.eq.${USER.id}`)
+    .order('created_at',{ascending:false});
+  // Group by conversation
+  const convMap = {};
+  (data||[]).forEach(m=>{
+    const otherId = m.sender_id===USER.id ? m.recipient_id : m.sender_id;
+    const key = [USER.id, otherId].sort().join('_');
+    if(!convMap[key]||new Date(m.created_at)>new Date(convMap[key].created_at)) convMap[key]={...m,otherId};
+  });
+  const list = document.getElementById('dmConvList');
+  const convs = Object.values(convMap);
+  if(!convs.length){ list.innerHTML=`<div class="dm-empty"><div style="font-size:40px">💬</div><div style="font-weight:600">No messages yet</div><div style="font-size:13px;color:var(--text3)">Message an author from their profile.</div></div>`; return; }
+  // Get names
+  const otherIds=[...new Set(convs.map(c=>c.otherId))];
+  const {data:profiles}=await sb.from('profiles').select('id,name,avatar_url').in('id',otherIds);
+  const profMap={}; (profiles||[]).forEach(p=>profMap[p.id]=p);
+  list.innerHTML=convs.map(c=>{
+    const other=profMap[c.otherId]||{name:'Unknown'};
+    const unread=c.recipient_id===USER.id&&!c.is_read;
+    const convKey=[USER.id,c.otherId].sort().join('_');
+    return`<div class="dm-conv-item" onclick="openDMConv('${c.otherId}','${esc(other.name)}','${convKey}')">
+      <div class="avatar" style="width:36px;height:36px;font-size:14px">${other.avatar_url?`<img src="${other.avatar_url}" alt="">`:(other.name||'?')[0]}</div>
       <div style="flex:1;min-width:0">
-        <div class="dm-conv-name">${other?other.name:'Unknown'}</div>
-        <div class="dm-conv-preview">${last?last.text:'No messages'}</div>
+        <div class="dm-conv-name">${esc(other.name)}</div>
+        <div class="dm-conv-preview">${esc(c.content||'')}</div>
       </div>
-      ${last?`<div class="dm-conv-time">${timeSince(last.ts)}</div>`:''}
-      ${unread?'<div class="dm-unread"></div>':''}
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="dm-conv-time">${timeSince(c.created_at)}</div>
+        ${unread?'<div class="dm-unread"></div>':''}
+      </div>
     </div>`;
   }).join('');
 }
 
-function openDMThread(dmId){
-  S.activeDM=dmId;
-  const d=S.dms.find(x=>x.id===dmId);if(!d)return;
-  const otherId=d.participants.find(p=>p!==S.currentUser.id);
-  const other=S.users.find(u=>u.id===otherId);
+async function openDMConv(otherId, otherName, convKey){
+  DM_ACTIVE_CONV = {otherId, convKey};
   document.getElementById('dmConvList').style.display='none';
   const thread=document.getElementById('dmThread');thread.classList.add('open');
-  document.getElementById('dmThreadAv').textContent=other?other.name[0]:'?';
-  document.getElementById('dmThreadName').textContent=other?other.name:'Unknown';
+  document.getElementById('dmThreadAv').textContent=(otherName||'?')[0];
+  document.getElementById('dmThreadName').textContent=otherName;
+  await loadDMMessages(otherId, convKey);
   // Mark as read
-  d.messages.forEach(m=>{if(m.from!==S.currentUser.id)m.read=true;});
-  saveState();updateDMDot();
-  renderDMMessages(d);
+  await sb.from('messages').update({is_read:true}).eq('recipient_id',USER.id).eq('sender_id',otherId).eq('is_read',false);
+  updateDMDot();
+  // Subscribe to new messages
+  if(DM_SUBSCRIPTION) DM_SUBSCRIPTION.unsubscribe();
+  DM_SUBSCRIPTION = sb.channel('dm_'+convKey)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`conversation_id=eq.${convKey}`},
+      ()=>{ loadDMMessages(otherId,convKey); updateDMDot(); })
+    .subscribe();
 }
 
-function renderDMMessages(d){
-  const el=document.getElementById('dmMessages');
-  el.innerHTML=d.messages.map(m=>{
-    const isMe=m.from===S.currentUser.id;
+async function loadDMMessages(otherId, convKey){
+  const { data } = await sb.from('messages').select('*').eq('conversation_id', convKey).order('created_at',{ascending:true});
+  const el = document.getElementById('dmMessages');
+  el.innerHTML=(data||[]).map(m=>{
+    const isMe=m.sender_id===USER.id;
     return`<div style="display:flex;flex-direction:column;align-items:${isMe?'flex-end':'flex-start'}">
-      <div class="dm-msg ${isMe?'me':'them'}">${m.text}<div class="dm-msg-time">${timeSince(m.ts)}</div></div>
+      <div class="dm-msg ${isMe?'me':'them'}">${esc(m.content)}<div class="dm-msg-time">${timeSince(m.created_at)}</div></div>
     </div>`;
   }).join('');
   el.scrollTop=el.scrollHeight;
 }
 
 function closeDMThread(){
-  S.activeDM=null;
+  DM_ACTIVE_CONV=null;
   document.getElementById('dmConvList').style.display='';
   document.getElementById('dmThread').classList.remove('open');
+  if(DM_SUBSCRIPTION){DM_SUBSCRIPTION.unsubscribe();DM_SUBSCRIPTION=null;}
 }
 
-function sendMsg(){
-  if(!S.currentUser||!S.activeDM)return;
+async function sendMsg(){
+  if(!USER||!DM_ACTIVE_CONV) return;
   const input=document.getElementById('dmInput');
-  const text=(input.value||'').trim();if(!text)return;
-  const d=S.dms.find(x=>x.id===S.activeDM);if(!d)return;
-  d.messages.push({from:S.currentUser.id,text,ts:Date.now(),read:false});
-  input.value='';saveState();
-  renderDMMessages(d);
-  // update list preview
-  renderDMList();
+  const text=(input.value||'').trim();
+  if(!text) return;
+  const convKey=DM_ACTIVE_CONV.convKey;
+  const {error}=await sb.from('messages').insert({
+    conversation_id:convKey, sender_id:USER.id, recipient_id:DM_ACTIVE_CONV.otherId,
+    content:text, is_read:false
+  });
+  if(!error) input.value='';
 }
 
-function openNewDM(targetUserId){
-  const u=S.users.find(x=>x.id===targetUserId);if(!u)return;
-  document.getElementById('dmToAv').textContent=u.name[0];
-  document.getElementById('dmToName').textContent=u.name;
+function openNewDM(targetId, targetName){
+  if(!USER){openM('loginModal');return;}
+  DM_RECIPIENT={id:targetId,name:targetName};
+  document.getElementById('dmToAv').textContent=(targetName||'?')[0];
+  document.getElementById('dmToName').textContent=targetName;
   document.getElementById('newDMText').value='';
-  document.getElementById('newDMModal').setAttribute('data-target',targetUserId);
   openM('newDMModal');
+}
+
+async function sendNewDM(){
+  const text=(document.getElementById('newDMText').value||'').trim();
+  if(!text){toast('Please write a message.','error');return;}
+  if(!DM_RECIPIENT) return;
+  const convKey=[USER.id,DM_RECIPIENT.id].sort().join('_');
+  const {error}=await sb.from('messages').insert({
+    conversation_id:convKey, sender_id:USER.id, recipient_id:DM_RECIPIENT.id,
+    content:text, is_read:false
+  });
+  if(error){toast('Send failed.','error');return;}
+  closeM('newDMModal');
+  document.getElementById('dmPanel').classList.add('open');
+  await loadDMList();
+  openDMConv(DM_RECIPIENT.id, DM_RECIPIENT.name, convKey);
+  toast('Message sent!','success');
 }
 
 function dmAuthor(){
   const btn=document.getElementById('dmAuthorBtn');
   const authorId=btn.getAttribute('data-author');
-  if(!S.currentUser){openM('loginModal');return;}
-  if(!authorId)return;
-  openNewDM(authorId);
+  if(!USER){openM('loginModal');return;}
+  if(!authorId) return;
+  // Get author name
+  sb.from('profiles').select('name').eq('id',authorId).single().then(({data})=>{
+    openNewDM(authorId, data?.name||'Author');
+  });
 }
 
-function sendNewDM(){
-  const targetId=document.getElementById('newDMModal').getAttribute('data-target');
-  const text=(document.getElementById('newDMText').value||'').trim();
-  if(!text){toast('Please write a message.','error');return;}
-  if(!S.currentUser)return;
-  // Find existing conversation
-  let conv=S.dms.find(d=>d.participants.includes(S.currentUser.id)&&d.participants.includes(targetId));
-  if(!conv){conv={id:'dm'+Date.now(),participants:[S.currentUser.id,targetId],messages:[]};S.dms.push(conv);}
-  conv.messages.push({from:S.currentUser.id,text,ts:Date.now(),read:false});
-  saveState();closeM('newDMModal');
-  S.dmOpen=true;document.getElementById('dmPanel').classList.add('open');
-  renderDMList();openDMThread(conv.id);
-  toast('Message sent!','success');
+async function updateDMDot(){
+  if(!USER){document.getElementById('dmDot').classList.add('hidden');return;}
+  const {count}=await sb.from('messages').select('*',{count:'exact',head:true}).eq('recipient_id',USER.id).eq('is_read',false);
+  document.getElementById('dmDot').classList.toggle('hidden',!count);
 }
 
-function timeSince(ts){
-  const s=Math.floor((Date.now()-ts)/1000);
-  if(s<60)return'now';if(s<3600)return Math.floor(s/60)+'m';
-  if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';
-}
-
-// ══════════════════════════════════════════════
-//  SEARCH & FILTER
-// ══════════════════════════════════════════════
-function doSearch(){
-  const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();if(!q)return;
-  document.getElementById('searchLabel').textContent=`"${q}"`;
-  const res=S.books.filter(b=>!b.takedown&&(b.title.toLowerCase().includes(q)||b.authorName.toLowerCase().includes(q)||b.desc.toLowerCase().includes(q)||(b.tags||[]).some(t=>t.toLowerCase().includes(q))));
-  renderGrid(res,'searchGrid');
-  document.getElementById('noResults').classList.toggle('hidden',res.length>0);
-  goPg('search');
-}
-function filterTag(el,tag){
-  document.querySelectorAll('.tags-strip .tag').forEach(t=>t.classList.remove('active'));el.classList.add('active');
-  const bks=tag==='all'?S.books:S.books.filter(b=>!b.takedown&&(b.tags||[]).includes(tag));
-  renderGrid(bks,'bookGrid');goPg('home');
-  setTimeout(()=>document.getElementById('booksSection').scrollIntoView({behavior:'smooth'}),80);
-}
-function scrollToBooks(){goPg('home');setTimeout(()=>document.getElementById('booksSection').scrollIntoView({behavior:'smooth'}),80);}
-document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
-
-// ══════════════════════════════════════════════
-//  PUBLISH
-// ══════════════════════════════════════════════
-function buildTagOpts(){const el=document.getElementById('pubTagOpts');if(!el)return;el.innerHTML=ALL_TAGS.map(t=>`<span class="tag" onclick="togglePubTag(this,'${t}')">${t}</span>`).join('');}
-function togglePubTag(el,tag){const i=S.selTags.indexOf(tag);if(i>-1){S.selTags.splice(i,1);el.classList.remove('active');}else if(S.selTags.length<5){S.selTags.push(tag);el.classList.add('active');}renderTagsSel();}
-function renderTagsSel(){document.getElementById('pubTagsSel').innerHTML=S.selTags.map(t=>`<span class="badge bv">${t} <span style="cursor:pointer;margin-left:4px" onclick="removePubTag('${t}')">×</span></span>`).join('');}
-function removePubTag(tag){S.selTags=S.selTags.filter(t=>t!==tag);document.querySelectorAll('#pubTagOpts .tag').forEach(el=>{if(el.textContent.trim()===tag)el.classList.remove('active');});renderTagsSel();}
-function prevCover(input){if(!input.files||!input.files[0])return;const r=new FileReader();r.onload=e=>{S.pendingCover=e.target.result;const up=document.getElementById('coverUp');let img=up.querySelector('img');if(!img){img=document.createElement('img');up.prepend(img);}img.src=e.target.result;up.querySelector('.cover-up-icon').style.display='none';up.querySelector('.cover-up-lbl').style.display='none';};r.readAsDataURL(input.files[0]);}
-function fmtText(t){const ta=document.getElementById('pubContent');const s=ta.selectionStart,e=ta.selectionEnd;if(s===e)return;const sel=ta.value.slice(s,e);ta.value=ta.value.slice(0,s)+(t==='bold'?`**${sel}**`:`_${sel}_`)+ta.value.slice(e);}
-function insertChapter(){const ta=document.getElementById('pubContent');const p=ta.selectionStart;ta.value=ta.value.slice(0,p)+'\n\n--- Chapter: Title ---\n\n'+ta.value.slice(p);}
-function insertAd(){const ta=document.getElementById('pubContent');const p=ta.selectionStart;ta.value=ta.value.slice(0,p)+'\n[AD]\n'+ta.value.slice(p);}
-function checkOrig(){
-  const content=(document.getElementById('pubContent').value||'').trim();
-  const box=document.getElementById('origBox');box.style.display='block';
-  if(content.length<100){box.className='orig-box orig-fail';document.getElementById('origTitle').textContent='⚠ Too short';document.getElementById('origMsg').textContent='Write at least 100 characters.';return;}
-  box.className='orig-box orig-chk';document.getElementById('origTitle').textContent='⏳ Scanning…';document.getElementById('origMsg').textContent='Cross-referencing against known works…';
-  setTimeout(()=>{box.className='orig-box orig-pass';document.getElementById('origTitle').textContent='✅ Originality check passed';document.getElementById('origMsg').textContent='No significant matches found. Your work appears original.';toast('Originality check passed!','success');},1600);
-}
-function publishBook(){
-  if(!S.currentUser){openM('registerModal');return;}
-  const title=(document.getElementById('pubTitle').value||'').trim();
-  const desc=(document.getElementById('pubDesc').value||'').trim();
-  const content=(document.getElementById('pubContent').value||'').trim();
-  if(!title){toast('Please enter a title.','error');return;}if(!desc){toast('Please add a synopsis.','error');return;}
-  if(content.length<100){toast('Content too short (min 100 chars).','error');return;}if(!S.selTags.length){toast('Select at least one genre.','error');return;}
-  const bk={id:'b'+Date.now(),title,desc,content,tags:[...S.selTags],author:S.currentUser.id,authorName:S.currentUser.name,reads:0,earnings:0,comments:[],emoji:EMOJIS[Math.floor(Math.random()*EMOJIS.length)],cover:S.pendingCover||null,flagged:false,takedown:false,createdAt:Date.now()};
-  S.books.unshift(bk);
-  const u=S.users.find(x=>x.id===S.currentUser.id);if(u){u.books=u.books||[];u.books.push(bk.id);}
-  saveState();renderGrid(S.books,'bookGrid');updateProofStats();
-  document.getElementById('pubTitle').value='';document.getElementById('pubDesc').value='';document.getElementById('pubContent').value='';
-  S.selTags=[];S.pendingCover=null;renderTagsSel();buildTagOpts();document.getElementById('origBox').style.display='none';
-  const up=document.getElementById('coverUp');const img=up.querySelector('img');if(img)img.remove();up.querySelector('.cover-up-icon').style.display='';up.querySelector('.cover-up-lbl').style.display='';
-  toast(`"${title}" is now live on Thalia! ✦`,'success');goPg('dashboard');
-}
-
-// ══════════════════════════════════════════════
-//  DASHBOARD
-// ══════════════════════════════════════════════
-function renderDashboard(){
-  if(!S.currentUser)return;
-  const u=S.users.find(x=>x.id===S.currentUser.id);if(!u)return;
-  const bks=S.books.filter(b=>b.author===u.id);
-  const reads=bks.reduce((s,b)=>s+(b.reads||0),0);
-  const earn=bks.reduce((s,b)=>s+(b.earnings||0),0);
-  document.getElementById('dashEarn').textContent='$'+earn.toFixed(2);
-  document.getElementById('dashReads').textContent=reads.toLocaleString();
-  document.getElementById('dashBkCt').textContent=bks.filter(b=>!b.takedown).length;
-  document.getElementById('earnFill').style.width=Math.min(100,(earn/PAYOUT_MIN)*100)+'%';
-  document.getElementById('payNote').textContent=`$${earn.toFixed(2)} / $${PAYOUT_MIN} threshold`;
-  const tbody=document.getElementById('dashBkBody');
-  if(!bks.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text3)">No stories yet. <a href="#" onclick="goPg('publish')" style="color:var(--plum-light)">Publish your first →</a></td></tr>`;return;}
-  tbody.innerHTML=bks.map(b=>{const r=avgRating(b);return`<tr><td><strong>${b.title}</strong><br><span style="font-size:11px;color:var(--text3)">${(b.tags||[]).join(', ')}</span></td><td>${b.takedown?'<span class="badge bred">Removed</span>':b.flagged?'<span class="badge bred">⚠</span>':'<span class="badge bgrn">Live</span>'}</td><td style="font-family:var(--f-mono)">${(b.reads||0).toLocaleString()}</td><td style="color:var(--gold)">${r?`★ ${r}`:'-'}</td><td style="font-family:var(--f-mono);color:var(--gold)">$${(b.earnings||0).toFixed(2)}</td><td><button class="btn btn-ghost btn-sm" onclick="openBook('${b.id}')">Read</button></td></tr>`;}).join('');
-}
-function reqPayout(){
-  if(!S.currentUser)return;
-  const earn=S.books.filter(b=>b.author===S.currentUser.id).reduce((s,b)=>s+(b.earnings||0),0);
-  if(earn<PAYOUT_MIN){toast(`Minimum $${PAYOUT_MIN}. You have $${earn.toFixed(2)}.`,'error');return;}
-  toast('Payout requested! Processing in 5–7 business days.','success');
-}
-
-// ══════════════════════════════════════════════
-//  COPYRIGHT
-// ══════════════════════════════════════════════
-function submitClaim(){
+// ================================================================
+// COPYRIGHT CLAIMS
+// ================================================================
+async function submitClaim(){
   const name=(document.getElementById('claimName').value||'').trim();
   const email=(document.getElementById('claimEmail').value||'').trim();
   const desc=(document.getElementById('claimDesc').value||'').trim();
   if(!name||!email||!desc){toast('Please fill in all fields.','error');return;}
-  const claim={id:'cl'+Date.now(),bookId:S.viewBook.id,bookTitle:S.viewBook.title,claimant:name,email,desc,status:'pending',date:Date.now()};
-  S.claims.push(claim);
-  const b=S.books.find(x=>x.id===S.viewBook.id);if(b)b.flagged=true;
-  saveState();closeM('copyrightModal');
-  toast('Copyright claim submitted. Admin review within 48h.','info');
-  if(S.viewBook)renderReaderContent(S.viewBook);
+  if(!VIEW_BOOK){toast('No book selected.','error');return;}
+  const {error}=await sb.from('copyright_claims').insert({
+    book_id:VIEW_BOOK.id, book_title:VIEW_BOOK.title,
+    claimant_name:name, claimant_email:email, description:desc, status:'pending'
+  });
+  if(error){toast('Submit failed.','error');return;}
+  // Flag the book
+  await sb.from('books').update({is_flagged:true}).eq('id',VIEW_BOOK.id);
+  closeM('copyrightModal');
+  toast('Copyright claim submitted. Admin review within 48 hours.','info');
+  VIEW_BOOK.is_flagged=true;
+  renderReaderContent(VIEW_BOOK);
 }
 
-// ══════════════════════════════════════════════
-//  ADMIN
-// ══════════════════════════════════════════════
-function renderAdmin(){
-  const pending=S.claims.filter(c=>c.status==='pending');
-  document.getElementById('claimsBadge').textContent=pending.length+' pending';
-  document.getElementById('adminBkBadge').textContent=S.books.length+' total';
-  document.getElementById('adminUserBadge').textContent=S.users.length+' users';
-
-  document.getElementById('adminClaims').innerHTML=pending.length
-    ?pending.map(c=>`<div class="admin-row"><div style="flex:1"><strong>${c.bookTitle}</strong><br><span style="font-size:12px;color:var(--text3)">By ${c.claimant} (${c.email})</span><br><span style="font-size:12px">${c.desc.slice(0,120)}…</span></div><button class="btn btn-danger btn-xs" onclick="approveAndTakedown('${c.id}')">Approve &amp; Remove</button><button class="btn btn-outline btn-xs" onclick="dismissClaim('${c.id}')">Dismiss</button></div>`).join('')
-    :'<div class="admin-row" style="color:var(--text3)">No pending claims.</div>';
-
-  document.getElementById('adminBooks').innerHTML=S.books.map(b=>`<div class="admin-row"><span style="font-size:18px">${b.emoji||'📖'}</span><div style="flex:1"><strong>${b.title}</strong> <span style="font-size:12px;color:var(--text3)">by ${b.authorName} · ${(b.reads||0).toLocaleString()} reads</span></div>${b.takedown?'<span class="badge bred">Down</span>':b.flagged?'<span class="badge bred">⚠</span>':'<span class="badge bgrn">Live</span>'}${!b.takedown?`<button class="btn btn-danger btn-xs" onclick="adminTakedown('${b.id}')">Remove</button>`:`<button class="btn btn-outline btn-xs" onclick="adminRestore('${b.id}')">Restore</button>`}</div>`).join('');
-
-  document.getElementById('adminUsers').innerHTML=S.users.map(u=>`<div class="admin-row">
-    <div class="avatar" style="width:34px;height:34px;font-size:14px">${u.name[0]}</div>
-    <div style="flex:1"><strong>${u.name}</strong>${u.isAdmin?' <span class="badge bg2">Admin</span>':''}${u.banned?` <span class="badge bred">Banned</span>`:''}<br><span style="font-size:12px;color:var(--text3)">${u.email} · ${(u.books||[]).length} books</span></div>
-    ${!u.isAdmin&&!u.banned?`<button class="btn btn-danger btn-xs" onclick="openBanModal('${u.id}')">🚫 Ban</button>`:''}
-    ${u.banned&&!u.isAdmin?`<button class="btn btn-sage btn-xs" onclick="unbanUser('${u.id}')">✓ Unban</button>`:''}
-  </div>`).join('');
+// ================================================================
+// CONTACT FORM
+// ================================================================
+async function submitContact(){
+  const name=(document.getElementById('ctName').value||'').trim();
+  const email=(document.getElementById('ctEmail').value||'').trim();
+  const subject=document.getElementById('ctSubject').value;
+  const message=(document.getElementById('ctMessage').value||'').trim();
+  const errEl=document.getElementById('ctErr');
+  if(!name||!email||!subject||!message){showErr(errEl,'Please fill in all fields.');return;}
+  btnLoading('ctBtn',true);
+  const {error}=await sb.from('contact_submissions').insert({name,email,subject,message,is_read:false});
+  btnLoading('ctBtn',false);
+  if(error){showErr(errEl,'Failed to send. Please email us directly.');return;}
+  errEl.classList.remove('show');
+  document.getElementById('ctSuccess').classList.remove('hidden');
+  document.getElementById('ctBtn').classList.add('hidden');
+  toast('Message sent! We\'ll reply within 48 hours.','success');
 }
 
-function approveAndTakedown(cid){const c=S.claims.find(x=>x.id===cid);if(!c)return;c.status='approved';const b=S.books.find(x=>x.id===c.bookId);if(b){b.takedown=true;b.flagged=false;}saveState();renderAdmin();renderGrid(S.books,'bookGrid');toast(`"${c.bookTitle}" removed.`,'info');}
-function dismissClaim(cid){const c=S.claims.find(x=>x.id===cid);if(!c)return;c.status='dismissed';const b=S.books.find(x=>x.id===c.bookId);if(b)b.flagged=false;saveState();renderAdmin();toast('Claim dismissed.','info');}
-function adminTakedown(id){const b=S.books.find(x=>x.id===id);if(!b)return;b.takedown=true;saveState();renderAdmin();renderGrid(S.books,'bookGrid');toast('Book removed.','info');}
-function adminRestore(id){const b=S.books.find(x=>x.id===id);if(!b)return;b.takedown=false;b.flagged=false;saveState();renderAdmin();renderGrid(S.books,'bookGrid');toast('Book restored.','success');}
+// ================================================================
+// ADMIN PANEL
+// ================================================================
+async function loadAdmin(){
+  if(!PROFILE?.is_admin){ showPage('home'); toast('Access denied.','error'); return; }
+  showPage('admin');
+  loadAdminClaims();
+  loadAdminInboxBadge();
+}
 
-function openBanModal(uid){
-  const u=S.users.find(x=>x.id===uid);if(!u)return;
-  S.banTargetId=uid;
-  document.getElementById('banTargetInfo').innerHTML=`<div class="avatar" style="width:36px;height:36px;font-size:15px">${u.name[0]}</div><div><strong>${u.name}</strong><br><span style="font-size:13px;color:var(--text3)">${u.email}</span></div>`;
-  document.getElementById('banReason').value='';document.getElementById('banNotes').value='';
+function switchAdminTab(tab, btn){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  ['claims','books','users','inbox'].forEach(t=>{
+    document.getElementById(`adminTab${t.charAt(0).toUpperCase()+t.slice(1)}`).style.display=t===tab?'':'none';
+  });
+  if(tab==='claims') loadAdminClaims();
+  if(tab==='books') loadAdminBooks();
+  if(tab==='users') loadAdminUsers();
+  if(tab==='inbox') loadAdminInbox();
+}
+
+async function loadAdminClaims(){
+  const {data}=await sb.from('copyright_claims').select('*').eq('status','pending').order('created_at',{ascending:false});
+  document.getElementById('claimsBadge').textContent=(data||[]).length;
+  document.getElementById('adminClaimsContent').innerHTML=(data||[]).length
+    ? `<div class="admin-card"><div class="admin-chdr">Pending Claims (${data.length})</div>${(data||[]).map(c=>`
+        <div class="admin-row">
+          <div style="flex:1">
+            <strong>${esc(c.book_title)}</strong><br>
+            <span style="font-size:12px;color:var(--text3)">By ${esc(c.claimant_name)} (${esc(c.claimant_email)})</span><br>
+            <span style="font-size:12px">${esc((c.description||'').slice(0,120))}…</span>
+          </div>
+          <button class="btn btn-danger btn-xs" onclick="approveClaim('${c.id}','${c.book_id}')">Approve &amp; Remove</button>
+          <button class="btn btn-outline btn-xs" onclick="dismissClaim('${c.id}','${c.book_id}')">Dismiss</button>
+        </div>`).join('')}</div>`
+    : '<div class="admin-card"><div class="admin-row" style="color:var(--text3)">No pending claims.</div></div>';
+}
+
+async function approveClaim(claimId, bookId){
+  await sb.from('copyright_claims').update({status:'approved'}).eq('id',claimId);
+  await sb.from('books').update({is_takedown:true,is_flagged:false}).eq('id',bookId);
+  toast('Book taken down.','info');
+  loadAdminClaims();loadBooks();
+}
+async function dismissClaim(claimId, bookId){
+  await sb.from('copyright_claims').update({status:'dismissed'}).eq('id',claimId);
+  await sb.from('books').update({is_flagged:false}).eq('id',bookId);
+  toast('Claim dismissed.','info');
+  loadAdminClaims();
+}
+
+async function loadAdminBooks(){
+  const {data}=await sb.from('books').select('*').order('created_at',{ascending:false});
+  document.getElementById('adminBkBadge'||'_').textContent=(data||[]).length;
+  document.getElementById('adminBooksContent').innerHTML=`<div class="admin-card"><div class="admin-chdr">All Books (${(data||[]).length})</div>
+    ${(data||[]).map(b=>`<div class="admin-row">
+      <div style="flex:1"><strong>${esc(b.title)}</strong> <span style="font-size:12px;color:var(--text3)">by ${esc(b.author_name)} · ${b.reads||0} reads</span></div>
+      ${b.is_takedown?'<span class="badge bred">Down</span>':b.is_flagged?'<span class="badge bred">⚠</span>':'<span class="badge bgrn">Live</span>'}
+      ${!b.is_takedown?`<button class="btn btn-danger btn-xs" onclick="adminTakedownBook('${b.id}')">Remove</button>`:`<button class="btn btn-outline btn-xs" onclick="adminRestoreBook('${b.id}')">Restore</button>`}
+    </div>`).join('')}
+  </div>`;
+}
+async function adminTakedownBook(id){
+  await sb.from('books').update({is_takedown:true}).eq('id',id);
+  toast('Book removed.','info');loadAdminBooks();loadBooks();
+}
+async function adminRestoreBook(id){
+  await sb.from('books').update({is_takedown:false,is_flagged:false}).eq('id',id);
+  toast('Book restored.','success');loadAdminBooks();loadBooks();
+}
+
+async function loadAdminUsers(){
+  const {data}=await sb.from('profiles').select('*').order('created_at',{ascending:false});
+  document.getElementById('adminUsersContent').innerHTML=`<div class="admin-card"><div class="admin-chdr">All Users (${(data||[]).length})</div>
+    ${(data||[]).map(u=>`<div class="admin-row">
+      <div class="avatar" style="width:34px;height:34px;font-size:14px">${u.avatar_url?`<img src="${u.avatar_url}" alt="">`:u.name[0]}</div>
+      <div style="flex:1"><strong>${esc(u.name)}</strong>${u.is_admin?' <span class="badge bg2">Admin</span>':''}${u.is_banned?` <span class="badge bred">Banned</span>`:''}<br><span style="font-size:12px;color:var(--text3)">${esc(u.id.slice(0,8))}…</span></div>
+      ${!u.is_admin&&!u.is_banned?`<button class="btn btn-danger btn-xs" onclick="openBanModal('${u.id}','${esc(u.name)}')">🚫 Ban</button>`:''}
+      ${u.is_banned&&!u.is_admin?`<button class="btn btn-sage btn-xs" onclick="unbanUser('${u.id}')">✓ Unban</button>`:''}
+    </div>`).join('')}
+  </div>`;
+}
+
+function openBanModal(uid, name){
+  BAN_TARGET_ID=uid;
+  document.getElementById('banTargetInfo').innerHTML=`<div class="avatar" style="width:36px;height:36px;font-size:15px">${name[0]}</div><div><strong>${esc(name)}</strong></div>`;
+  document.getElementById('banReason').value='';
+  document.getElementById('banNotes').value='';
   openM('banModal');
 }
-function confirmBan(){
+async function confirmBan(){
   const reason=document.getElementById('banReason').value;
   if(!reason){toast('Please select a reason.','error');return;}
-  const u=S.users.find(x=>x.id===S.banTargetId);if(!u)return;
-  u.banned=true;u.banReason=reason;u.banNotes=document.getElementById('banNotes').value;
-  // If this is the current user, show ban wall
-  if(S.currentUser&&S.currentUser.id===u.id){S.currentUser=null;localStorage.removeItem('thalia_user');}
-  saveState();closeM('banModal');renderAdmin();
-  toast(`${u.name} has been banned.`,'info');
+  const notes=document.getElementById('banNotes').value;
+  const {error}=await sb.from('profiles').update({is_banned:true,ban_reason:reason+' '+notes}).eq('id',BAN_TARGET_ID);
+  if(error){toast('Ban failed.','error');return;}
+  closeM('banModal');
+  toast('User banned.','info');
+  loadAdminUsers();
 }
-function unbanUser(uid){
-  const u=S.users.find(x=>x.id===uid);if(!u)return;
-  u.banned=false;delete u.banReason;delete u.banNotes;
-  saveState();renderAdmin();toast(`${u.name} has been unbanned.`,'success');
+async function unbanUser(uid){
+  await sb.from('profiles').update({is_banned:false,ban_reason:''}).eq('id',uid);
+  toast('User unbanned.','success');
+  loadAdminUsers();
 }
 
-// ══════════════════════════════════════════════
-//  MODALS
-// ══════════════════════════════════════════════
-function openM(id){document.getElementById(id).classList.remove('hidden');}
-function closeM(id){document.getElementById(id).classList.add('hidden');}
-function swModal(a,b){closeM(a);openM(b);}
+async function loadAdminInboxBadge(){
+  const {count}=await sb.from('contact_submissions').select('*',{count:'exact',head:true}).eq('is_read',false);
+  document.getElementById('inboxBadge').textContent=count||0;
+}
 
-// ══════════════════════════════════════════════
-//  TOAST
-// ══════════════════════════════════════════════
+async function loadAdminInbox(){
+  const {data}=await sb.from('contact_submissions').select('*').order('created_at',{ascending:false});
+  const msgs=data||[];
+  const unread=msgs.filter(m=>!m.is_read).length;
+  document.getElementById('inboxBadge').textContent=unread;
+  document.getElementById('adminInboxContent').innerHTML=`<div class="admin-card"><div class="admin-chdr">Contact Inbox (${msgs.length} messages, ${unread} unread)</div>
+    ${msgs.length?msgs.map(m=>`<div class="admin-msg-row${!m.is_read?' unread':''}" onclick="viewContactMsg('${m.id}')">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <strong style="font-size:14px">${esc(m.name)} — ${esc(m.subject)}</strong>
+        <span style="font-size:12px;color:var(--text3);font-family:var(--f-mono)">${fmtDate(m.created_at)}</span>
+      </div>
+      <div style="font-size:13px;color:var(--text3)">${esc(m.email)} · ${esc((m.message||'').slice(0,80))}…</div>
+    </div>`).join('')
+    :'<div class="admin-row" style="color:var(--text3)">No messages yet.</div>'}
+  </div>`;
+}
+
+async function viewContactMsg(id){
+  const {data:m}=await sb.from('contact_submissions').select('*').eq('id',id).single();
+  if(!m) return;
+  document.getElementById('viewMsgBody').innerHTML=`
+    <div style="margin-bottom:16px">
+      <div style="font-size:13px;color:var(--text3);margin-bottom:4px">FROM</div>
+      <strong>${esc(m.name)}</strong> — <a href="mailto:${esc(m.email)}" style="color:var(--plum-light)">${esc(m.email)}</a>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:13px;color:var(--text3);margin-bottom:4px">SUBJECT</div>
+      <strong>${esc(m.subject)}</strong>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:13px;color:var(--text3);margin-bottom:8px">MESSAGE</div>
+      <div style="background:var(--surface2);border-radius:var(--r);padding:16px;font-size:15px;line-height:1.7">${esc(m.message).replace(/\n/g,'<br>')}</div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <a href="mailto:${esc(m.email)}?subject=Re: ${esc(m.subject)}" class="btn btn-violet" style="flex:1;justify-content:center">Reply via email →</a>
+    </div>
+    <div style="font-size:12px;color:var(--text3);margin-top:12px;font-family:var(--f-mono)">${fmtDate(m.created_at)}</div>`;
+  openM('viewMsgModal');
+  // Mark as read
+  if(!m.is_read){
+    await sb.from('contact_submissions').update({is_read:true}).eq('id',id);
+    loadAdminInboxBadge();
+  }
+}
+
+// ================================================================
+// PAGE NAVIGATION
+// ================================================================
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg) pg.classList.add('active');
+  window.scrollTo(0,0);
+  cDD();
+  if(id==='dashboard'){ if(USER) loadDashboard(); else openM('loginModal'); }
+  if(id==='admin'){ loadAdmin(); }
+  if(id==='publish'){
+    if(!USER){openM('loginModal');return;}
+    buildTagOpts();SEL_TAGS=[];PENDING_COVER_FILE=null;STORY_IMG_URLS=[];renderSelTags();
+    document.getElementById('storyImgPreviews').innerHTML='';
+    document.getElementById('origBox').style.display='none';
+  }
+}
+
+function toggleDD(){ document.getElementById('avDD').classList.toggle('hidden'); }
+function cDD(){ document.getElementById('avDD').classList.add('hidden'); }
+document.addEventListener('click',e=>{ if(!e.target.closest('.nav-av-wrap')) cDD(); });
+
+// ================================================================
+// MODALS
+// ================================================================
+function openM(id){ document.getElementById(id).classList.remove('hidden'); }
+function closeM(id){ document.getElementById(id).classList.add('hidden'); }
+function swM(a,b){ closeM(a); openM(b); }
+
+// ================================================================
+// TOAST
+// ================================================================
 function toast(msg,type='info'){
   const icons={success:'✓',error:'✕',info:'✦'};
-  const el=document.createElement('div');el.className=`toast ${type}`;
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
   el.innerHTML=`<span>${icons[type]}</span><span>${msg}</span>`;
   document.getElementById('toasts').appendChild(el);
   setTimeout(()=>el.remove(),4200);
 }
 
+// ================================================================
+// HELPERS
+// ================================================================
+function esc(str){ const d=document.createElement('div');d.textContent=str||'';return d.innerHTML; }
+function fmtDate(d){ return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+function timeSince(ts){
+  const s=Math.floor((Date.now()-new Date(ts).getTime())/1000);
+  if(s<60)return'now';if(s<3600)return Math.floor(s/60)+'m';
+  if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';
+}
+function showErr(el, msg){ el.textContent=msg; el.classList.add('show'); }
+function btnLoading(id, loading){
+  const btn=document.getElementById(id);
+  if(!btn) return;
+  btn.disabled=loading;
+  btn.style.opacity=loading?'0.6':'1';
+}
 
-// Expose all functions to window for inline onclick handlers
-Object.assign(window, {
-  toggleTheme, goPg, toggleDD, cDD, updateNav,
-  doLogin, doRegister, logout, openEditProfile, saveProfile,
-  openBook, goAuthorFromReader, openAuthor, goMyProfile,
-  setStar, submitComment,
-  toggleDM, closeDM, openDMThread, closeDMThread, sendMsg, openNewDM, dmAuthor, sendNewDM,
-  doSearch, filterTag, scrollToBooks,
-  buildTagOpts, togglePubTag, removePubTag, prevCover, fmtText, insertChapter, insertAd, checkOrig, publishBook,
-  renderDashboard, reqPayout, submitClaim,
-  renderAdmin, approveAndTakedown, dismissClaim, adminTakedown, adminRestore, openBanModal, confirmBan, unbanUser,
-  openM, closeM, swModal, toast
-});
-
+// ================================================================
 // INIT
-loadState();
-checkBan();
-renderGrid(S.books,'bookGrid');
-updateNav();
-buildTagOpts();
+// ================================================================
+async function init(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(session){
+    USER=session.user;
+    await loadProfile(USER.id);
+  } else {
+    updateNav();
+  }
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if(event==='SIGNED_IN'){
+      USER=session.user;
+      await loadProfile(USER.id);
+      updateNav();
+    } else if(event==='SIGNED_OUT'){
+      USER=null;PROFILE=null;
+      updateNav();
+    }
+  });
+  await loadBooks();
+  buildTagOpts();
+  // Expose functions globally for onclick handlers
+  Object.assign(window,{
+    toggleTheme,showPage,toggleDD,cDD,
+    doSignUp,doSignIn,doSignOut,
+    openEditProfile,saveProfile,uploadAvatar,
+    openBook,goAuthorFromReader,openAuthor,showMyProfile,
+    setStar,submitComment,
+    toggleDM,closeDM,openDMConv,closeDMThread,sendMsg,openNewDM,sendNewDM,dmAuthor,
+    doSearch,filterTag,scrollToBooks,
+    buildTagOpts,toggleTag,removeTag,fmtTxt,insertChap,insertAdMark,uploadStoryImg,removeStoryImg,previewCover,checkOrig,publishBook,
+    loadDashboard,reqPayout,deleteBook,
+    submitClaim,submitContact,
+    loadAdmin,switchAdminTab,approveClaim,dismissClaim,adminTakedownBook,adminRestoreBook,openBanModal,confirmBan,unbanUser,viewContactMsg,adminTakedownCurrent,loadMoreBooks,
+    openM,closeM,swM,
+  });
+}
+
+init();
 </script>
 </body>
 </html>
