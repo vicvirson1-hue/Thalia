@@ -569,12 +569,22 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
 <div id="page-dashboard" class="page">
   <div class="dash-grid">
     <div>
-      <div class="stat-card" style="border-top:3px solid var(--gold)">
+      <div class="stat-card" style="border-top:3px solid var(--gold)" id="earningsCard">
         <div class="stat-lbl">Pending Earnings</div>
         <div class="stat-val" id="dashEarn" style="color:var(--gold)">$0.00</div>
         <div class="earn-bar"><div class="earn-fill" id="earnFill" style="width:0%"></div></div>
-        <div class="pay-note" id="payNote">$0 / $50 payout threshold</div>
-        <button class="btn btn-violet" style="width:100%;justify-content:center;margin-top:14px" onclick="reqPayout()">Request Payout</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+          <div class="pay-note" id="payNote">$0 / $50 payout threshold</div>
+          <div class="pay-note" id="payPct" style="color:var(--gold)">0%</div>
+        </div>
+        <!-- Milestone alert shown when threshold reached -->
+        <div id="payoutAlert" class="hidden" style="background:linear-gradient(135deg,var(--plum-mid),var(--violet));color:#fff;border-radius:var(--r);padding:12px 14px;margin-top:12px;font-size:13px;line-height:1.6">
+          🎉 <strong>You've reached $50!</strong> You can now request your first payout. Make sure your PayPal email is saved in your profile.
+        </div>
+        <button class="btn btn-violet" style="width:100%;justify-content:center;margin-top:14px" id="payoutBtn" onclick="reqPayout()">Request Payout</button>
+        <div id="payoutPending" class="hidden" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-top:12px;font-size:12px;color:var(--text3);text-align:center">
+          ⏳ Payout requested — processing within 5–7 business days
+        </div>
       </div>
       <div class="stat-card">
         <div class="stat-lbl">Total Reads</div>
@@ -585,9 +595,17 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
         <div class="stat-lbl">Published Books</div>
         <div class="stat-val" id="dashBkCount">0</div>
       </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px;font-size:13px;color:var(--text3);line-height:1.75">
-        <strong style="color:var(--text);display:block;margin-bottom:8px">💜 Revenue model</strong>
-        <strong style="color:var(--violet)">$0.003</strong> per ad view · Ads every ~500 words · <strong style="color:var(--violet)">55%</strong> author share · $50 minimum payout
+      <!-- PayPal reminder if not set -->
+      <div id="paypalReminder" class="hidden" style="background:#fdf3df;border:1px solid #f0d89a;border-radius:var(--rl);padding:14px 16px;font-size:13px;color:#7a5010;line-height:1.6;margin-bottom:16px">
+        💡 <strong>Add your PayPal email</strong> in Edit Profile so we know where to send your earnings when you request a payout.
+        <button onclick="openEditProfile()" class="btn btn-gold btn-sm" style="margin-top:8px;width:100%;justify-content:center">Add PayPal email →</button>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px;font-size:13px;color:var(--text3);line-height:1.9">
+        <strong style="color:var(--text);display:block;margin-bottom:8px">💜 How you earn</strong>
+        Every time someone reads your story, ads in the sidebar generate revenue.<br>
+        <strong style="color:var(--violet)">$0.003</strong> per ad impression · ads every ~500 words<br>
+        <strong style="color:var(--violet)">55%</strong> goes to you · <strong style="color:var(--violet)">45%</strong> to Thalia<br>
+        Minimum payout <strong style="color:var(--violet)">$50</strong>
       </div>
     </div>
     <div>
@@ -846,6 +864,11 @@ nav{position:sticky;top:0;z-index:200;height:var(--nav);background:color-mix(in 
       </div>
       <div class="fg"><label class="fl">Display name</label><input class="fi" id="epName"></div>
       <div class="fg"><label class="fl">Bio</label><textarea class="fta" id="epBio" style="min-height:80px"></textarea></div>
+      <div class="fg">
+        <label class="fl">PayPal email <span style="color:var(--text3)">(for receiving payments)</span></label>
+        <input class="fi" id="epPaypal" type="email" placeholder="your-paypal@email.com">
+        <div class="fhint">This is where we send your earnings when you request a payout. Keep it private.</div>
+      </div>
       <div class="fg">
         <label class="fl">Social links</label>
         <div class="soc-inputs">
@@ -1165,6 +1188,7 @@ function openEditProfile(){
   document.getElementById('epTwitter').value = PROFILE.twitter||'';
   document.getElementById('epInstagram').value = PROFILE.instagram||'';
   document.getElementById('epWebsite').value = PROFILE.website||'';
+  document.getElementById('epPaypal').value = PROFILE.paypal_email||'';
   const prev = document.getElementById('editAvatarPreview');
   if(PROFILE.avatar_url){ prev.innerHTML=`<img src="${PROFILE.avatar_url}" alt="">`; }
   else { prev.textContent = PROFILE.name[0].toUpperCase(); }
@@ -1196,6 +1220,7 @@ async function saveProfile(){
     twitter: document.getElementById('epTwitter').value.trim(),
     instagram: document.getElementById('epInstagram').value.trim(),
     website: document.getElementById('epWebsite').value.trim(),
+    paypal_email: document.getElementById('epPaypal').value.trim(),
     avatar_url: PROFILE.avatar_url || '',
   };
   const { error } = await sb.from('profiles').update(updates).eq('id', USER.id);
@@ -1427,25 +1452,67 @@ async function loadDashboard(){
   const bks = books||[];
   const totalReads = bks.reduce((s,b)=>s+(b.reads||0),0);
   const totalEarn = bks.reduce((s,b)=>s+(parseFloat(b.earnings)||0),0);
+  const pct = Math.min(100,(totalEarn/PAYOUT_MIN)*100);
+
   document.getElementById('dashEarn').textContent = '$'+totalEarn.toFixed(2);
   document.getElementById('dashReads').textContent = totalReads.toLocaleString();
   document.getElementById('dashBkCount').textContent = bks.filter(b=>!b.is_takedown).length;
-  document.getElementById('earnFill').style.width = Math.min(100,(totalEarn/PAYOUT_MIN)*100)+'%';
-  document.getElementById('payNote').textContent = `$${totalEarn.toFixed(2)} / $${PAYOUT_MIN} threshold`;
-  // Fetch avg ratings for each book
+  document.getElementById('earnFill').style.width = pct+'%';
+  document.getElementById('payNote').textContent = `$${totalEarn.toFixed(2)} of $${PAYOUT_MIN} threshold`;
+  document.getElementById('payPct').textContent = pct.toFixed(0)+'%';
+
+  // Show payout alert if threshold reached
+  const alert = document.getElementById('payoutAlert');
+  const btn = document.getElementById('payoutBtn');
+  const pending = document.getElementById('payoutPending');
+  if(totalEarn >= PAYOUT_MIN){
+    alert.classList.remove('hidden');
+    btn.style.display = '';
+    btn.style.background = 'linear-gradient(135deg,var(--gold),var(--gold-lt))';
+    pending.classList.add('hidden');
+  } else {
+    alert.classList.add('hidden');
+    btn.style.display = '';
+    pending.classList.add('hidden');
+  }
+
+  // Show PayPal reminder if no PayPal email set
+  const paypalReminder = document.getElementById('paypalReminder');
+  if(!PROFILE.paypal_email && totalEarn > 0){
+    paypalReminder.classList.remove('hidden');
+  } else {
+    paypalReminder.classList.add('hidden');
+  }
+
+  // Build book rows with ratings
   const tbody = document.getElementById('dashBkBody');
-  if(!bks.length){ tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text3)">No stories yet. <a href="#" onclick="showPage('publish')" style="color:var(--plum-light)">Publish your first →</a></td></tr>`; return; }
-  tbody.innerHTML = bks.map(b=>`<tr>
-    <td><strong>${esc(b.title)}</strong><br><span style="font-size:11px;color:var(--text3)">${(b.tags||[]).join(', ')}</span></td>
-    <td>${b.is_takedown?'<span class="badge bred">Removed</span>':b.is_flagged?'<span class="badge bred">⚠ Claimed</span>':'<span class="badge bgrn">Live</span>'}</td>
-    <td style="font-family:var(--f-mono)">${(b.reads||0).toLocaleString()}</td>
-    <td style="color:var(--gold)">—</td>
-    <td style="font-family:var(--f-mono);color:var(--gold)">$${(parseFloat(b.earnings)||0).toFixed(2)}</td>
-    <td style="display:flex;gap:6px">
-      <button class="btn btn-ghost btn-sm" onclick="openBook('${b.id}')">Read</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteBook('${b.id}')">Delete</button>
-    </td>
-  </tr>`).join('');
+  if(!bks.length){
+    tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text3)">No stories yet. <a href="#" onclick="showPage('publish')" style="color:var(--plum-light)">Publish your first →</a></td></tr>`;
+    return;
+  }
+
+  // Fetch ratings for all books in parallel
+  const ratingPromises = bks.map(b =>
+    sb.from('comments').select('rating').eq('book_id',b.id).not('rating','is',null)
+  );
+  const ratingResults = await Promise.all(ratingPromises);
+
+  tbody.innerHTML = bks.map((b, i) => {
+    const ratings = (ratingResults[i]?.data||[]).map(c=>c.rating);
+    const avgR = ratings.length ? (ratings.reduce((s,r)=>s+r,0)/ratings.length).toFixed(1) : null;
+    const earnForBook = parseFloat(b.earnings)||0;
+    return `<tr>
+      <td><strong>${esc(b.title)}</strong><br><span style="font-size:11px;color:var(--text3)">${(b.tags||[]).join(', ')}</span></td>
+      <td>${b.is_takedown?'<span class="badge bred">Removed</span>':b.is_flagged?'<span class="badge bred">⚠ Claimed</span>':'<span class="badge bgrn">Live</span>'}</td>
+      <td style="font-family:var(--f-mono)">${(b.reads||0).toLocaleString()}</td>
+      <td style="color:var(--gold)">${avgR ? '★ '+avgR : '—'}</td>
+      <td style="font-family:var(--f-mono);color:var(--gold)">$${earnForBook.toFixed(2)}</td>
+      <td style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm" onclick="openBook('${b.id}')">Read</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteBook('${b.id}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
 }
 
 async function deleteBook(id){
@@ -1456,10 +1523,30 @@ async function deleteBook(id){
   loadDashboard();
 }
 
-function reqPayout(){
+async function reqPayout(){
   const earn = parseFloat(document.getElementById('dashEarn').textContent.replace('$',''))||0;
-  if(earn < PAYOUT_MIN){ toast(`Minimum payout is $${PAYOUT_MIN}. You have $${earn.toFixed(2)}.`,'error'); return; }
-  toast('Payout requested! We will process within 5–7 business days.','success');
+  if(earn < PAYOUT_MIN){
+    toast(`You need $${PAYOUT_MIN} to request a payout. You have $${earn.toFixed(2)} — keep writing!`,'error');
+    return;
+  }
+  if(!PROFILE?.paypal_email){
+    toast('Please add your PayPal email in Edit Profile before requesting a payout.','error');
+    openEditProfile();
+    return;
+  }
+  // Save payout request to Supabase contact_submissions so admin sees it
+  await sb.from('contact_submissions').insert({
+    name: PROFILE.name,
+    email: PROFILE.paypal_email,
+    subject: 'Payout Request',
+    message: `Author ${PROFILE.name} has requested a payout of $${earn.toFixed(2)} to PayPal: ${PROFILE.paypal_email}`,
+    is_read: false
+  });
+  // Show pending state
+  document.getElementById('payoutBtn').style.display = 'none';
+  document.getElementById('payoutAlert').classList.add('hidden');
+  document.getElementById('payoutPending').classList.remove('hidden');
+  toast('Payout requested! We will send $'+earn.toFixed(2)+' to your PayPal within 5–7 business days.','success');
 }
 
 // ================================================================
